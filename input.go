@@ -23,7 +23,7 @@ type ButtonIndex int
 type IMouseListener interface {
 	OnMouseCursorMoved(x, y float32) bool
 	OnMouseButtonEvent(button ButtonIndex, event EventAction, modifiers ModifierKey) bool
-	OnMouseScrolled(x, y float32) bool
+	OnMouseScrolled(scrollX, scrollY float32) bool
 }
 
 type IKeyboardListener interface {

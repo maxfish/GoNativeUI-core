@@ -47,7 +47,9 @@ func (g *Gui) OnMouseButtonEvent(buttonIndex ButtonIndex, event EventAction, mod
 	return false
 }
 
-func (g *Gui) OnMouseScrolled(x, y float32) bool {
+func (g *Gui) OnMouseScrolled(scrollX, scrollY float32) bool {
+	//log.Printf("[Gui] Mouse wheel scrolled %.2f,%.2f\n", scrollX, scrollY)
+
 	// TODO traverse the widgets tree and pass the event
 	return false
 }

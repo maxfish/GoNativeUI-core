@@ -109,7 +109,7 @@ func (w *Widget) OnMouseCursorMoved(x, y float32) bool {
 func (w *Widget) OnMouseButtonEvent(button ButtonIndex, event EventAction, modifiers ModifierKey) bool {
 	return false
 }
-func (w *Widget) OnMouseScrolled(x, y float32) bool {
+func (w *Widget) OnMouseScrolled(scrollX, scrollY float32) bool {
 	return false
 }
 
