@@ -26,5 +26,11 @@ type IMouseListener interface {
 	OnMouseScrolled(scrollX, scrollY float32) bool
 }
 
+type MouseData struct {
+	currentPosX, currentPosY   float32
+	previousPosX, previousPosY float32
+	button                     ButtonIndex // Button currently pressed
+}
+
 type IKeyboardListener interface {
 }

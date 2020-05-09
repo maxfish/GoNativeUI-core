@@ -15,7 +15,8 @@ type IRenderer interface {
 }
 
 type Gui struct {
-	screen IContainer
+	screen    IContainer
+	mouseData MouseData
 }
 
 func NewGui(theme *Theme, w int, h int) *Gui {
