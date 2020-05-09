@@ -23,7 +23,7 @@ type IContainer interface {
 	//ComponentByRelativeId(Id string)
 	//RemoveChildByIs(i string)
 	//GetMaximumComponentSize(c IWidget)
-	FindChildAt(x int32, y int32) IWidget
+	FindChildAt(x int, y int) IWidget
 
 	//SetAlignment(alignmentH ui.AlignmentH, alignmentV ui.AlignmentV)
 }
@@ -81,6 +81,12 @@ func (c *Container) ChildById(id string) IWidget {
 //func (c *Widget) ComponentByRelativeId(Id string)
 func (c *Container) RemoveChildById(id string)             {}
 func (c *Container) GetMaximumComponentSize(child IWidget) {}
-func (c *Container) FindChildAt(x, y int32) IWidget {
+func (c *Container) FindChildAt(x, y int) IWidget {
+	for j := 0; j < len(c.children); j++ {
+		child := c.children[j]
+		if child.Bounds().ContainsPoint(x, y) {
+			return child
+		}
+	}
 	return nil
 }
