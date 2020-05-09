@@ -11,8 +11,9 @@ const (
 
 type Button struct {
 	Label
-	buttonType ButtonType
-	pressed    bool
+	buttonType  ButtonType
+	buttonGroup []*Button
+	pressed     bool
 }
 
 func NewButton(text string) *Button {
@@ -46,12 +47,26 @@ func (b *Button) SetTheme(theme *Theme) {
 	b.padding = theme.ButtonPadding
 }
 
+func (b *Button)SetButtonGroup(buttonGroup []*Button) {
+	b.buttonGroup = buttonGroup
+}
+
 func (b *Button) OnMouseButtonEvent(x float32, y float32, button ButtonIndex, event EventAction, modifiers ModifierKey) bool {
 	if event == EventActionPress {
 		if b.buttonType == ButtonTypeNormal {
 			b.pressed = true
 		} else {
-			b.pressed = !b.pressed
+			if b.buttonGroup != nil {
+				for _, btn := range b.buttonGroup {
+					if btn != b && btn.buttonType == ButtonTypeToggle {
+						btn.pressed = false
+					} else {
+						b.pressed = true
+					}
+				}
+			} else {
+				b.pressed = !b.pressed
+			}
 		}
 	} else if event == EventActionRelease {
 		if b.buttonType == ButtonTypeNormal {
