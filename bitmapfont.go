@@ -6,7 +6,7 @@ package gui
 
 import (
 	"fmt"
-	"github.com/maxfish/gogui/gui/utils"
+	"github.com/maxfish/GoNativeUI-Core/utils"
 	"io/ioutil"
 	"log"
 	"regexp"

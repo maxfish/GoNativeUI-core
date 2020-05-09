@@ -1,7 +1,7 @@
 package gui
 
 import (
-	"github.com/maxfish/gogui/gui/utils"
+	"github.com/maxfish/GoNativeUI-Core/utils"
 )
 
 type Theme struct {

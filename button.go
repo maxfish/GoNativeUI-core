@@ -1,6 +1,6 @@
 package gui
 
-import "github.com/maxfish/gogui/gui/utils"
+import "github.com/maxfish/GoNativeUI-Core/utils"
 
 type Button struct {
 	Label
