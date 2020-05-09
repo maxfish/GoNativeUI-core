@@ -5,10 +5,16 @@ package gui
 // Exporter: https://github.com/libgdx/libgdx/wiki/Hiero
 
 import (
+	"bytes"
+	"encoding/base64"
 	"fmt"
 	"github.com/maxfish/GoNativeUI-Core/utils"
+	"image"
+	"image/png"
 	"io/ioutil"
 	"log"
+	"os"
+	"path"
 	"regexp"
 	"strconv"
 	"strings"
@@ -39,8 +45,10 @@ func (c *BitmapGlyph) Kerning(previousGlyph int32) int {
 
 // BitmapFont holds information about the Bitmap font
 type BitmapFont struct {
-	pageFiles []string
-	glyphs    map[int32]*BitmapGlyph
+	path       string
+	pageNames  []string
+	pageImages []image.Image
+	glyphs     map[int32]*BitmapGlyph
 
 	// Info
 	face          string
@@ -66,16 +74,50 @@ type BitmapFont struct {
 }
 
 // NewFontFromFile parse the font data out of a file
-func NewFontFromFile(path string, fileName string) *BitmapFont {
-	f := &BitmapFont{}
-	f.pageFiles = make([]string, 0)
-	f.glyphs = make(map[int32]*BitmapGlyph)
-
-	fileContent, err := ioutil.ReadFile(path + fileName)
+func NewFontFromFile(fileName string) *BitmapFont {
+	fileContent, err := ioutil.ReadFile(fileName)
 	if err != nil {
 		log.Panicf("Error loading font -> %s", err)
 	}
-	lines := strings.Split(string(fileContent), "\n")
+
+	f := &BitmapFont{}
+	f.path, _ = path.Split(fileName)
+	f.pageNames = make([]string, 0)
+	f.pageImages = make([]image.Image, 0)
+	f.glyphs = make(map[int32]*BitmapGlyph)
+	f.loadDefinitionFromString(string(fileContent))
+	f.loadPageImagesFiles()
+
+	return f
+}
+
+func NewFontFromData(definition string, base64Images []string) *BitmapFont {
+	f := &BitmapFont{}
+	f.path = "n/a"
+	f.pageNames = make([]string, 0)
+	f.glyphs = make(map[int32]*BitmapGlyph)
+	f.loadDefinitionFromString(definition)
+
+	for _, base64String := range base64Images {
+		data, err := base64.StdEncoding.DecodeString(base64String)
+		if err != nil {
+			log.Panicf("Cannot decode b64 -> '%s'\n", err)
+		}
+
+		r := bytes.NewReader(data)
+		decodedImage, err := png.Decode(r)
+		if err != nil {
+			panic("Bad png")
+		}
+
+		f.pageImages = append(f.pageImages, decodedImage)
+	}
+
+	return f
+}
+
+func (f *BitmapFont) loadDefinitionFromString(definition string) {
+	lines := strings.Split(definition, "\n")
 	for _, line := range lines {
 		section, keyValues := f.tokenizeLine(line)
 		switch section {
@@ -84,23 +126,37 @@ func NewFontFromFile(path string, fileName string) *BitmapFont {
 		case "common":
 			f.parseCommonSection(keyValues)
 		case "page":
-			f.parsePageSection(keyValues, path)
+			f.parsePageSection(keyValues)
 		case "char":
 			f.parseCharSection(keyValues)
 		case "kerning":
 			f.parseKerningSection(keyValues)
 		}
 	}
+}
 
-	return f
+func (f *BitmapFont) loadPageImagesFiles() {
+	for _, imageFileName := range f.pageNames {
+		file, err := os.Open(path.Join(f.path, imageFileName))
+		if err != nil {
+			log.Panicf("Error loading image '%s' -> '%s'\n", imageFileName, err)
+		}
+
+		decodedImage, format, err := image.Decode(file)
+		if err != nil {
+			log.Panicf("Cannot decode image:'%s' format:'%s' -> '%s'\n", imageFileName, format, err)
+		}
+		file.Close()
+		f.pageImages = append(f.pageImages, decodedImage)
+	}
 }
 
 func (f *BitmapFont) FaceName() string {
 	return f.face
 }
 
-func (f *BitmapFont) PageFiles() []string {
-	return f.pageFiles
+func (f *BitmapFont) PageImages() []image.Image {
+	return f.pageImages
 }
 
 func (f *BitmapFont) PageSize() utils.Size {
@@ -165,10 +221,10 @@ func (f *BitmapFont) parseCommonSection(keyValues map[string]string) {
 	f.numPages, _ = strconv.Atoi(keyValues["pages"])
 }
 
-func (f *BitmapFont) parsePageSection(keyValues map[string]string, path string) {
+func (f *BitmapFont) parsePageSection(keyValues map[string]string) {
 	// TODO: This assumes the files are in order
 	//Id, _ := strconv.Atoi(keyValues["Id"])
-	f.pageFiles = append(f.pageFiles, path + keyValues["file"])
+	f.pageNames = append(f.pageNames, keyValues["file"])
 }
 
 func (f *BitmapFont) parseCharSection(keyValues map[string]string) {

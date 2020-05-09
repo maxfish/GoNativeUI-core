@@ -1,8 +1,11 @@
 package gui
 
 import (
+	"github.com/maxfish/GoNativeUI-Core/assets"
 	"github.com/maxfish/GoNativeUI-Core/utils"
 )
+
+const defaultAssetsPath = "github.com/maxfish/GoNativeUI-Core/assets/"
 
 type Theme struct {
 	ScreenBackgroundColor utils.ColorF
@@ -27,7 +30,8 @@ func NewDefaultTheme() *Theme {
 
 	t.ScreenBackgroundColor = utils.ColorGrayi(56, 255)
 
-	defaultFont := NewFontFromFile("gui/assets/", "Roboto-Regular.fnt")
+	//defaultFont := NewFontFromFile("assets/Roboto-Regular.fnt")
+	defaultFont := NewFontFromData(assets.FontRobotoRegularDefinition, []string{assets.FontRobotoRegularImage})
 
 	t.LabelFont = defaultFont
 	t.LabelTextColor = utils.ColorGrayi(225, 255)
