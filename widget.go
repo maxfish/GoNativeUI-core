@@ -103,10 +103,10 @@ func (w *Widget) SizeToContent() {
 }
 
 // Mouse handling
-func (w *Widget) OnMouseMoved(x, y float32) bool {
+func (w *Widget) OnMouseCursorMoved(x, y float32) bool {
 	return false
 }
-func (w *Widget) OnMouseButtonEvent(buttonIndex uint, event EventAction, modifiers ModifierKey) bool {
+func (w *Widget) OnMouseButtonEvent(button ButtonIndex, event EventAction, modifiers ModifierKey) bool {
 	return false
 }
 func (w *Widget) OnMouseScrolled(x, y float32) bool {

@@ -1,6 +1,8 @@
 package gui
 
-import "github.com/maxfish/GoNativeUI-Core/utils"
+import (
+	"github.com/maxfish/GoNativeUI-Core/utils"
+)
 
 type IFont interface {
 	FaceName() string
@@ -31,14 +33,21 @@ func (g *Gui) Theme() *Theme      { return g.screen.Theme() }
 //func (g *Gui) SetScale(scale float32)        { g.scale = scale }
 
 // Mouse handling
-func (g *Gui) OnMouseMoved(x, y float32) bool {
+func (g *Gui) OnMouseCursorMoved(x, y float32) bool {
+	//log.Printf("[Gui] Mouse moved %.2f,%.2f\n", x, y)
+
+	// TODO traverse the widgets tree and pass the event
 	return false
 }
 
-func (g *Gui) OnMouseButtonEvent(buttonIndex uint, event EventAction, modifiers ModifierKey) bool {
+func (g *Gui) OnMouseButtonEvent(buttonIndex ButtonIndex, event EventAction, modifiers ModifierKey) bool {
+	//log.Printf("[Gui] Mouse button #%d <%d> modifiers:%d\n", buttonIndex, event, modifiers)
+
+	// TODO traverse the widgets tree and pass the event
 	return false
 }
 
 func (g *Gui) OnMouseScrolled(x, y float32) bool {
+	// TODO traverse the widgets tree and pass the event
 	return false
 }

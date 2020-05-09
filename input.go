@@ -1,6 +1,6 @@
 package gui
 
-type ModifierKey uint
+type ModifierKey int
 
 const (
 	ModifierKeyShift    ModifierKey = 0x01
@@ -10,7 +10,7 @@ const (
 	ModifierKeySuper                = 0x10
 )
 
-type EventAction uint
+type EventAction int
 
 const (
 	EventActionPress EventAction = iota
@@ -18,9 +18,11 @@ const (
 	EventActionRepeat
 )
 
+type ButtonIndex int
+
 type IMouseListener interface {
-	OnMouseMoved(x, y float32) bool
-	OnMouseButtonEvent(buttonIndex uint, event EventAction, modifiers ModifierKey) bool
+	OnMouseCursorMoved(x, y float32) bool
+	OnMouseButtonEvent(button ButtonIndex, event EventAction, modifiers ModifierKey) bool
 	OnMouseScrolled(x, y float32) bool
 }
 
