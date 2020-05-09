@@ -7,6 +7,7 @@ const (
 	ModifierKeyControl              = 0x02
 	ModifierKeyAlt                  = 0x04
 	ModifierKeyCapsLock             = 0x08
+	ModifierKeySuper                = 0x10
 )
 
 type EventAction uint
