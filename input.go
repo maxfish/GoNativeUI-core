@@ -21,9 +21,9 @@ const (
 type ButtonIndex int
 
 type IMouseListener interface {
-	OnMouseCursorMoved(x, y float32) bool
-	OnMouseButtonEvent(button ButtonIndex, event EventAction, modifiers ModifierKey) bool
-	OnMouseScrolled(scrollX, scrollY float32) bool
+	OnMouseCursorMoved(x float32, y float32) bool
+	OnMouseButtonEvent(x float32, y float32, button ButtonIndex, event EventAction, modifiers ModifierKey) bool
+	OnMouseScrolled(scrollX float32, scrollY float32) bool
 }
 
 type MouseData struct {

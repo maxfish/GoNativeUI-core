@@ -100,7 +100,7 @@ func (w *Widget) SizeToContent() {
 func (w *Widget) OnMouseCursorMoved(x, y float32) bool {
 	return false
 }
-func (w *Widget) OnMouseButtonEvent(button ButtonIndex, event EventAction, modifiers ModifierKey) bool {
+func (w *Widget) OnMouseButtonEvent(x float32, y float32, button ButtonIndex, event EventAction, modifiers ModifierKey) bool {
 	return false
 }
 func (w *Widget) OnMouseScrolled(scrollX, scrollY float32) bool {

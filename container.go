@@ -90,3 +90,32 @@ func (c *Container) FindChildAt(x, y int) IWidget {
 	}
 	return nil
 }
+
+// Mouse handling
+func (c *Container) OnMouseCursorMoved(x float32, y float32) bool {
+	return false
+}
+
+func (c *Container) OnMouseButtonEvent(x float32, y float32, button ButtonIndex, event EventAction, modifiers ModifierKey) bool {
+	var child IWidget = nil
+	for j := 0; j < len(c.children); j++ {
+		oneChild := c.children[j]
+		if !(oneChild.Visible() && oneChild.Enabled()) {
+			continue
+		}
+		// FIXME: This won't work on nested containers. It needs to translate to the parent's origin
+		if oneChild.Bounds().ContainsPoint(int(x), int(y)) {
+			child = oneChild
+			break
+		}
+	}
+	if child == nil {
+		return false
+	}
+	consumed := child.OnMouseButtonEvent(x, y, button, event, modifiers)
+	return consumed
+}
+
+func (c *Container) OnMouseScrolled(scrollX float32, scrollY float32) bool {
+	return false
+}

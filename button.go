@@ -30,3 +30,12 @@ func (b *Button) SetTheme(theme *Theme) {
 	b.fontSize = theme.ButtonFontSize
 	b.padding = theme.ButtonPadding
 }
+
+func (b *Button) OnMouseButtonEvent(x float32, y float32, button ButtonIndex, event EventAction, modifiers ModifierKey) bool {
+	if event == EventActionPress {
+		b.pressed = true
+	} else if event == EventActionRelease {
+		b.pressed = false
+	}
+	return true
+}
