@@ -38,20 +38,16 @@ func (g *Gui) OnMouseCursorMoved(x, y float32) bool {
 	g.mouseData.previousPosX, g.mouseData.previousPosY = g.mouseData.currentPosX, g.mouseData.currentPosY
 	g.mouseData.currentPosX, g.mouseData.currentPosY = x, y
 	//log.Printf("[Gui] Mouse moved %.2f,%.2f\n", x, y)
-
-	// TODO traverse the widgets tree and pass the event
-	return false
+	return g.screen.OnMouseCursorMoved(x,y)
 }
 
+// NOTE: We don't expect to receive the cursor coordinates here, that's why they are stored when the cursor moves
 func (g *Gui) OnMouseButtonEvent(x float32, y float32, buttonIndex ButtonIndex, event EventAction, modifiers ModifierKey) bool {
-	// NOTE: We don't expect to receive the cursor coordinates here, that's why they are stored when the cursor moves
 	//log.Printf("[Gui] Mouse button #%d <%d> modifiers:%d\n", buttonIndex, event, modifiers)
 	return g.screen.OnMouseButtonEvent(g.mouseData.currentPosX, g.mouseData.currentPosY, buttonIndex, event, modifiers)
 }
 
 func (g *Gui) OnMouseScrolled(scrollX, scrollY float32) bool {
 	//log.Printf("[Gui] Mouse wheel scrolled %.2f,%.2f\n", scrollX, scrollY)
-
-	// TODO traverse the widgets tree and pass the event
-	return false
+	return g.screen.OnMouseScrolled(scrollX, scrollY)
 }
