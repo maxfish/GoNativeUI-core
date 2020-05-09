@@ -55,12 +55,6 @@ type Widget struct {
 	contentAlignmentV AlignmentV
 }
 
-func InitWidget(widget Widget) {
-	widget.visible = true
-	widget.enabled = true
-	// contentAlignments get the default: top,left
-}
-
 func (w *Widget) Id() string         { return w.id }
 func (w *Widget) Parent() IContainer { return w.parent }
 func (w *Widget) SetParent(container IContainer) {

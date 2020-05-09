@@ -17,7 +17,8 @@ type Label struct {
 
 func NewLabel(text string) *Label {
 	l := &Label{}
-	InitWidget(l.Widget)
+	l.visible = true
+	l.enabled = true
 	l.text = text
 	l.fontSize = 25
 	l.bounds = utils.Rect{W: 150, H: l.fontSize}
