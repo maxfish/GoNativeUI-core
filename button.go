@@ -2,13 +2,22 @@ package gui
 
 import "github.com/maxfish/GoNativeUI-Core/utils"
 
+type ButtonType int
+
+const (
+	ButtonTypeNormal ButtonType = iota
+	ButtonTypeToggle
+)
+
 type Button struct {
 	Label
-	pressed bool
+	buttonType ButtonType
+	pressed    bool
 }
 
 func NewButton(text string) *Button {
 	b := &Button{}
+	b.buttonType = ButtonTypeNormal
 	b.visible = true
 	b.enabled = true
 	b.fontSize = 25
@@ -17,6 +26,12 @@ func NewButton(text string) *Button {
 	b.contentAlignmentH = AlignmentHCenter
 	b.contentAlignmentV = AlignmentVCenter
 	b.text = text
+	return b
+}
+
+func NewToggleButton(text string) *Button {
+	b := NewButton(text)
+	b.buttonType = ButtonTypeToggle
 	return b
 }
 
@@ -33,9 +48,15 @@ func (b *Button) SetTheme(theme *Theme) {
 
 func (b *Button) OnMouseButtonEvent(x float32, y float32, button ButtonIndex, event EventAction, modifiers ModifierKey) bool {
 	if event == EventActionPress {
-		b.pressed = true
+		if b.buttonType == ButtonTypeNormal {
+			b.pressed = true
+		} else {
+			b.pressed = !b.pressed
+		}
 	} else if event == EventActionRelease {
-		b.pressed = false
+		if b.buttonType == ButtonTypeNormal {
+			b.pressed = false
+		}
 	}
 	return true
 }
