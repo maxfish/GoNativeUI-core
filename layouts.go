@@ -55,6 +55,7 @@ func HBoxLayout(container IContainer, alignH AlignmentH, spacing int) {
 	}
 }
 
+// TODO: this needs to be optimized
 func HGridLayout(container IContainer, numColumns int, alignH []AlignmentH, percentages []float32) {
 	numChildren := container.ChildrenCount()
 	containerY := container.InnerBounds().Y
