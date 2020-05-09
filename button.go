@@ -47,7 +47,7 @@ func (b *Button) SetTheme(theme *Theme) {
 	b.padding = theme.ButtonPadding
 }
 
-func (b *Button)SetButtonGroup(buttonGroup []*Button) {
+func (b *Button) SetButtonGroup(buttonGroup []*Button) {
 	b.buttonGroup = buttonGroup
 }
 

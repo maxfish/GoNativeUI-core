@@ -46,7 +46,6 @@ func (r Rect) ShrinkByInt(i int) Rect {
 	}
 }
 
-
 func (r Rect) CenterIn(o Rect) Rect {
 	hW := (o.W - r.W) / 2
 	hH := (o.H - r.H) / 2

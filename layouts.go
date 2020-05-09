@@ -83,7 +83,7 @@ func HGridLayout(container IContainer, numColumns int, alignH []AlignmentH, perc
 	}
 
 	top := containerY
-	numRows := numChildren / numColumns + 1
+	numRows := numChildren/numColumns + 1
 	for row := 0; row < numRows; row++ {
 		rowHeight := 0
 		left := 0
