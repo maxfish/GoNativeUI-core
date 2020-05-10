@@ -60,8 +60,8 @@ func (r Rect) CenterIn(o Rect) Rect {
 func (r Rect) UnionWith(other Rect) Rect {
 	x1 := MinI(r.X, other.X)
 	y1 := MinI(r.Y, other.Y)
-	x2 := MinI(r.Right(), other.Right())
-	y2 := MinI(r.Bottom(), other.Bottom())
+	x2 := MaxI(r.Right(), other.Right())
+	y2 := MaxI(r.Bottom(), other.Bottom())
 	return Rect{X: x1, Y: y1, W: x2 - x1, H: y2 - y1}
 }
 
