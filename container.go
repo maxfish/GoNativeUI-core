@@ -3,12 +3,8 @@ package gui
 type IContainer interface {
 	IWidget
 
-	//KeyEvent(eventType int32, key int32) bool
 	//Update(deltaMs uint32) bool
 
-	//RequestLayout()
-	//layout()
-	//layoutComponents()
 	//adaptWidthToComponents()
 	//adaptHeightToComponents()
 
@@ -18,14 +14,9 @@ type IContainer interface {
 	AddChild(c IWidget)
 	AddChildren(children ...IWidget)
 	AddChildAtIndex(c IWidget, i int32)
-	//DescendantById(Id string)
-	//ComponentByPath(path string)
-	//ComponentByRelativeId(Id string)
 	//RemoveChildByIs(i string)
 	//GetMaximumComponentSize(c IWidget)
 	FindChildAt(x int, y int) IWidget
-
-	//SetAlignment(alignmentH ui.AlignmentH, alignmentV ui.AlignmentV)
 }
 
 type Container struct {
@@ -76,9 +67,6 @@ func (c *Container) ChildById(id string) IWidget {
 	return nil
 }
 
-//func (c *Widget) DescendantById(Id string)
-//func (c *Widget) ComponentByPath(path string)
-//func (c *Widget) ComponentByRelativeId(Id string)
 func (c *Container) RemoveChildById(id string)             {}
 func (c *Container) GetMaximumComponentSize(child IWidget) {}
 func (c *Container) FindChildAt(x, y int) IWidget {
