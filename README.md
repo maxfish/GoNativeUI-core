@@ -1,3 +1,5 @@
+![Go](https://github.com/maxfish/GoNativeUI-core/workflows/Go/badge.svg)
+
 *Heavily WIP / Not yet ready for use*
 
 # GoNativeUI
