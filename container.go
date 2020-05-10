@@ -32,12 +32,19 @@ type Container struct {
 	childrenMap map[string]IWidget
 }
 
-func NewContainer() IContainer {
+func NewContainer(theme *Theme, children ...IWidget) IContainer {
 	c := &Container{}
 	c.visible = true
 	c.enabled = true
 	c.children = make([]IWidget, 0, 16)
 	c.childrenMap = make(map[string]IWidget)
+	c.theme = theme
+
+	if children != nil {
+		for _, child := range children {
+			c.AddChild(child)
+		}
+	}
 	return c
 }
 
