@@ -7,7 +7,8 @@ import (
 type AlignmentH uint32
 
 const (
-	AlignmentHLeft AlignmentH = iota
+	AlignmentHNone AlignmentH = iota
+	AlignmentHLeft
 	AlignmentHCenter
 	AlignmentHRight
 )
@@ -15,14 +16,15 @@ const (
 type AlignmentV uint32
 
 const (
-	AlignmentVTop AlignmentV = iota
+	AlignmentVNone AlignmentV = iota
+	AlignmentVTop
 	AlignmentVCenter
 	AlignmentVBottom
 )
 
 type Alignment struct {
-	horizontal AlignmentH
-	vertical   AlignmentV
+	Horizontal AlignmentH
+	Vertical   AlignmentV
 }
 
 type DistributionH uint32
