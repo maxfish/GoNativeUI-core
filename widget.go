@@ -8,6 +8,7 @@ type IWidget interface {
 	IMouseListener
 
 	Id() string
+	SetId(id string)
 	Parent() IContainer
 	SetParent(container IContainer)
 
@@ -55,6 +56,7 @@ type Widget struct {
 }
 
 func (w *Widget) Id() string         { return w.id }
+func (w *Widget) SetId(id string)    { w.id = id }
 func (w *Widget) Parent() IContainer { return w.parent }
 func (w *Widget) SetParent(container IContainer) {
 	w.parent = container
