@@ -1,12 +1,15 @@
 package gui
 
-import "github.com/maxfish/GoNativeUI-Core/utils"
+import (
+	"github.com/maxfish/GoNativeUI-Core/utils"
+)
 
 type IContainer interface {
 	IWidget
 
 	//Update(deltaMs uint32) bool
 
+	ContentRect() utils.Rect
 	//adaptWidthToComponents()
 	//adaptHeightToComponents()
 
@@ -38,12 +41,47 @@ func NewContainer() IContainer {
 	return c
 }
 
-func (c *Container) SizeToContent() {
+//
+//func (c *Container) ContentWidth() int {
+//	contentRect := utils.Rect{}
+//	for _, child := range c.children {
+//		contentRect = contentRect.UnionWith(child.Bounds())
+//	}
+//	return contentRect.W
+//}
+//
+//func (c *Container) ContentHeight() int {
+//	contentRect := utils.Rect{}
+//	for _, child := range c.children {
+//		contentRect = contentRect.UnionWith(child.Bounds())
+//	}
+//	return contentRect.H
+//}
+
+func (c *Container) ContentRect() utils.Rect {
 	contentRect := utils.Rect{}
 	for _, child := range c.children {
-		contentRect = contentRect.UnionWith(child.Bounds())
+		switch childCast := child.(type) {
+		case IContainer:
+			contentRect = contentRect.UnionWith(childCast.ContentRect())
+		case IWidget:
+			contentRect = contentRect.UnionWith(child.Bounds())
+		}
 	}
-	c.bounds = contentRect
+	return contentRect
+}
+
+func (c *Container) SizeToContent() {
+	//contentRect := utils.Rect{}
+	//for _, child := range c.children {
+	//	switch childCast := child.(type) {
+	//	case *Container:
+	//		contentRect = contentRect.UnionWith(childCast.contentRect())
+	//	case *Widget:
+	//		contentRect = contentRect.UnionWith(child.Bounds())
+	//	}
+	//}
+	c.bounds = c.ContentRect()
 }
 
 // Children
@@ -100,7 +138,7 @@ func (c *Container) OnMouseButtonEvent(x float32, y float32, button ButtonIndex,
 		if !(oneChild.Visible() && oneChild.Enabled()) {
 			continue
 		}
-		if oneChild.Bounds().ContainsPoint(int(x)-c.bounds.X, int(y)-c.bounds.Y) {
+		if oneChild.Bounds().ContainsPoint(int(x), int(y)) {
 			child = oneChild
 			break
 		}
@@ -108,7 +146,13 @@ func (c *Container) OnMouseButtonEvent(x float32, y float32, button ButtonIndex,
 	if child == nil {
 		return false
 	}
-	consumed := child.OnMouseButtonEvent(x, y, button, event, modifiers)
+	consumed := false
+	_, ok := child.(*Container)
+	if ok {
+		consumed = child.OnMouseButtonEvent(x-float32(child.Bounds().X), y-float32(child.Bounds().Y), button, event, modifiers)
+	} else {
+		consumed = child.OnMouseButtonEvent(x, y, button, event, modifiers)
+	}
 	return consumed
 }
 
