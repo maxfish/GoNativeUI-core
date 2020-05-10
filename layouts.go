@@ -106,3 +106,23 @@ func HGridLayout(container IContainer, numColumns int, alignH []AlignmentH, perc
 func HorizontalLayout(container IContainer, ) {
 
 }
+
+func AlignRectIn(a utils.Rect, b utils.Rect, alignment Alignment) utils.Rect {
+	switch alignment.Horizontal {
+	case AlignmentHLeft:
+		a.X = b.X
+	case AlignmentHCenter:
+		a.X = b.X + (b.W-a.W)/2
+	case AlignmentHRight:
+		a.X = b.Right() - a.W
+	}
+	switch alignment.Vertical {
+	case AlignmentVTop:
+		a.Y = b.Y
+	case AlignmentVCenter:
+		a.Y = b.Y + (b.H-a.H)/2
+	case AlignmentVBottom:
+		a.Y = b.Bottom() - a.H
+	}
+	return a
+}
