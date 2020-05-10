@@ -21,8 +21,7 @@ type Gui struct {
 
 func NewGui(theme *Theme, w int, h int) *Gui {
 	g := &Gui{}
-	g.screen = NewContainer()
-	g.screen.SetTheme(theme)
+	g.screen = NewContainer(theme)
 	g.screen.SetBounds(utils.Rect{W: w, H: h})
 	return g
 }

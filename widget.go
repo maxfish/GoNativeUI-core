@@ -38,8 +38,8 @@ type IWidget interface {
 
 	// Layout
 	WrapContent()
-	ContentAlignmentH() AlignmentH
-	ContentAlignmentV() AlignmentV
+	ContentAlignmentH() utils.AlignmentH
+	ContentAlignmentV() utils.AlignmentV
 
 	SetLeft(left int)
 	SetRight(right int)
@@ -59,8 +59,8 @@ type Widget struct {
 	percentHeight int
 	padding       utils.Insets
 
-	contentAlignmentH AlignmentH
-	contentAlignmentV AlignmentV
+	contentAlignmentH utils.AlignmentH
+	contentAlignmentV utils.AlignmentV
 }
 
 func (w *Widget) Init() {

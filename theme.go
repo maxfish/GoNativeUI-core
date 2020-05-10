@@ -22,7 +22,7 @@ type Theme struct {
 	ButtonTextColor utils.ColorF
 	ButtonFillColor utils.ColorF
 	ButtonPadding   utils.Insets
-	ButtonAlignment Alignment
+	ButtonAlignment utils.Alignment
 }
 
 func NewDefaultTheme() *Theme {
@@ -43,6 +43,6 @@ func NewDefaultTheme() *Theme {
 	t.ButtonTextColor = utils.ColorGrayi(232, 255)
 	t.ButtonFontSize = 15
 	t.ButtonPadding = utils.Insets{Top: 5, Right: 10, Bottom: 5, Left: 10}
-	t.ButtonAlignment = Alignment{AlignmentHCenter, AlignmentVCenter}
+	t.ButtonAlignment = utils.Alignment{utils.AlignmentHCenter, utils.AlignmentVCenter}
 	return t
 }

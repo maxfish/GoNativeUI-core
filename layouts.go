@@ -5,28 +5,6 @@ import (
 	"log"
 )
 
-type AlignmentH uint32
-
-const (
-	AlignmentHNone AlignmentH = iota
-	AlignmentHLeft
-	AlignmentHCenter
-	AlignmentHRight
-)
-
-type AlignmentV uint32
-
-const (
-	AlignmentVNone AlignmentV = iota
-	AlignmentVTop
-	AlignmentVCenter
-	AlignmentVBottom
-)
-
-type Alignment struct {
-	Horizontal AlignmentH
-	Vertical   AlignmentV
-}
 
 type DistributionH uint32
 
@@ -37,18 +15,18 @@ const (
 	DistributionHRight
 )
 
-func HBoxLayout(container IContainer, alignH AlignmentH, spacing int) {
+func HBoxLayout(container IContainer, alignH utils.AlignmentH, spacing int) {
 	numChildren := container.ChildrenCount()
 	left := container.InnerBounds().X
 
 	switch alignH {
-	case AlignmentHLeft:
+	case utils.AlignmentHLeft:
 		for i := 0; i < numChildren; i++ {
 			c := container.Children()[i]
 			c.SetLeft(left)
 			left += c.Bounds().W + spacing
 		}
-	case AlignmentHRight:
+	case utils.AlignmentHRight:
 		right := container.InnerBounds().W
 		for i := numChildren - 1; i >= 0; i-- {
 			c := container.Children()[i]
@@ -59,7 +37,7 @@ func HBoxLayout(container IContainer, alignH AlignmentH, spacing int) {
 }
 
 // TODO: this needs to be optimized
-func HGridLayout(container IContainer, numColumns int, alignH []AlignmentH, percentages []float32) {
+func HGridLayout(container IContainer, numColumns int, alignH []utils.AlignmentH, percentages []float32) {
 	if numColumns != len(alignH) || numColumns != len(percentages) {
 		log.Panicf("HGridLayout parameters don't have all the same length")
 	}
@@ -103,7 +81,7 @@ func HGridLayout(container IContainer, numColumns int, alignH []AlignmentH, perc
 			}
 			cellRect := utils.Rect{left, top, columnWidths[col], 1}
 			c := container.Children()[row*numColumns+col]
-			c.SetBounds(AlignRectIn(c.Bounds(), cellRect, Alignment{alignH[col], AlignmentVTop}))
+			c.SetBounds(c.Bounds().AlignIn(cellRect, utils.Alignment{alignH[col], utils.AlignmentVTop}))
 			rowHeight = utils.MaxI(rowHeight, c.Bounds().H)
 			left += columnWidths[col]
 		}
@@ -113,24 +91,4 @@ func HGridLayout(container IContainer, numColumns int, alignH []AlignmentH, perc
 
 func HorizontalLayout(container IContainer, ) {
 
-}
-
-func AlignRectIn(a utils.Rect, b utils.Rect, alignment Alignment) utils.Rect {
-	switch alignment.Horizontal {
-	case AlignmentHLeft:
-		a.X = b.X
-	case AlignmentHCenter:
-		a.X = b.X + (b.W-a.W)/2
-	case AlignmentHRight:
-		a.X = b.Right() - a.W
-	}
-	switch alignment.Vertical {
-	case AlignmentVTop:
-		a.Y = b.Y
-	case AlignmentVCenter:
-		a.Y = b.Y + (b.H-a.H)/2
-	case AlignmentVBottom:
-		a.Y = b.Bottom() - a.H
-	}
-	return a
 }

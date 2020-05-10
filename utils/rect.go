@@ -57,6 +57,26 @@ func (r Rect) CenterIn(o Rect) Rect {
 	}
 }
 
+func (r Rect) AlignIn(b Rect, alignment Alignment) Rect {
+	switch alignment.Horizontal {
+	case AlignmentHLeft:
+		r.X = b.X
+	case AlignmentHCenter:
+		r.X = b.X + (b.W-r.W)/2
+	case AlignmentHRight:
+		r.X = b.Right() - r.W
+	}
+	switch alignment.Vertical {
+	case AlignmentVTop:
+		r.Y = b.Y
+	case AlignmentVCenter:
+		r.Y = b.Y + (b.H-r.H)/2
+	case AlignmentVBottom:
+		r.Y = b.Bottom() - r.H
+	}
+	return r
+}
+
 func (r Rect) UnionWith(other Rect) Rect {
 	x1 := MinI(r.X, other.X)
 	y1 := MinI(r.Y, other.Y)
