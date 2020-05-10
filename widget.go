@@ -27,11 +27,14 @@ type IWidget interface {
 	// Dimensions
 	Bounds() utils.Rect
 	SetBounds(b utils.Rect)
+	PercentWidth() int
+	SetPercentWidth(int)
+	PercentHeight() int
+	SetPercentHeight(int)
 	SetPadding(b utils.Insets)
 	InnerBounds() utils.Rect // Bounds - Padding
 	ContentWidth() int
 	ContentHeight() int
-
 
 	// Layout
 	WrapContent()
@@ -49,10 +52,12 @@ type Widget struct {
 	parent IContainer
 	theme  *Theme
 
-	enabled bool
-	visible bool
-	bounds  utils.Rect
-	padding utils.Insets
+	enabled       bool
+	visible       bool
+	bounds        utils.Rect
+	percentWidth  int
+	percentHeight int
+	padding       utils.Insets
 
 	contentAlignmentH AlignmentH
 	contentAlignmentV AlignmentV
@@ -82,6 +87,8 @@ func (w *Widget) SetTheme(t *Theme) {
 func (w *Widget) Enabled() bool                 { return w.enabled }
 func (w *Widget) Visible() bool                 { return w.visible }
 func (w *Widget) Bounds() utils.Rect            { return w.bounds }
+func (w *Widget) PercentWidth() int             { return w.percentWidth }
+func (w *Widget) PercentHeight() int            { return w.percentHeight }
 func (w *Widget) Padding() utils.Insets         { return w.padding }
 func (w *Widget) InnerBounds() utils.Rect       { return w.bounds.ShrinkByInsets(w.padding) }
 func (w *Widget) ContentWidth() int             { return 0 }
@@ -94,6 +101,8 @@ func (w *Widget) SetVisible(v bool)         { w.visible = v }
 func (w *Widget) SetEnabled(e bool)         { w.enabled = e }
 func (w *Widget) SetBounds(b utils.Rect)    { w.bounds = b }
 func (w *Widget) SetPadding(b utils.Insets) { w.padding = b }
+func (w *Widget) SetPercentWidth(width int)   { w.percentWidth = width }
+func (w *Widget) SetPercentHeight(height int) { w.percentHeight = height }
 
 func (w *Widget) SetLeft(left int)     { w.bounds.X = left }
 func (w *Widget) SetRight(right int)   { w.bounds.X = right - w.bounds.W }
