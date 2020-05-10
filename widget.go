@@ -32,8 +32,9 @@ type IWidget interface {
 	ContentWidth() int
 	ContentHeight() int
 
+
 	// Layout
-	SizeToContent()
+	WrapContent()
 	ContentAlignmentH() AlignmentH
 	ContentAlignmentV() AlignmentV
 
@@ -99,7 +100,7 @@ func (w *Widget) SetRight(right int)   { w.bounds.X = right - w.bounds.W }
 func (w *Widget) SetTop(top int)       { w.bounds.Y = top }
 func (w *Widget) SetBottom(bottom int) { w.bounds.X = bottom - w.bounds.H }
 
-func (w *Widget) SizeToContent() {
+func (w *Widget) WrapContent() {
 	w.bounds.W = w.ContentWidth() + w.padding.Left + w.padding.Right
 	w.bounds.H = w.ContentHeight() + w.padding.Top + w.padding.Bottom
 }

@@ -71,16 +71,7 @@ func (c *Container) ContentRect() utils.Rect {
 	return contentRect
 }
 
-func (c *Container) SizeToContent() {
-	//contentRect := utils.Rect{}
-	//for _, child := range c.children {
-	//	switch childCast := child.(type) {
-	//	case *Container:
-	//		contentRect = contentRect.UnionWith(childCast.contentRect())
-	//	case *Widget:
-	//		contentRect = contentRect.UnionWith(child.Bounds())
-	//	}
-	//}
+func (c *Container) WrapContent() {
 	c.bounds = c.ContentRect()
 }
 
