@@ -1,5 +1,7 @@
 package gui
 
+import "github.com/maxfish/GoNativeUI-Core/utils"
+
 type IContainer interface {
 	IWidget
 
@@ -29,13 +31,19 @@ type Container struct {
 
 func NewContainer() IContainer {
 	c := &Container{}
+	c.visible = true
+	c.enabled = true
 	c.children = make([]IWidget, 0, 16)
 	c.childrenMap = make(map[string]IWidget)
 	return c
 }
 
 func (c *Container) SizeToContent() {
-	panic("implement me")
+	contentRect := utils.Rect{}
+	for _, child := range c.children {
+		contentRect = contentRect.UnionWith(child.Bounds())
+	}
+	c.bounds = contentRect
 }
 
 // Children
@@ -43,6 +51,7 @@ func (c *Container) Children() []IWidget { return c.children }
 func (c *Container) ChildrenCount() int  { return len(c.children) }
 func (c *Container) AddChild(child IWidget) {
 	c.children = append(c.children, child)
+	child.SetParent(c)
 	child.SetTheme(c.theme)
 }
 func (c *Container) AddChildren(children ...IWidget) {
@@ -91,8 +100,7 @@ func (c *Container) OnMouseButtonEvent(x float32, y float32, button ButtonIndex,
 		if !(oneChild.Visible() && oneChild.Enabled()) {
 			continue
 		}
-		// FIXME: This won't work on nested containers. It needs to translate to the parent's origin
-		if oneChild.Bounds().ContainsPoint(int(x), int(y)) {
+		if oneChild.Bounds().ContainsPoint(int(x)-c.bounds.X, int(y)-c.bounds.Y) {
 			child = oneChild
 			break
 		}
