@@ -47,11 +47,10 @@ func WidgetToDebugString(str interface{}) string {
 }
 
 func ContainerToTreeDebugString(c IContainer) string {
-	var depth string
-	return toString(c, depth)
+	return containerToTreeDebugString(c, "")
 }
 
-func toString(node IWidget, depth string) string {
+func containerToTreeDebugString(node IWidget, depth string) string {
 	s := WidgetToDebugString(node) + "\n"
 	container, ok := node.(*Container)
 	if ok {
@@ -63,7 +62,7 @@ func toString(node IWidget, depth string) string {
 				c = "|"
 			}
 			depth += " " + c + "  "
-			s += toString(child, depth)
+			s += containerToTreeDebugString(child, depth)
 			depth = depth[:len(depth)-4]
 		}
 	}
