@@ -20,9 +20,8 @@ type Button struct {
 
 func NewButton(text string) *Button {
 	b := &Button{}
+	b.Init()
 	b.buttonType = ButtonTypeNormal
-	b.visible = true
-	b.enabled = true
 	b.fontSize = 25
 	b.padding = utils.Insets{Top: 2, Right: 2, Bottom: 2, Left: 2}
 	b.bounds = utils.Rect{W: 200, H: b.fontSize}

@@ -7,6 +7,8 @@ import (
 type IWidget interface {
 	IMouseListener
 
+	Init()
+
 	Id() string
 	SetId(id string)
 	Parent() IContainer
@@ -53,6 +55,11 @@ type Widget struct {
 
 	contentAlignmentH AlignmentH
 	contentAlignmentV AlignmentV
+}
+
+func (w *Widget) Init() {
+	w.enabled = true
+	w.visible = true
 }
 
 func (w *Widget) Id() string         { return w.id }
