@@ -1,7 +1,6 @@
 package gui
 
 import (
-	"fmt"
 	"github.com/maxfish/GoNativeUI-Core/utils"
 )
 
@@ -105,16 +104,4 @@ func (w *Widget) OnMouseButtonEvent(x float32, y float32, button ButtonIndex, ev
 }
 func (w *Widget) OnMouseScrolled(scrollX, scrollY float32) bool {
 	return false
-}
-
-func (w *Widget) ToString() string {
-	flags := ""
-	if w.enabled {
-		flags += "E"
-	}
-	if w.visible {
-		flags += "V"
-	}
-	s := "Id='%s' bounds=%s padding=%s [%s]"
-	return fmt.Sprintf(s, w.id, w.bounds.ToString(), w.padding.ToString(), flags)
 }

@@ -1,9 +1,7 @@
 package gui
 
 import (
-	"fmt"
 	"github.com/maxfish/GoNativeUI-Core/utils"
-	"reflect"
 )
 
 type Label struct {
@@ -44,10 +42,4 @@ func (l *Label) SetTheme(theme *Theme) {
 	l.fontSize = theme.LabelFontSize
 	l.padding = theme.LabelPadding
 	//l.in = theme.LabelFontSize
-}
-
-func (l *Label) ToString() string {
-	s := "[%s] Id='%s' bounds=%s padding=%s textSize=%d,%d"
-	w, h := l.theme.LabelFont.TextSize(l.fontSize, l.text)
-	return fmt.Sprintf(s, reflect.TypeOf(l), l.id, l.bounds.ToString(), l.padding.ToString(), w, h)
 }

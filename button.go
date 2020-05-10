@@ -1,6 +1,8 @@
 package gui
 
-import "github.com/maxfish/GoNativeUI-Core/utils"
+import (
+	"github.com/maxfish/GoNativeUI-Core/utils"
+)
 
 type ButtonType int
 
@@ -75,3 +77,11 @@ func (b *Button) OnMouseButtonEvent(x float32, y float32, button ButtonIndex, ev
 	}
 	return true
 }
+//
+//func (b *Button) ToString() string {
+//	id := ""
+//	if b.id != "" {
+//		id = " '" + b.id + "'"
+//	}
+//	return fmt.Sprintf("B%s %s '%s'", id, b.bounds.ToString(), b.text)
+//}
