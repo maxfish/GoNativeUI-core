@@ -72,27 +72,14 @@ func ContainerToTreeDebugString(c IContainer) string {
 
 func containerToTreeDebugString(node IWidget, depth string) string {
 	s := WidgetToDebugString(node) + "\n"
-	container, ok := node.(*Container)
+
+	container, ok := node.(IContainer)
 	if ok {
 		for index, _ := range container.Children() {
-			child := container.children[index]
+			child := container.Children()[index]
 			s += fmt.Sprintf("%s `--", depth)
 			c := " "
 			if index < container.ChildrenCount()-1 {
-				c = "|"
-			}
-			depth += " " + c + "  "
-			s += containerToTreeDebugString(child, depth)
-			depth = depth[:len(depth)-4]
-		}
-	}
-	bc, ok := node.(*BoxContainer)
-	if ok {
-		for index, _ := range bc.Children() {
-			child := bc.children[index]
-			s += fmt.Sprintf("%s `--", depth)
-			c := " "
-			if index < bc.ChildrenCount()-1 {
 				c = "|"
 			}
 			depth += " " + c + "  "
