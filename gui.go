@@ -22,21 +22,19 @@ type Gui struct {
 func NewGui(theme *Theme, w int, h int) *Gui {
 	g := &Gui{}
 	g.screen = NewContainer(theme)
-	g.screen.SetBounds(utils.Rect{W: w, H: h})
+	g.screen.SetDimensionH(utils.Pixels(w))
+	g.screen.SetDimensionV(utils.Pixels(h))
 	return g
 }
 
 func (g *Gui) Screen() IContainer { return g.screen }
 func (g *Gui) Theme() *Theme      { return g.screen.Theme() }
 
-//func (g *Gui) Scale() float32             { return g.scale }
-//func (g *Gui) SetScale(scale float32)        { g.scale = scale }
-
 // Mouse handling
 func (g *Gui) OnMouseCursorMoved(x, y float32) bool {
+	//log.Printf("[Gui] Mouse moved %.2f,%.2f\n", x, y)
 	g.mouseData.previousPosX, g.mouseData.previousPosY = g.mouseData.currentPosX, g.mouseData.currentPosY
 	g.mouseData.currentPosX, g.mouseData.currentPosY = x, y
-	//log.Printf("[Gui] Mouse moved %.2f,%.2f\n", x, y)
 	return g.screen.OnMouseCursorMoved(x, y)
 }
 

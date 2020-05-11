@@ -9,7 +9,7 @@ type IContainer interface {
 
 	//Update(deltaMs uint32) bool
 
-	ContentRect() utils.Rect
+	//ContentRect() utils.Rect
 	//adaptWidthToComponents()
 	//adaptHeightToComponents()
 
@@ -19,8 +19,6 @@ type IContainer interface {
 	AddChild(c IWidget)
 	AddChildren(children ...IWidget)
 	AddChildAtIndex(c IWidget, i int32)
-	//RemoveChildByIs(i string)
-	//GetMaximumComponentSize(c IWidget)
 	FindChildAt(x int, y int) IWidget
 }
 
@@ -34,10 +32,7 @@ type Container struct {
 
 func NewContainer(theme *Theme, children ...IWidget) IContainer {
 	c := &Container{}
-	c.visible = true
-	c.enabled = true
-	c.children = make([]IWidget, 0, 16)
-	c.childrenMap = make(map[string]IWidget)
+	c.Init()
 	c.theme = theme
 
 	if children != nil {
@@ -48,38 +43,10 @@ func NewContainer(theme *Theme, children ...IWidget) IContainer {
 	return c
 }
 
-//
-//func (c *Container) ContentWidth() int {
-//	contentRect := utils.Rect{}
-//	for _, child := range c.children {
-//		contentRect = contentRect.UnionWith(child.Bounds())
-//	}
-//	return contentRect.W
-//}
-//
-//func (c *Container) ContentHeight() int {
-//	contentRect := utils.Rect{}
-//	for _, child := range c.children {
-//		contentRect = contentRect.UnionWith(child.Bounds())
-//	}
-//	return contentRect.H
-//}
-
-func (c *Container) ContentRect() utils.Rect {
-	contentRect := utils.Rect{}
-	for _, child := range c.children {
-		switch childCast := child.(type) {
-		case IContainer:
-			contentRect = contentRect.UnionWith(childCast.ContentRect())
-		case IWidget:
-			contentRect = contentRect.UnionWith(child.Bounds())
-		}
-	}
-	return contentRect
-}
-
-func (c *Container) WrapContent() {
-	c.bounds = c.ContentRect()
+func (c *Container) Init() {
+	widgetInit(c)
+	c.children = make([]IWidget, 0, 16)
+	c.childrenMap = make(map[string]IWidget)
 }
 
 // Children
@@ -89,6 +56,8 @@ func (c *Container) AddChild(child IWidget) {
 	c.children = append(c.children, child)
 	child.SetParent(c)
 	child.SetTheme(c.theme)
+	//child.Layout()
+	c.contentSizeValid = false
 }
 func (c *Container) AddChildren(children ...IWidget) {
 	for _, child := range children {
@@ -104,9 +73,9 @@ func (c *Container) AddChildAtIndex(child IWidget, i int32) {
 }
 
 func (c *Container) ChildById(id string) IWidget {
-	for i := 0; i < len(c.children); i++ {
-		if c.children[i].Id() == id {
-			return c.children[i]
+	for _, child := range c.children {
+		if child.Id() == id {
+			return child
 		}
 	}
 	return nil
@@ -115,13 +84,30 @@ func (c *Container) ChildById(id string) IWidget {
 func (c *Container) RemoveChildById(id string)             {}
 func (c *Container) GetMaximumComponentSize(child IWidget) {}
 func (c *Container) FindChildAt(x, y int) IWidget {
-	for j := 0; j < len(c.children); j++ {
-		child := c.children[j]
+	for _, child := range c.children {
 		if child.Bounds().ContainsPoint(x, y) {
 			return child
 		}
 	}
 	return nil
+}
+
+// Layout
+func (c *Container) Layout() {
+	c.computeContentSize()
+	widgetLayout(c)
+	c.layoutChildren()
+}
+
+func (c *Container) layoutChildren() {
+	for _, child := range c.children {
+		child.Layout()
+		// Force container alignment
+		child.SetBounds(child.Bounds().AlignIn(
+			c.InnerBounds(),
+			utils.Alignment{Horizontal: c.contentAlignmentH, Vertical: c.contentAlignmentV},
+		))
+	}
 }
 
 // Mouse handling
@@ -131,8 +117,7 @@ func (c *Container) OnMouseCursorMoved(x float32, y float32) bool {
 
 func (c *Container) OnMouseButtonEvent(x float32, y float32, button ButtonIndex, event EventAction, modifiers ModifierKey) bool {
 	var child IWidget = nil
-	for j := 0; j < len(c.children); j++ {
-		oneChild := c.children[j]
+	for _, oneChild := range c.children {
 		if !(oneChild.Visible() && oneChild.Enabled()) {
 			continue
 		}
@@ -156,4 +141,25 @@ func (c *Container) OnMouseButtonEvent(x float32, y float32, button ButtonIndex,
 
 func (c *Container) OnMouseScrolled(scrollX float32, scrollY float32) bool {
 	return false
+}
+
+func (c *Container) computeContentSize() {
+	contentRect := utils.Rect{}
+	for _, child := range c.children {
+		switch childCast := child.(type) {
+		case IContainer:
+			contentRect = contentRect.UnionWith(childCast.Bounds())
+		case IWidget:
+			contentRect = contentRect.UnionWith(child.Bounds())
+		}
+	}
+	c.contentWidth = contentRect.W
+	c.contentHeight = contentRect.H
+}
+
+func containerLayout(c IContainer) {
+	bounds := c.Bounds()
+	bounds.W = utils.MaxI(c.PreferredWidth(), c.ContentWidth())
+	bounds.H = c.PreferredHeight()
+	c.SetBounds(bounds)
 }

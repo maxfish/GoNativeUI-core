@@ -20,11 +20,10 @@ type Button struct {
 
 func NewButton(text string) *Button {
 	b := &Button{}
-	b.Init()
+	widgetInit(b)
 	b.buttonType = ButtonTypeNormal
 	b.fontSize = 25
 	b.padding = utils.Insets{Top: 2, Right: 2, Bottom: 2, Left: 2}
-	b.bounds = utils.Rect{W: 200, H: b.fontSize}
 	b.contentAlignmentH = utils.AlignmentHCenter
 	b.contentAlignmentV = utils.AlignmentVCenter
 	b.text = text
