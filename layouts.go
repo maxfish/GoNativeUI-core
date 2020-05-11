@@ -5,7 +5,6 @@ import (
 	"log"
 )
 
-
 type DistributionH uint32
 
 const (

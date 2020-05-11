@@ -63,7 +63,7 @@ func WidgetToDebugString(str interface{}) string {
 		DimensionToString(widget.DimensionV()),
 	)
 
-	return fmt.Sprintf("(%s)%s %s %s %s", wType, wId,  boundsString, flags, extra)
+	return fmt.Sprintf("(%s)%s %s %s %s", wType, wId, boundsString, flags, extra)
 }
 
 func ContainerToTreeDebugString(c IContainer) string {
