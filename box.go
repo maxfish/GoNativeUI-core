@@ -1,6 +1,8 @@
 package gui
 
-import "github.com/maxfish/GoNativeUI-Core/utils"
+import (
+	"github.com/maxfish/GoNativeUI-Core/utils"
+)
 
 type BoxOrientation int
 
@@ -61,9 +63,9 @@ func (c *BoxContainer) layoutChildren() {
 }
 
 func (c *BoxContainer) computeContentSize() {
-	if c.contentSizeValid {
-		return
-	}
+	//if c.contentSizeValid {
+	//	return
+	//}
 
 	w := 0
 	h := 0
@@ -81,17 +83,13 @@ func (c *BoxContainer) computeContentSize() {
 	case BoxVerticalOrientation:
 		for _, child := range c.children {
 			if child.Visible() {
+				w = utils.MaxI(child.PreferredWidth(), w)
 				h += child.PreferredHeight()
 			}
 		}
 		if h > 0 {
-			h = h + (c.ChildrenCount()-1)*c.widgetSpacing
+			h -= c.widgetSpacing
 		}
-		maxWidth := 0
-		for _, child := range c.children {
-			maxWidth = utils.MaxI(child.PreferredWidth(), maxWidth)
-		}
-		w = maxWidth
 	}
 
 	c.contentWidth = w
