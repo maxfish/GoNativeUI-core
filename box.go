@@ -11,16 +11,16 @@ const (
 
 type BoxContainer struct {
 	Container
-	orientation   BoxOrientation
-	widgetSpacing int
-	contentLength int
-	toBeProcessed []int
+	orientation    BoxOrientation
+	widgetSpacing  int
+	contentLength  int
+	tempFlexValues []int
 }
 
 func NewBoxContainer(theme *Theme, orientation BoxOrientation, children ...IWidget) *BoxContainer {
 	b := &BoxContainer{}
 	b.Container.Init()
-	b.toBeProcessed = make([]int, 0)
+	b.tempFlexValues = make([]int, 0)
 	b.theme = theme
 	b.orientation = orientation
 
@@ -49,10 +49,11 @@ func (c *BoxContainer) layoutChildren(fixedSpace int, flexSpace int) {
 		return
 	}
 
-	c.toBeProcessed = c.toBeProcessed[:0]
+	// Cache for the flex values
+	c.tempFlexValues = c.tempFlexValues[:0]
 	for i := 0; i < c.ChildrenCount(); i++ {
-		c.toBeProcessed = append(c.toBeProcessed, i)
-		c.toBeProcessed[i] = c.children[i].Flex()
+		c.tempFlexValues = append(c.tempFlexValues, i)
+		c.tempFlexValues[i] = c.children[i].Flex()
 	}
 
 	switch c.orientation {
@@ -69,14 +70,14 @@ func (c *BoxContainer) layoutChildren(fixedSpace int, flexSpace int) {
 					continue
 				}
 				child.SetLeft(pos)
-				if c.toBeProcessed[i] > 0 {
-					width := (c.toBeProcessed[i] * spaceFree) / flexSpace
+				if c.tempFlexValues[i] > 0 {
+					width := (c.tempFlexValues[i] * spaceFree) / flexSpace
 					child.SetDimension(width, child.Bounds().H)
 					if width <= child.MinimumWidth() || width >= child.MaximumWidth() {
 						// A flexible component has reach one of its limits
 						fixedSpace += child.Bounds().W
-						flexSpace -= c.toBeProcessed[i]
-						c.toBeProcessed[i] = 0
+						flexSpace -= c.tempFlexValues[i]
+						c.tempFlexValues[i] = 0
 						hasToRestart = true
 						break
 					}
