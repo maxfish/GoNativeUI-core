@@ -121,18 +121,20 @@ func (w *Widget) SetDimensionV(v utils.Dimension) {
 
 // Layout
 func (w *Widget) PreferredWidth() int {
+	contentPlusPadding := w.padding.Left + w.contentWidth + w.padding.Right
+
 	switch w.dimensionH.Unit {
 	case utils.PixelUnit:
 		return w.dimensionH.Value
 	case utils.NoUnit:
 		// Wraps the content
-		return w.padding.Left + w.contentWidth + w.padding.Right
+		return contentPlusPadding
 	case utils.PercentageUnit:
 		if w.Parent() == nil {
 			// Wraps the content
-			return w.padding.Left + w.contentWidth + w.padding.Right
+			return contentPlusPadding
 		} else {
-			return (w.Parent().InnerBounds().W * w.dimensionH.Value) / 100
+			return utils.MaxI((w.Parent().InnerBounds().W * w.dimensionH.Value) / 100, contentPlusPadding)
 		}
 	}
 	log.Panicf("Dimension unit is unknown")
@@ -140,18 +142,20 @@ func (w *Widget) PreferredWidth() int {
 }
 
 func (w *Widget) PreferredHeight() int {
+	contentPlusPadding := w.padding.Top + w.contentHeight + w.padding.Bottom
+
 	switch w.dimensionV.Unit {
 	case utils.PixelUnit:
 		return w.dimensionV.Value
 	case utils.NoUnit:
 		// Wraps the content
-		return w.padding.Top + w.contentHeight + w.padding.Bottom
+		return contentPlusPadding
 	case utils.PercentageUnit:
 		if w.Parent() == nil {
 			// Wraps the content
-			return w.padding.Top + w.contentHeight + w.padding.Bottom
+			return contentPlusPadding
 		} else {
-			return (w.Parent().InnerBounds().H * w.dimensionV.Value) / 100
+			return utils.MaxI((w.Parent().InnerBounds().H * w.dimensionV.Value) / 100, contentPlusPadding)
 		}
 	}
 	log.Panicf("Dimension unit is unknown")
