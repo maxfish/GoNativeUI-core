@@ -1,7 +1,6 @@
 package gui
 
 import (
-	"github.com/maxfish/GoNativeUI-Core/utils"
 )
 
 type IFont interface {
@@ -21,9 +20,8 @@ type Gui struct {
 
 func NewGui(theme *Theme, w int, h int) *Gui {
 	g := &Gui{}
-	g.screen = NewContainer(theme)
-	g.screen.SetDimensionH(utils.Pixels(w))
-	g.screen.SetDimensionV(utils.Pixels(h))
+	g.screen = NewBoxContainer(theme, BoxHorizontalOrientation)
+	g.screen.SetDimension(w, h)
 	return g
 }
 

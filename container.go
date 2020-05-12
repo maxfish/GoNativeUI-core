@@ -1,19 +1,8 @@
 package gui
 
-import (
-	"github.com/maxfish/GoNativeUI-Core/utils"
-)
-
 type IContainer interface {
 	IWidget
 
-	//Update(deltaMs uint32) bool
-
-	//ContentRect() utils.Rect
-	//adaptWidthToComponents()
-	//adaptHeightToComponents()
-
-	// Children components
 	Children() []IWidget
 	ChildrenCount() int
 	AddChild(c IWidget)
@@ -30,19 +19,6 @@ type Container struct {
 	childrenMap map[string]IWidget
 }
 
-func NewContainer(theme *Theme, children ...IWidget) IContainer {
-	c := &Container{}
-	c.Init()
-	c.theme = theme
-
-	if children != nil {
-		for _, child := range children {
-			c.AddChild(child)
-		}
-	}
-	return c
-}
-
 func (c *Container) Init() {
 	widgetInit(c)
 	c.children = make([]IWidget, 0, 16)
@@ -56,9 +32,8 @@ func (c *Container) AddChild(child IWidget) {
 	c.children = append(c.children, child)
 	child.SetParent(c)
 	child.SetTheme(c.theme)
-	//child.Layout()
-	c.contentSizeValid = false
 }
+
 func (c *Container) AddChildren(children ...IWidget) {
 	for _, child := range children {
 		c.AddChild(child)
@@ -94,20 +69,11 @@ func (c *Container) FindChildAt(x, y int) IWidget {
 
 // Layout
 func (c *Container) Layout() {
-	c.computeContentSize()
-	widgetLayout(c)
-	c.layoutChildren()
+	panic("Layout() shouldn't be called on the base Controller")
 }
 
 func (c *Container) layoutChildren() {
-	for _, child := range c.children {
-		child.Layout()
-		// Force container alignment
-		child.SetBounds(child.Bounds().AlignIn(
-			c.InnerBounds(),
-			utils.Alignment{Horizontal: c.contentAlignmentH, Vertical: c.contentAlignmentV},
-		))
-	}
+	panic("layoutChildren() shouldn't be called on the base Controller")
 }
 
 // Mouse handling
@@ -143,23 +109,12 @@ func (c *Container) OnMouseScrolled(scrollX float32, scrollY float32) bool {
 	return false
 }
 
-func (c *Container) computeContentSize() {
-	contentRect := utils.Rect{}
-	for _, child := range c.children {
-		switch childCast := child.(type) {
-		case IContainer:
-			contentRect = contentRect.UnionWith(childCast.Bounds())
-		case IWidget:
-			contentRect = contentRect.UnionWith(child.Bounds())
-		}
-	}
-	c.contentWidth = contentRect.W
-	c.contentHeight = contentRect.H
-}
-
 func containerLayout(c IContainer) {
-	bounds := c.Bounds()
-	bounds.W = c.PreferredWidth()
-	bounds.H = c.PreferredHeight()
-	c.SetBounds(bounds)
+	// Without a parent no need for layout
+	if c.Parent() == nil {
+		return
+	}
+	w := c.ContentWidth()
+	h := c.ContentHeight()
+	c.SetDimension(w, h)
 }

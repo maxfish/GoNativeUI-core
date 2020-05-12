@@ -29,7 +29,7 @@ func HBoxLayout(container IContainer, alignH utils.AlignmentH, spacing int) {
 		right := container.InnerBounds().W
 		for i := numChildren - 1; i >= 0; i-- {
 			c := container.Children()[i]
-			c.SetRight(right)
+			//c.SetRight(right)
 			right -= c.Bounds().W + spacing
 		}
 	}
@@ -78,9 +78,9 @@ func HGridLayout(container IContainer, numColumns int, alignH []utils.AlignmentH
 			if row*numColumns+col >= numChildren {
 				return
 			}
-			cellRect := utils.Rect{left, top, columnWidths[col], 1}
+			//cellRect := utils.Rect{left, top, columnWidths[col], 1}
 			c := container.Children()[row*numColumns+col]
-			c.SetBounds(c.Bounds().AlignIn(cellRect, utils.Alignment{alignH[col], utils.AlignmentVTop}))
+			//c.SetBounds(c.Bounds().AlignIn(cellRect, utils.Alignment{alignH[col], utils.AlignmentVTop}))
 			rowHeight = utils.MaxI(rowHeight, c.Bounds().H)
 			left += columnWidths[col]
 		}

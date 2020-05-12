@@ -18,7 +18,6 @@ func NewLabel(text string) *Label {
 	widgetInit(l)
 	l.text = text
 	l.fontSize = 25
-	l.bounds = utils.Rect{W: 150, H: l.fontSize}
 	return l
 }
 
@@ -34,12 +33,11 @@ func (l *Label) SetTheme(theme *Theme) {
 	l.textColor = theme.LabelTextColor
 	l.fontSize = theme.LabelFontSize
 	l.padding = theme.LabelPadding
-	//l.in = theme.LabelFontSize
+	l.Layout()
 }
 
 func (l *Label) SetText(text string) {
 	l.text = text
-	l.contentSizeValid = false
 	l.Layout()
 }
 
@@ -49,9 +47,5 @@ func (l *Label) Layout() {
 }
 
 func (l *Label) computeContentSize() {
-	if l.contentSizeValid {
-		return
-	}
 	l.contentWidth, l.contentHeight = l.theme.LabelFont.TextSize(l.fontSize, l.text)
-	l.contentSizeValid = true
 }

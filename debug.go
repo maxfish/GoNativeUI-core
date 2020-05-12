@@ -51,19 +51,12 @@ func WidgetToDebugString(str interface{}) string {
 	extra := ""
 	switch w := str.(type) {
 	case *Label:
+		extra = "text:\"" + w.text + "\""
 	case *Button:
 		extra = "text:\"" + w.text + "\""
 	}
 
-	// Bounds
-	boundsString := fmt.Sprintf(
-		"%s[%s,%s]",
-		widget.Bounds().ToString(),
-		DimensionToString(widget.DimensionH()),
-		DimensionToString(widget.DimensionV()),
-	)
-
-	return fmt.Sprintf("(%s)%s %s %s %s", wType, wId, boundsString, flags, extra)
+	return fmt.Sprintf("(%s)%s %s %s %s", wType, wId, widget.Bounds().ToString(), flags, extra)
 }
 
 func ContainerToTreeDebugString(c IContainer) string {
