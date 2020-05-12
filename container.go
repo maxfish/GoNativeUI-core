@@ -159,7 +159,7 @@ func (c *Container) computeContentSize() {
 
 func containerLayout(c IContainer) {
 	bounds := c.Bounds()
-	bounds.W = utils.MaxI(c.PreferredWidth(), c.ContentWidth())
+	bounds.W = c.PreferredWidth()
 	bounds.H = c.PreferredHeight()
 	c.SetBounds(bounds)
 }
