@@ -180,23 +180,3 @@ func widgetInit(w IWidget) {
 	w.SetEnabled(true)
 	w.SetVisible(true)
 }
-
-func widgetLayout(widget IWidget) {
-	w := 0
-	h := 0
-	//if widget.Flex() > 0 {
-	//	NOP here. The container will take care of resizing the widget
-	//} else {
-	wDimension := widget.Padding().Left + widget.ContentWidth() + widget.Padding().Right
-	w = utils.MaxI(wDimension, widget.MinimumWidth())
-	if widget.MaximumWidth() > 0 {
-		w = utils.MinI(w, widget.MaximumWidth())
-	}
-	hDimension := widget.Padding().Top + widget.ContentHeight() + widget.Padding().Bottom
-	h = utils.MaxI(hDimension, widget.MinimumHeight())
-	if widget.MaximumHeight() > 0 {
-		h = utils.MinI(h, widget.MaximumHeight())
-	}
-	//}
-	widget.SetDimension(w, h)
-}
