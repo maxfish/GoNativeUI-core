@@ -6,13 +6,6 @@ import (
 	"testing"
 )
 
-const (
-	screenW = 800
-	screenH = 500
-	text1   = "LabelText"
-	text2   = "LabelText_2"
-)
-
 func TestLabel(t *testing.T) {
 	g := InitTestGui(screenW, screenH, nil)
 	label := gui.NewLabel(text1)
@@ -49,9 +42,9 @@ func TestLabel(t *testing.T) {
 		t.Errorf("expected: %s\nreceived: %s", expected, value)
 	}
 
-	valueW, valueH := g.Theme().LabelFont.TextSize(label.FontSize(), label.Text())
+	label.Measure()
 	expectedW, expectedH := 68, 16
-	if valueW != expectedW || valueH != expectedH {
-		t.Errorf("expected: %d,%d\nreceived: %d,%d", expectedW, expectedH, valueW, valueH)
+	if label.ContentWidth() != expectedW || label.ContentHeight() != expectedH {
+		t.Errorf("expected: %d,%d\nreceived: %d,%d", expectedW, expectedH, label.ContentWidth(), label.ContentHeight())
 	}
 }
