@@ -7,6 +7,10 @@ import (
 	"strings"
 )
 
+func ColorToString(f utils.ColorF) string {
+	return fmt.Sprintf("{%.2f,%.2f,%.2f,%.2f}", f[0], f[1], f[2], f[3])
+}
+
 func DimensionToString(dimension utils.Dimension) string {
 	switch dimension.Unit {
 	case utils.PixelUnit:
