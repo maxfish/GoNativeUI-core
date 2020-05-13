@@ -45,7 +45,7 @@ func (b *Button) SetTheme(theme *Theme) {
 	b.textColor = theme.ButtonTextColor
 	b.fontSize = theme.ButtonFontSize
 	b.padding = theme.ButtonPadding
-	b.Layout()
+	b.Measure()
 }
 
 func (b *Button) SetButtonGroup(buttonGroup []*Button) {

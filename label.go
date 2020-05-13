@@ -33,17 +33,23 @@ func (l *Label) SetTheme(theme *Theme) {
 	l.textColor = theme.LabelTextColor
 	l.fontSize = theme.LabelFontSize
 	l.padding = theme.LabelPadding
-	l.Layout()
+	l.Measure()
 }
 
 func (l *Label) SetText(text string) {
 	l.text = text
-	l.Layout()
+	l.Measure()
+}
+
+func (l *Label) Measure() {
+	l.computeContentSize()
+	l.measuredWidth = l.contentWidth
+	l.measuredHeight = l.contentHeight
+	l.measuredFlex = l.flex
 }
 
 func (l *Label) Layout() {
-	l.computeContentSize()
-	widgetLayout(l)
+	// TODO: Layout content
 }
 
 func (l *Label) computeContentSize() {

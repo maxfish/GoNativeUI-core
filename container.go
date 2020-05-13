@@ -108,13 +108,3 @@ func (c *Container) OnMouseButtonEvent(x float32, y float32, button ButtonIndex,
 func (c *Container) OnMouseScrolled(scrollX float32, scrollY float32) bool {
 	return false
 }
-
-func containerLayout(c IContainer) {
-	// Without a parent no need for layout
-	if c.Parent() == nil {
-		return
-	}
-	w := c.ContentWidth()
-	h := c.ContentHeight()
-	c.SetDimension(w, h)
-}

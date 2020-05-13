@@ -11,6 +11,6 @@ func NewSpacer() *Spacer {
 	return s
 }
 
-func (s *Spacer) Layout() {
-	widgetLayout(s)
+func (s *Spacer) Measure() {
+	s.measuredFlex = s.flex
 }

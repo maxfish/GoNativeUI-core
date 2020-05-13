@@ -5,22 +5,22 @@ import "github.com/maxfish/GoNativeUI-Core/utils"
 type BoxOrientation int
 
 const (
-	BoxHorizontalOrientation BoxOrientation = iota
-	BoxVerticalOrientation
+	BoxHorizontalOrientation BoxOrientation = 0
+	BoxVerticalOrientation                  = 1
 )
 
 type BoxContainer struct {
 	Container
-	orientation    BoxOrientation
-	widgetSpacing  int
-	contentLength  int
-	tempFlexValues []int
+	orientation              BoxOrientation
+	widgetSpacing            int
+	contentLength            int
+	childrenTotalFlexAmount  int
+	childrenTotalFixedLength int
 }
 
 func NewBoxContainer(theme *Theme, orientation BoxOrientation, children ...IWidget) *BoxContainer {
 	b := &BoxContainer{}
 	b.Container.Init()
-	b.tempFlexValues = make([]int, 0)
 	b.theme = theme
 	b.orientation = orientation
 
@@ -32,118 +32,129 @@ func NewBoxContainer(theme *Theme, orientation BoxOrientation, children ...IWidg
 	return b
 }
 
-func (c *BoxContainer) Layout() {
+func (c *BoxContainer) Measure() {
+	var mainLength, oppositeLength int
+	mainIndex := c.orientation
+	oppositeIndex := 1 - c.orientation
+
+	var totalFlex, totalFixed int
 	for _, child := range c.children {
-		_, ok := child.(IContainer)
-		if ok {
-			child.Layout()
+		if !child.Visible() {
+			continue
+		}
+		child.Measure()
+		measuredLength := []int{child.MeasuredWidth(), child.MeasuredHeight()}
+		minimumLength := []int{child.MinimumWidth(), child.MinimumHeight()}
+
+		mainLength += utils.MaxI(measuredLength[mainIndex], minimumLength[mainIndex])
+		oppositeLength = utils.MaxI(oppositeLength, utils.MaxI(measuredLength[oppositeIndex], minimumLength[oppositeIndex]))
+		if child.MeasuredFlex() == 0 {
+			totalFixed += measuredLength[mainIndex]
+		} else {
+			totalFlex += child.MeasuredFlex()
 		}
 	}
-	fixedSpace, flexSpace := c.computeContentSize()
-	c.layoutChildren(fixedSpace, flexSpace)
-	containerLayout(c)
+	c.measuredFlex = c.flex
+	c.childrenTotalFixedLength = totalFixed
+	c.childrenTotalFlexAmount = totalFlex
+
+	lengths := []int{mainLength, oppositeLength}
+	c.measuredWidth, c.measuredHeight = lengths[c.orientation], lengths[1-c.orientation]
 }
 
-func (c *BoxContainer) layoutChildren(fixedSpace int, flexSpace int) {
+func (c *BoxContainer) Layout() {
+	c.Measure()
+	c.layoutChildren()
+}
+
+func (c *BoxContainer) layoutChildren() {
 	if c.ChildrenCount() == 0 {
 		return
 	}
 
-	// Cache for the flex values
-	c.tempFlexValues = c.tempFlexValues[:0]
-	for i := 0; i < c.ChildrenCount(); i++ {
-		c.tempFlexValues = append(c.tempFlexValues, i)
-		c.tempFlexValues[i] = c.children[i].Flex()
-	}
-
+	flexSpace := c.childrenTotalFlexAmount
 	switch c.orientation {
 	case BoxHorizontalOrientation:
-		// TODO: It should consider the container's padding
+		fixedSpace := c.childrenTotalFixedLength
+		totalSpace := c.bounds.W
 		hasToRestart := true
 		for hasToRestart {
 			hasToRestart = false
 			pos := 0
-			spaceFree := utils.MaxI(c.bounds.W-fixedSpace, 0)
+			spaceFree := utils.MaxI(totalSpace-fixedSpace, 0)
 			maxHeight := 0
-			for i, child := range c.children {
+			for _, child := range c.children {
 				if !child.Visible() {
 					continue
 				}
 				child.SetLeft(pos)
-				if c.tempFlexValues[i] > 0 {
-					width := (c.tempFlexValues[i] * spaceFree) / flexSpace
-					child.SetDimension(width, child.Bounds().H)
-					if width <= child.MinimumWidth() || width >= child.MaximumWidth() {
-						// A flexible component has reach one of its limits
+				if child.MeasuredFlex() > 0 {
+					width := (child.MeasuredFlex() * spaceFree) / flexSpace
+					child.SetWidth(width)
+					if width <= child.MinimumWidth() || (child.MaximumWidth() > 0 && width >= child.MaximumWidth()) {
+						// A flexible component has reached one of its limits
 						fixedSpace += child.Bounds().W
-						flexSpace -= c.tempFlexValues[i]
-						c.tempFlexValues[i] = 0
+						flexSpace -= child.MeasuredFlex()
+						child.SetMeasuredFlex(0)
+						child.SetMeasuredWidth(child.Bounds().W)
 						hasToRestart = true
 						break
 					}
 				} else {
-					// NOP
+					child.SetWidth(child.MeasuredWidth())
 				}
+
+				if child.Stretch() > 0 {
+					child.SetHeight(c.Bounds().H)
+				} else {
+					child.SetHeight(child.MeasuredHeight())
+				}
+
 				maxHeight = utils.MaxI(maxHeight, child.Bounds().H)
 				pos += child.Bounds().W
 			}
-			c.contentWidth = pos
-			c.contentHeight = maxHeight
 		}
 	case BoxVerticalOrientation:
-		// TODO: It should consider the container's padding
-		pos := 0
-		spaceFree := utils.MaxI(c.bounds.H-fixedSpace, 0)
-		maxWidth := 0
-		for _, child := range c.children {
-			if !child.Visible() {
-				continue
-			}
-			child.SetTop(pos)
-			if child.Flex() > 0 {
-				child.SetDimension(child.Bounds().W, (child.Flex()*spaceFree)/flexSpace)
-			} else {
-				// NOP
-			}
-			maxWidth = utils.MaxI(maxWidth, child.Bounds().W)
-			pos += child.Bounds().H
-		}
-		c.contentWidth = maxWidth
-		c.contentHeight = pos
-	}
-}
+		fixedSpace := c.childrenTotalFixedLength
+		totalSpace := c.bounds.H
+		hasToRestart := true
+		for hasToRestart {
+			hasToRestart = false
+			pos := 0
+			spaceFree := utils.MaxI(totalSpace-fixedSpace, 0)
+			for _, child := range c.children {
+				if !child.Visible() {
+					continue
+				}
+				child.SetTop(pos)
+				if child.MeasuredFlex() > 0 {
+					height := (child.MeasuredFlex() * spaceFree) / flexSpace
+					child.SetHeight(height)
+					if height <= child.MinimumHeight() || (child.MaximumHeight() > 0 && height >= child.MaximumHeight()) {
+						// A flexible component has reached one of its limits
+						fixedSpace += child.Bounds().H
+						flexSpace -= child.MeasuredFlex()
+						child.SetMeasuredFlex(0)
+						child.SetMeasuredHeight(child.Bounds().H)
+						hasToRestart = true
+						break
+					}
+				} else {
+					child.SetHeight(child.MeasuredHeight())
+				}
 
-func (c *BoxContainer) computeContentSize() (int, int) {
-	switch c.orientation {
-	case BoxHorizontalOrientation:
-		totalFixedSize := 0
-		totalFlexSize := 0
-		for _, child := range c.children {
-			if !child.Visible() {
-				continue
-			}
-			if child.Flex() > 0 {
-				totalFlexSize += child.Flex()
-			} else {
-				totalFixedSize += child.Bounds().W
+				if child.Stretch() > 0 {
+					child.SetWidth(c.Bounds().W)
+				} else {
+					child.SetWidth(child.MeasuredWidth())
+				}
+
+				pos += child.Bounds().H
 			}
 		}
-		return totalFixedSize, totalFlexSize
-	case BoxVerticalOrientation:
-		totalFixedSize := 0
-		totalFlexSize := 0
-		for _, child := range c.children {
-			if !child.Visible() {
-				continue
-			}
-			if child.Flex() > 0 {
-				totalFlexSize += child.Flex()
-			} else {
-				totalFixedSize += child.Bounds().H
-			}
-		}
-		return totalFixedSize, totalFlexSize
 	}
 
-	panic("computeContentSize() called with unknown orientation")
+	for _, child := range c.children {
+		child.Layout()
+	}
 }
