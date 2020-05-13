@@ -1,7 +1,5 @@
 package utils
 
-import "fmt"
-
 type Insets struct {
 	Top, Right, Bottom, Left int
 }
