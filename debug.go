@@ -26,7 +26,6 @@ func InsetsToString(i utils.Insets) string {
 	return fmt.Sprintf("{top:%d,right:%d,bottom:%d,left:%d}", i.Top, i.Right, i.Bottom, i.Left)
 }
 
-
 func WidgetToDebugString(str interface{}) string {
 	widget := str.(IWidget)
 	// Widget id
