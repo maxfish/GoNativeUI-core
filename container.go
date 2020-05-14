@@ -9,25 +9,25 @@ type IContainer interface {
 	AddChildren(children ...IWidget)
 	AddChildAtIndex(c IWidget, i int32)
 	FindChildAt(x int, y int) IWidget
+	RemoveChildById(id string)
+	RemoveChildAtIndex(index int)
 }
 
 type Container struct {
 	Widget
 
-	// Children
 	children    []IWidget
-	childrenMap map[string]IWidget
 }
 
 func (c *Container) Init() {
 	widgetInit(c)
 	c.children = make([]IWidget, 0, 16)
-	c.childrenMap = make(map[string]IWidget)
 }
 
 // Children
 func (c *Container) Children() []IWidget { return c.children }
 func (c *Container) ChildrenCount() int  { return len(c.children) }
+
 func (c *Container) AddChild(child IWidget) {
 	c.children = append(c.children, child)
 	child.SetParent(c)
@@ -56,8 +56,24 @@ func (c *Container) ChildById(id string) IWidget {
 	return nil
 }
 
-func (c *Container) RemoveChildById(id string)             {}
-func (c *Container) GetMaximumComponentSize(child IWidget) {}
+func (c *Container) RemoveChildById(id string) {
+	toBeRemovedIndex := -1
+	for i, child := range c.children {
+		if child.Id() == id {
+			toBeRemovedIndex = i
+		}
+	}
+	if toBeRemovedIndex >= 0 {
+		c.RemoveChildAtIndex(toBeRemovedIndex)
+	}
+}
+
+func (c *Container) RemoveChildAtIndex(index int) {
+	ret := make([]IWidget, 0)
+	ret = append(ret, c.children[:index]...)
+	c.children = append(ret, c.children[index+1:]...)
+}
+
 func (c *Container) FindChildAt(x, y int) IWidget {
 	for _, child := range c.children {
 		if child.Bounds().ContainsPoint(x, y) {
