@@ -2,13 +2,14 @@ package tests
 
 import (
 	gui "github.com/maxfish/GoNativeUI-Core"
+	"github.com/maxfish/GoNativeUI-Core/utils"
 	"reflect"
 	"testing"
 )
 
 func TestLabel(t *testing.T) {
 	g := InitTestGui(screenW, screenH, nil)
-	label := gui.NewLabel(text1)
+	label := gui.NewLabel(textStrings[0])
 	g.Screen().AddChild(label)
 
 	valueColor := label.TextColor()
@@ -29,22 +30,18 @@ func TestLabel(t *testing.T) {
 		t.Errorf("expected: %d\nreceived: %d", expectedFontSize, valueFontSize)
 	}
 
-	value := label.Text()
-	expected := text1
-	if value != expected {
-		t.Errorf("expected: %s\nreceived: %s", expected, value)
-	}
+	assertStringEqual(t, label.Text(), textStrings[0])
 
-	label.SetText(text2)
-	value = label.Text()
-	expected = text2
-	if value != expected {
-		t.Errorf("expected: %s\nreceived: %s", expected, value)
-	}
+	label.SetText(textStrings[2])
+	assertStringEqual(t, label.Text(), textStrings[2])
 
-	label.Measure()
-	expectedW, expectedH := 68, 16
-	if label.ContentWidth() != expectedW || label.ContentHeight() != expectedH {
-		t.Errorf("expected: %d,%d\nreceived: %d,%d", expectedW, expectedH, label.ContentWidth(), label.ContentHeight())
+	for i:=0; i< len(textStrings); i++ {
+		label.SetText(textStrings[i])
+		assertStructEqual(t, utils.Size{label.ContentWidth(), label.ContentHeight()}, textLengths[i])
+		//label.Measure()
+		//expectedW, expectedH := 68, 16
+		//if label.ContentWidth() != expectedW || label.ContentHeight() != expectedH {
+		//	t.Errorf("expected: %d,%d\nreceived: %d,%d", expectedW, expectedH, label.ContentWidth(), label.ContentHeight())
+		//}
 	}
 }
