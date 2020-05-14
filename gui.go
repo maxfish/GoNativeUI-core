@@ -1,8 +1,5 @@
 package gui
 
-import (
-)
-
 type IFont interface {
 	FaceName() string
 	TextSize(size int, text string) (int, int)
