@@ -26,6 +26,35 @@ func TestBox(t *testing.T) {
 	//assertStructEqual(t, dimensions, expected)
 }
 
+func TestBoxBasics(t *testing.T) {
+	theme := gui.NewDefaultTheme()
+	g := InitTestGui(screenW, screenH, theme)
+
+	l1 := gui.NewLabel(textStrings[2])
+	l1.SetId("label1")
+	l2 := gui.NewLabel(textStrings[3])
+	l2.SetId("label2")
+	c1 := gui.NewBoxContainer(theme, gui.BoxHorizontalOrientation, l1)
+	c1.AddChild(l2)
+	g.Screen().AddChild(c1)
+	g.Screen().Layout()
+
+	// Assert children order
+	assertStructEqual(t, c1.Children(), []gui.IWidget{l1, l2})
+	// Assert content wrapping
+	assertStringEqual(t, c1.Bounds().ToString(), "{x:0,y:0,w:207,h:16}")
+	// Assert children placement
+	assertStringEqual(t, l1.Bounds().ToString(), "{x:0,y:0,w:99,h:16}")
+	assertStringEqual(t, l2.Bounds().ToString(), "{x:99,y:0,w:108,h:16}")
+
+	c1.RemoveChildById("label1")
+	c1.RemoveChildById("label2")
+	g.Screen().Layout()
+	assertStructEqual(t, c1.Children(), []gui.IWidget{})
+	// Assert content wrapping
+	assertStringEqual(t, c1.Bounds().ToString(), "{x:0,y:0,w:0,h:0}")
+}
+
 func TestBoxComplexLayout(t *testing.T) {
 	theme := gui.NewDefaultTheme()
 	g := InitTestGui(screenW, screenH, theme)
@@ -73,5 +102,4 @@ func TestBoxComplexLayout(t *testing.T) {
 	assertStringEqual(t, l.Bounds().ToString(), "{x:148,y:0,w:108,h:16}")
 	assertStringEqual(t, spacer1.Bounds().ToString(), "{x:0,y:48,w:0,h:100}")
 	assertStringEqual(t, spacer2.Bounds().ToString(), "{x:148,y:0,w:0,h:0}")
-
 }
