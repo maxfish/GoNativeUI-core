@@ -36,7 +36,6 @@ func NewToggleButton(text string) *Button {
 	return b
 }
 
-// Getters
 func (b *Button) Pressed() bool { return b.pressed }
 
 func (b *Button) SetTheme(theme *Theme) {
