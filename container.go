@@ -16,7 +16,7 @@ type IContainer interface {
 type Container struct {
 	Widget
 
-	children    []IWidget
+	children []IWidget
 }
 
 func (c *Container) Init() {
@@ -41,6 +41,9 @@ func (c *Container) AddChildren(children ...IWidget) {
 }
 
 func (c *Container) AddChildAtIndex(child IWidget, i int32) {
+	child.SetParent(c)
+	child.SetTheme(c.theme)
+
 	s := append(c.children, nil)
 	copy(s[i+1:], s[i:])
 	s[i] = child
@@ -81,6 +84,12 @@ func (c *Container) FindChildAt(x, y int) IWidget {
 		}
 	}
 	return nil
+}
+
+func (c *Container) SetTheme(t *Theme) {
+	for _, child := range c.children {
+		child.SetTheme(t)
+	}
 }
 
 // Layout
