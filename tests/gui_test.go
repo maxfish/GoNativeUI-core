@@ -21,6 +21,12 @@ func assertIntEqual(t *testing.T, actual int, expected int) {
 	}
 }
 
+func assertBoolEqual(t *testing.T, actual bool, expected bool) {
+	if actual != expected {
+		t.Errorf("expected: %t\nreceived: %t", expected, actual)
+	}
+}
+
 func assertStringEqual(t *testing.T, actual string, expected string) {
 	if actual != expected {
 		t.Errorf("expected: %s\nreceived: %s", expected, actual)

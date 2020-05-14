@@ -26,6 +26,52 @@ func TestBox(t *testing.T) {
 	//assertStructEqual(t, dimensions, expected)
 }
 
+func TestBoxChildren(t *testing.T) {
+	theme := gui.NewDefaultTheme()
+	g := InitTestGui(screenW, screenH, theme)
+	box := gui.NewBoxContainer(g.Theme(), gui.BoxHorizontalOrientation)
+	label1 := gui.NewLabel(textStrings[0])
+	label1.SetId("label1")
+	label2 := gui.NewLabel(textStrings[0])
+	label2.SetId("label2")
+	button3 := gui.NewButton(textStrings[0])
+	button3.SetId("label3")
+	label4 := gui.NewLabel(textStrings[0])
+	label4.SetId("label4")
+	box.AddChildren(label1, button3)
+	g.Screen().AddChild(box)
+	g.Screen().Layout()
+
+	assertStructEqual(t, box.Children(), []gui.IWidget{label1, button3})
+
+	box.AddChildAtIndex(label2, 1)
+	assertStructEqual(t, box.Children(), []gui.IWidget{label1, label2, button3})
+
+	box.AddChild(label4)
+	assertStructEqual(t, box.Children(), []gui.IWidget{label1, label2, button3, label4})
+
+	g.Screen().Layout()
+	c := box.FindChildAt(100, 10)
+	assertStructEqual(t, c, button3)
+}
+
+func TestBoxInput(t *testing.T) {
+	theme := gui.NewDefaultTheme()
+	g := InitTestGui(screenW, screenH, theme)
+	box := gui.NewBoxContainer(g.Theme(), gui.BoxHorizontalOrientation)
+	button := gui.NewButton(textStrings[0])
+	box.AddChildren(button)
+	g.Screen().AddChild(box)
+	g.Screen().Layout()
+
+	// Button pressed
+	assertBoolEqual(t, button.Pressed(), false)
+	box.OnMouseButtonEvent(10, 10, 0, gui.EventActionPress, 0)
+	assertBoolEqual(t, button.Pressed(), true)
+	button.OnMouseButtonEvent(10, 10, 0, gui.EventActionRelease, 0)
+	assertBoolEqual(t, button.Pressed(), false)
+}
+
 func TestBoxBasics(t *testing.T) {
 	theme := gui.NewDefaultTheme()
 	g := InitTestGui(screenW, screenH, theme)
@@ -39,8 +85,6 @@ func TestBoxBasics(t *testing.T) {
 	g.Screen().AddChild(c1)
 	g.Screen().Layout()
 
-	// Assert children order
-	assertStructEqual(t, c1.Children(), []gui.IWidget{l1, l2})
 	// Assert content wrapping
 	assertStringEqual(t, c1.Bounds().ToString(), "{x:0,y:0,w:207,h:16}")
 	// Assert children placement

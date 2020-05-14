@@ -9,14 +9,6 @@ type WidgetTest struct {
 	gui.Widget
 }
 
-func (w *WidgetTest) Measure() {
-
-}
-
-func (w *WidgetTest) Layout() {
-	// TODO: Layout content
-}
-
 func TestWidget(t *testing.T) {
 	g := InitTestGui(screenW, screenH, nil)
 	w := &WidgetTest{}

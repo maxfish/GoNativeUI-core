@@ -12,6 +12,10 @@ func TestLabel(t *testing.T) {
 	label := gui.NewLabel(textStrings[0])
 	g.Screen().AddChild(label)
 
+	// Check initial state
+	assertBoolEqual(t, label.Visible(), true)
+	assertBoolEqual(t, label.Enabled(), true)
+
 	valueColor := label.TextColor()
 	expectedColor := g.Theme().LabelTextColor
 	if !reflect.DeepEqual(valueColor, expectedColor) {
@@ -35,7 +39,7 @@ func TestLabel(t *testing.T) {
 	label.SetText(textStrings[2])
 	assertStringEqual(t, label.Text(), textStrings[2])
 
-	for i:=0; i< len(textStrings); i++ {
+	for i := 0; i < len(textStrings); i++ {
 		label.SetText(textStrings[i])
 		assertStructEqual(t, utils.Size{label.ContentWidth(), label.ContentHeight()}, textLengths[i])
 		//label.Measure()
