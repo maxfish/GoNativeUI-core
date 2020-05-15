@@ -91,6 +91,14 @@ func TestBoxBasics(t *testing.T) {
 	assertStructEqual(t, l1.Bounds(), utils.Rect{X: 0, Y: 0, W: 99, H: 16})
 	assertStructEqual(t, l2.Bounds(), utils.Rect{X: 99, Y: 0, W: 108, H: 16})
 
+	// Spacing
+	c1.SetSpacing(10)
+	g.Screen().Layout()
+	assertStructEqual(t, c1.Bounds(), utils.Rect{X: 0, Y: 0, W: 217, H: 16})
+	assertStructEqual(t, l1.Bounds(), utils.Rect{X: 0, Y: 0, W: 99, H: 16})
+	assertStructEqual(t, l2.Bounds(), utils.Rect{X: 109, Y: 0, W: 108, H: 16})
+
+	// Removing children
 	c1.RemoveChildById("label1")
 	c1.RemoveChildById("label2")
 	g.Screen().Layout()

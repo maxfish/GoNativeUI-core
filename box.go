@@ -12,7 +12,7 @@ const (
 type BoxContainer struct {
 	Container
 	orientation              BoxOrientation
-	widgetSpacing            int
+	spacing                  int
 	contentLength            int
 	childrenTotalFlexAmount  int
 	childrenTotalFixedLength int
@@ -32,11 +32,14 @@ func NewBoxContainer(theme *Theme, orientation BoxOrientation, children ...IWidg
 	return b
 }
 
+func (c *BoxContainer) Spacing() int        { return c.spacing }
+func (c *BoxContainer) SetSpacing(spacing int) { c.spacing = spacing }
+
 func (c *BoxContainer) Measure() {
 	var mainLength, oppositeLength int
 	mainIndex := c.orientation
 	oppositeIndex := 1 - c.orientation
-
+	c.spacing = 10
 	var totalFlex, totalFixed int
 	for _, child := range c.children {
 		if !child.Visible() {
@@ -45,6 +48,12 @@ func (c *BoxContainer) Measure() {
 		child.Measure()
 		measuredLength := []int{child.MeasuredWidth(), child.MeasuredHeight()}
 		minimumLength := []int{child.MinimumWidth(), child.MinimumHeight()}
+
+		// From the second widget adds the container spacing
+		if mainLength > 0 {
+			mainLength += c.spacing
+			totalFixed += c.spacing
+		}
 
 		mainLength += utils.MaxI(measuredLength[mainIndex], minimumLength[mainIndex])
 		oppositeLength = utils.MaxI(oppositeLength, utils.MaxI(measuredLength[oppositeIndex], minimumLength[oppositeIndex]))
@@ -112,7 +121,7 @@ func (c *BoxContainer) layoutChildren() {
 				}
 
 				maxHeight = utils.MaxI(maxHeight, child.Bounds().H)
-				offset += child.Bounds().W
+				offset += child.Bounds().W + c.spacing
 			}
 		}
 	case BoxVerticalOrientation:
@@ -150,7 +159,7 @@ func (c *BoxContainer) layoutChildren() {
 					child.SetWidth(child.MeasuredWidth())
 				}
 
-				offset += child.Bounds().H
+				offset += child.Bounds().H + c.spacing
 			}
 		}
 	}
