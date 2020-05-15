@@ -11,17 +11,6 @@ func ColorToString(f utils.ColorF) string {
 	return fmt.Sprintf("{%.2f,%.2f,%.2f,%.2f}", f[0], f[1], f[2], f[3])
 }
 
-func DimensionToString(dimension utils.Dimension) string {
-	switch dimension.Unit {
-	case utils.PixelUnit:
-		return fmt.Sprintf("%dpx", dimension.Value)
-	case utils.PercentageUnit:
-		return fmt.Sprintf("%d%%", dimension.Value)
-	}
-
-	return "-"
-}
-
 func InsetsToString(i utils.Insets) string {
 	return fmt.Sprintf("{top:%d,right:%d,bottom:%d,left:%d}", i.Top, i.Right, i.Bottom, i.Left)
 }

@@ -71,8 +71,6 @@ type Widget struct {
 	enabled    bool
 	visible    bool
 	bounds     utils.Rect
-	dimensionH utils.Dimension
-	dimensionV utils.Dimension
 	padding    utils.Insets
 
 	minimumWidth  int
