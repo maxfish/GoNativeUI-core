@@ -23,6 +23,14 @@ type Theme struct {
 	ButtonFillColor utils.ColorF
 	ButtonPadding   utils.Insets
 	ButtonAlignment utils.Alignment
+
+	// Checkbox
+	CheckboxFont      IFont
+	CheckboxFontSize  int
+	CheckboxTextColor utils.ColorF
+	CheckboxFillColor utils.ColorF
+	CheckboxPadding   utils.Insets
+	CheckboxAlignment utils.Alignment
 }
 
 func NewDefaultTheme() *Theme {
@@ -42,5 +50,12 @@ func NewDefaultTheme() *Theme {
 	t.ButtonFontSize = 15
 	t.ButtonPadding = utils.Insets{Top: 5, Right: 10, Bottom: 5, Left: 10}
 	t.ButtonAlignment = utils.Alignment{Horizontal: utils.AlignmentHCenter, Vertical: utils.AlignmentVCenter}
+
+	t.CheckboxFont = defaultFont
+	t.CheckboxFillColor = utils.ColorTransparent()
+	t.CheckboxTextColor = utils.ColorGrayi(232, 255)
+	t.CheckboxFontSize = 15
+	t.CheckboxPadding = utils.Insets{Top: 2, Right: 2, Bottom: 2, Left: 2}
+	t.CheckboxAlignment = utils.Alignment{Horizontal: utils.AlignmentHLeft, Vertical: utils.AlignmentVCenter}
 	return t
 }

@@ -46,10 +46,19 @@ func (b *Button) Pressed() bool { return b.pressed }
 
 func (b *Button) SetTheme(theme *Theme) {
 	b.theme = theme
-	b.font = theme.ButtonFont
-	b.textColor = theme.ButtonTextColor
-	b.fontSize = theme.ButtonFontSize
-	b.padding = theme.ButtonPadding
+
+	if b.buttonType == ButtonTypeCheckbox {
+		b.font = theme.CheckboxFont
+		b.textColor = theme.CheckboxTextColor
+		b.fontSize = theme.CheckboxFontSize
+		b.padding = theme.CheckboxPadding
+	} else {
+		b.font = theme.ButtonFont
+		b.textColor = theme.ButtonTextColor
+		b.fontSize = theme.ButtonFontSize
+		b.padding = theme.ButtonPadding
+	}
+
 	b.Measure()
 }
 

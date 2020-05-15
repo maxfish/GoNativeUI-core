@@ -27,6 +27,11 @@ func ColorGrayi(g, a uint8) ColorF {
 	}
 }
 
+// Transparent creates a new color with all components at 0, including the alpha
+func ColorTransparent() ColorF {
+	return ColorF{}
+}
+
 func ColorScaled(c ColorF, scale float32) ColorF {
 	return ColorF{
 		c[0] * scale,
