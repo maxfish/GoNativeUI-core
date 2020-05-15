@@ -1,9 +1,5 @@
 package gui
 
-import (
-	"github.com/maxfish/GoNativeUI-Core/utils"
-)
-
 type ButtonType int
 
 const (
@@ -23,8 +19,6 @@ func NewButton(text string) *Button {
 	b := &Button{}
 	widgetInit(b)
 	b.buttonType = ButtonTypeNormal
-	b.contentAlignmentH = utils.AlignmentHCenter
-	b.contentAlignmentV = utils.AlignmentVCenter
 	b.text = text
 	return b
 }
@@ -38,7 +32,6 @@ func NewToggleButton(text string) *Button {
 func NewCheckbox(text string) *Button {
 	b := NewButton(text)
 	b.buttonType = ButtonTypeCheckbox
-	b.contentAlignmentH = utils.AlignmentHLeft
 	return b
 }
 
@@ -52,11 +45,13 @@ func (b *Button) SetTheme(theme *Theme) {
 		b.textColor = theme.CheckboxTextColor
 		b.fontSize = theme.CheckboxFontSize
 		b.padding = theme.CheckboxPadding
+		b.contentAlignment = theme.CheckboxAlignment
 	} else {
 		b.font = theme.ButtonFont
 		b.textColor = theme.ButtonTextColor
 		b.fontSize = theme.ButtonFontSize
 		b.padding = theme.ButtonPadding
+		b.contentAlignment = theme.ButtonAlignment
 	}
 
 	b.Measure()

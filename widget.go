@@ -68,10 +68,10 @@ type Widget struct {
 	parent IContainer
 	theme  *Theme
 
-	enabled    bool
-	visible    bool
-	bounds     utils.Rect
-	padding    utils.Insets
+	enabled bool
+	visible bool
+	bounds  utils.Rect
+	padding utils.Insets
 
 	minimumWidth  int
 	maximumWidth  int
@@ -84,10 +84,9 @@ type Widget struct {
 	measuredHeight int
 	measuredFlex   int
 
-	contentAlignmentH utils.AlignmentH
-	contentAlignmentV utils.AlignmentV
-	contentWidth      int
-	contentHeight     int
+	contentAlignment utils.Alignment
+	contentWidth     int
+	contentHeight    int
 }
 
 // Getters / Setters
@@ -106,8 +105,8 @@ func (w *Widget) SetPadding(b utils.Insets)            { w.padding = b }
 func (w *Widget) InnerBounds() utils.Rect              { return w.bounds.ShrinkByInsets(w.padding) }
 func (w *Widget) ContentWidth() int                    { return w.contentWidth }
 func (w *Widget) ContentHeight() int                   { return w.contentHeight }
-func (w *Widget) ContentAlignmentH() utils.AlignmentH  { return w.contentAlignmentH }
-func (w *Widget) ContentAlignmentV() utils.AlignmentV  { return w.contentAlignmentV }
+func (w *Widget) ContentAlignmentH() utils.AlignmentH  { return w.contentAlignment.Horizontal }
+func (w *Widget) ContentAlignmentV() utils.AlignmentV  { return w.contentAlignment.Vertical }
 func (w *Widget) Flex() int                            { return w.flex }
 func (w *Widget) SetFlex(flex int)                     { w.flex = flex }
 func (w *Widget) Stretch() int                         { return w.stretch }
