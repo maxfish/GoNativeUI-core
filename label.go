@@ -43,8 +43,8 @@ func (l *Label) SetText(text string) {
 
 func (l *Label) Measure() {
 	l.computeContentSize()
-	l.measuredWidth = l.contentWidth
-	l.measuredHeight = l.contentHeight
+	l.measuredWidth = l.contentWidth + l.padding.Left + l.padding.Right
+	l.measuredHeight = l.contentHeight + l.padding.Top + l.padding.Bottom
 	l.measuredFlex = l.flex
 }
 

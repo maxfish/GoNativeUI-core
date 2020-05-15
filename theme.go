@@ -34,7 +34,7 @@ func NewDefaultTheme() *Theme {
 	t.LabelFont = defaultFont
 	t.LabelTextColor = utils.ColorGrayi(225, 255)
 	t.LabelFontSize = 15
-	t.LabelPadding = utils.Insets{Top: 10, Right: 10, Bottom: 5, Left: 5}
+	t.LabelPadding = utils.HomogeneousInsets(0)
 
 	t.ButtonFont = defaultFont
 	t.ButtonFillColor = utils.ColorGrayi(105, 255)

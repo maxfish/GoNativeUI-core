@@ -16,7 +16,7 @@ func TestBox(t *testing.T) {
 
 	// Wrap content
 	dimensions := utils.Size{box.Bounds().W, box.Bounds().H}
-	assertStructEqual(t, dimensions, textLengths[0])
+	assertStructEqual(t, dimensions, utils.Size{label.MeasuredWidth(), label.MeasuredHeight()})
 
 	// FIXME: This fails because of a bug happening when the only child of a Box is a simple widget with constraints
 	//label.SetMinimumWidth(100)
@@ -95,7 +95,7 @@ func TestBoxBasics(t *testing.T) {
 	c1.RemoveChildById("label2")
 	g.Screen().Layout()
 	assertStructEqual(t, c1.Children(), []gui.IWidget{})
-	// Assert content wrapping
+	// Content wrapping without children
 	assertStringEqual(t, c1.Bounds().ToString(), "{x:0,y:0,w:0,h:0}")
 }
 
@@ -133,17 +133,17 @@ func TestBoxComplexLayout(t *testing.T) {
 	// Main layout
 	g.Screen().Layout()
 	assertStringEqual(t, c1.Bounds().ToString(), "{x:0,y:0,w:230,h:500}")
-	assertStringEqual(t, c2.Bounds().ToString(), "{x:0,y:484,w:230,h:16}")
+	assertStringEqual(t, c2.Bounds().ToString(), "{x:0,y:474,w:230,h:26}")
 	assertStringEqual(t, l.Bounds().ToString(), "{x:460,y:0,w:108,h:16}")
-	assertStringEqual(t, spacer1.Bounds().ToString(), "{x:0,y:48,w:0,h:436}")
+	assertStringEqual(t, spacer1.Bounds().ToString(), "{x:0,y:68,w:0,h:406}")
 	assertStringEqual(t, spacer2.Bounds().ToString(), "{x:230,y:0,w:230,h:0}")
 
 	// Minimum dimensions constraints
 	g.Screen().SetDimension(256, 150)
 	g.Screen().Layout()
 	assertStringEqual(t, c1.Bounds().ToString(), "{x:0,y:0,w:148,h:150}")
-	assertStringEqual(t, c2.Bounds().ToString(), "{x:0,y:148,w:148,h:16}")
+	assertStringEqual(t, c2.Bounds().ToString(), "{x:0,y:168,w:148,h:26}")
 	assertStringEqual(t, l.Bounds().ToString(), "{x:148,y:0,w:108,h:16}")
-	assertStringEqual(t, spacer1.Bounds().ToString(), "{x:0,y:48,w:0,h:100}")
+	assertStringEqual(t, spacer1.Bounds().ToString(), "{x:0,y:68,w:0,h:100}")
 	assertStringEqual(t, spacer2.Bounds().ToString(), "{x:148,y:0,w:0,h:0}")
 }

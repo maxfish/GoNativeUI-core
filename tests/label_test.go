@@ -16,6 +16,10 @@ func TestLabel(t *testing.T) {
 	assertBoolEqual(t, label.Visible(), true)
 	assertBoolEqual(t, label.Enabled(), true)
 
+	// Measured size == Text size + Padding
+	assertIntEqual(t, label.MeasuredWidth(), textLengths[0].W()+label.Padding().Left+label.Padding().Right)
+	assertIntEqual(t, label.MeasuredHeight(), textLengths[0].H()+label.Padding().Top+label.Padding().Bottom)
+
 	valueColor := label.TextColor()
 	expectedColor := g.Theme().LabelTextColor
 	if !reflect.DeepEqual(valueColor, expectedColor) {
