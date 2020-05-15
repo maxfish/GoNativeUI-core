@@ -1,25 +1,5 @@
 package utils
 
-type MeasureUnit int
-
-const (
-	NoUnit MeasureUnit = iota
-	PixelUnit
-	PercentageUnit
-)
-
-type Dimension struct {
-	Value int
-	Unit  MeasureUnit
-}
-
-func Pixels(value int) Dimension {
-	return Dimension{value, PixelUnit}
-}
-func Percentage(value int) Dimension {
-	return Dimension{value, PercentageUnit}
-}
-
 type AlignmentH uint32
 
 const (
