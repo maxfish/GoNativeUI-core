@@ -86,17 +86,17 @@ func TestBoxBasics(t *testing.T) {
 	g.Screen().Layout()
 
 	// Assert content wrapping
-	assertStringEqual(t, c1.Bounds().ToString(), "{x:0,y:0,w:207,h:16}")
+	assertStructEqual(t, c1.Bounds(), utils.Rect{X: 0, Y: 0, W: 207, H: 16})
 	// Assert children placement
-	assertStringEqual(t, l1.Bounds().ToString(), "{x:0,y:0,w:99,h:16}")
-	assertStringEqual(t, l2.Bounds().ToString(), "{x:99,y:0,w:108,h:16}")
+	assertStructEqual(t, l1.Bounds(), utils.Rect{X: 0, Y: 0, W: 99, H: 16})
+	assertStructEqual(t, l2.Bounds(), utils.Rect{X: 99, Y: 0, W: 108, H: 16})
 
 	c1.RemoveChildById("label1")
 	c1.RemoveChildById("label2")
 	g.Screen().Layout()
 	assertStructEqual(t, c1.Children(), []gui.IWidget{})
 	// Content wrapping without children
-	assertStringEqual(t, c1.Bounds().ToString(), "{x:0,y:0,w:0,h:0}")
+	assertStructEqual(t, c1.Bounds(), utils.Rect{})
 }
 
 func TestBoxComplexLayout(t *testing.T) {
@@ -132,18 +132,18 @@ func TestBoxComplexLayout(t *testing.T) {
 
 	// Main layout
 	g.Screen().Layout()
-	assertStringEqual(t, c1.Bounds().ToString(), "{x:0,y:0,w:230,h:500}")
-	assertStringEqual(t, c2.Bounds().ToString(), "{x:0,y:474,w:230,h:26}")
-	assertStringEqual(t, l.Bounds().ToString(), "{x:460,y:0,w:108,h:16}")
-	assertStringEqual(t, spacer1.Bounds().ToString(), "{x:0,y:68,w:0,h:406}")
-	assertStringEqual(t, spacer2.Bounds().ToString(), "{x:230,y:0,w:230,h:0}")
+	assertStructEqual(t, c1.Bounds(), utils.Rect{X: 0, Y: 0, W: 230, H: 500})
+	assertStructEqual(t, c2.Bounds(), utils.Rect{X: 0, Y: 474, W: 230, H: 26})
+	assertStructEqual(t, l.Bounds(), utils.Rect{X: 460, Y: 0, W: 108, H: 16})
+	assertStructEqual(t, spacer1.Bounds(), utils.Rect{X: 0, Y: 68, H: 406})
+	assertStructEqual(t, spacer2.Bounds(), utils.Rect{X: 230, Y: 0, W: 230, H: 0})
 
 	// Minimum dimensions constraints
 	g.Screen().SetDimension(256, 150)
 	g.Screen().Layout()
-	assertStringEqual(t, c1.Bounds().ToString(), "{x:0,y:0,w:148,h:150}")
-	assertStringEqual(t, c2.Bounds().ToString(), "{x:0,y:168,w:148,h:26}")
-	assertStringEqual(t, l.Bounds().ToString(), "{x:148,y:0,w:108,h:16}")
-	assertStringEqual(t, spacer1.Bounds().ToString(), "{x:0,y:68,w:0,h:100}")
-	assertStringEqual(t, spacer2.Bounds().ToString(), "{x:148,y:0,w:0,h:0}")
+	assertStructEqual(t, c1.Bounds(), utils.Rect{X: 0, Y: 0, W: 148, H: 150})
+	assertStructEqual(t, c2.Bounds(), utils.Rect{X: 0, Y: 168, W: 148, H: 26})
+	assertStructEqual(t, l.Bounds(), utils.Rect{X: 148, Y: 0, W: 108, H: 16})
+	assertStructEqual(t, spacer1.Bounds(), utils.Rect{X: 0, Y: 68, W: 0, H: 100})
+	assertStructEqual(t, spacer2.Bounds(), utils.Rect{X: 148, Y: 0, W: 0, H: 0})
 }
