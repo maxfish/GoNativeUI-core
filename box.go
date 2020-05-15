@@ -59,7 +59,8 @@ func (c *BoxContainer) Measure() {
 	c.childrenTotalFlexAmount = totalFlex
 
 	lengths := []int{mainLength, oppositeLength}
-	c.measuredWidth, c.measuredHeight = lengths[c.orientation], lengths[1-c.orientation]
+	c.measuredWidth = lengths[c.orientation]
+	c.measuredHeight = lengths[1-c.orientation]
 }
 
 func (c *BoxContainer) Layout() {
@@ -80,14 +81,14 @@ func (c *BoxContainer) layoutChildren() {
 		hasToRestart := true
 		for hasToRestart {
 			hasToRestart = false
-			pos := 0
+			offset := 0
 			spaceFree := utils.MaxI(totalSpace-fixedSpace, 0)
 			maxHeight := 0
 			for _, child := range c.children {
 				if !child.Visible() {
 					continue
 				}
-				child.SetLeft(pos)
+				child.SetLeft(offset)
 				if child.MeasuredFlex() > 0 {
 					width := (child.MeasuredFlex() * spaceFree) / flexSpace
 					child.SetWidth(width)
@@ -111,7 +112,7 @@ func (c *BoxContainer) layoutChildren() {
 				}
 
 				maxHeight = utils.MaxI(maxHeight, child.Bounds().H)
-				pos += child.Bounds().W
+				offset += child.Bounds().W
 			}
 		}
 	case BoxVerticalOrientation:
@@ -120,13 +121,13 @@ func (c *BoxContainer) layoutChildren() {
 		hasToRestart := true
 		for hasToRestart {
 			hasToRestart = false
-			pos := 0
+			offset := 0
 			spaceFree := utils.MaxI(totalSpace-fixedSpace, 0)
 			for _, child := range c.children {
 				if !child.Visible() {
 					continue
 				}
-				child.SetTop(pos)
+				child.SetTop(offset)
 				if child.MeasuredFlex() > 0 {
 					height := (child.MeasuredFlex() * spaceFree) / flexSpace
 					child.SetHeight(height)
@@ -149,7 +150,7 @@ func (c *BoxContainer) layoutChildren() {
 					child.SetWidth(child.MeasuredWidth())
 				}
 
-				pos += child.Bounds().H
+				offset += child.Bounds().H
 			}
 		}
 	}
