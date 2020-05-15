@@ -1,5 +1,6 @@
 ![Go](https://github.com/maxfish/GoNativeUI-core/workflows/Go/badge.svg)
-<a href="https://codeclimate.com/github/codeclimate/codeclimate/maintainability"><img src="https://api.codeclimate.com/v1/badges/a99a88d28ad37a79dbf6/maintainability" /></a> [![Test Coverage](https://api.codeclimate.com/v1/badges/a99a88d28ad37a79dbf6/test_coverage)](https://codeclimate.com/github/codeclimate/codeclimate/test_coverage)
+[![Maintainability](https://api.codeclimate.com/v1/badges/1f9d6d2be93564c60962/maintainability)](https://codeclimate.com/github/maxfish/GoNativeUI-core/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/1f9d6d2be93564c60962/test_coverage)](https://codeclimate.com/github/maxfish/GoNativeUI-core/test_coverage)
 
 *Heavily WIP / Not yet ready for use*
 
