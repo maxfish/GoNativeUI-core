@@ -23,8 +23,6 @@ func NewButton(text string) *Button {
 	b := &Button{}
 	widgetInit(b)
 	b.buttonType = ButtonTypeNormal
-	b.fontSize = 25
-	b.padding = utils.Insets{Top: 2, Right: 2, Bottom: 2, Left: 2}
 	b.contentAlignmentH = utils.AlignmentHCenter
 	b.contentAlignmentV = utils.AlignmentVCenter
 	b.text = text
