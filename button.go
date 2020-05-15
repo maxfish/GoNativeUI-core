@@ -9,6 +9,7 @@ type ButtonType int
 const (
 	ButtonTypeNormal ButtonType = iota
 	ButtonTypeToggle
+	ButtonTypeCheckbox
 )
 
 type Button struct {
@@ -36,6 +37,13 @@ func NewToggleButton(text string) *Button {
 	return b
 }
 
+func NewCheckbox(text string) *Button {
+	b := NewButton(text)
+	b.buttonType = ButtonTypeCheckbox
+	b.contentAlignmentH = utils.AlignmentHLeft
+	return b
+}
+
 func (b *Button) Pressed() bool { return b.pressed }
 
 func (b *Button) SetTheme(theme *Theme) {
@@ -52,25 +60,28 @@ func (b *Button) SetButtonGroup(buttonGroup []*Button) {
 }
 
 func (b *Button) OnMouseButtonEvent(x float32, y float32, button ButtonIndex, event EventAction, modifiers ModifierKey) bool {
-	if event == EventActionPress {
-		if b.buttonType == ButtonTypeNormal {
+	if b.buttonType == ButtonTypeNormal {
+		switch event {
+		case EventActionPress:
 			b.pressed = true
-		} else {
-			if b.buttonGroup != nil {
-				for _, btn := range b.buttonGroup {
-					if btn != b && btn.buttonType == ButtonTypeToggle {
-						btn.pressed = false
-					} else {
-						b.pressed = true
-					}
-				}
-			} else {
-				b.pressed = !b.pressed
-			}
-		}
-	} else if event == EventActionRelease {
-		if b.buttonType == ButtonTypeNormal {
+		case EventActionRelease:
 			b.pressed = false
+		}
+		return true
+	}
+
+	// Toggle buttons
+	if event == EventActionPress {
+		if b.buttonGroup == nil {
+			b.pressed = !b.pressed
+		} else {
+			for _, btn := range b.buttonGroup {
+				if btn == b {
+					b.pressed = true
+				} else {
+					btn.pressed = false
+				}
+			}
 		}
 	}
 	return true
