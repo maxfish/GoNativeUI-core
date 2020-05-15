@@ -15,6 +15,7 @@ type Theme struct {
 	LabelFontSize  int
 	LabelTextColor utils.ColorF
 	LabelPadding   utils.Insets
+	LabelAlignment utils.Alignment
 
 	// Button
 	ButtonFont      IFont
@@ -43,6 +44,7 @@ func NewDefaultTheme() *Theme {
 	t.LabelTextColor = utils.ColorGrayi(225, 255)
 	t.LabelFontSize = 15
 	t.LabelPadding = utils.HomogeneousInsets(0)
+	t.LabelAlignment = utils.Alignment{Horizontal: utils.AlignmentHCenter, Vertical: utils.AlignmentVCenter}
 
 	t.ButtonFont = defaultFont
 	t.ButtonFillColor = utils.ColorGrayi(105, 255)
