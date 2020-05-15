@@ -2,20 +2,22 @@ package utils
 
 import "fmt"
 
-type Point struct {
-	X int
-	Y int
-}
+type Point [2]int
 
 func (p Point) Point(x, y int) Point {
-	return Point{
-		X: x,
-		Y: y,
-	}
+	return Point{x, y}
+}
+
+func (p Point) X() int {
+	return p[0]
+}
+
+func (p Point) Y() int {
+	return p[1]
 }
 
 func (p Point) EqualsTo(other Point) bool {
-	return p.X == other.X && p.Y == other.Y
+	return p[0] == other[0] && p[1] == other[1]
 }
 
 func (p Point) ToString() string {
