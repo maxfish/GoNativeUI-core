@@ -53,5 +53,7 @@ func (l *Label) Layout() {
 }
 
 func (l *Label) computeContentSize() {
-	l.contentWidth, l.contentHeight = l.theme.LabelFont.TextSize(l.fontSize, l.text)
+	textSize := l.theme.LabelFont.TextSize(l.fontSize, l.text)
+	l.contentWidth = textSize.W()
+	l.contentHeight = textSize.H()
 }

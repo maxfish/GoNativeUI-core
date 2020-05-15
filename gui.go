@@ -1,8 +1,10 @@
 package gui
 
+import "github.com/maxfish/GoNativeUI-Core/utils"
+
 type IFont interface {
 	FaceName() string
-	TextSize(size int, text string) (int, int)
+	TextSize(size int, text string) utils.Size
 }
 
 type IRenderer interface {

@@ -160,7 +160,7 @@ func (f *BitmapFont) PageImages() []image.Image {
 }
 
 func (f *BitmapFont) PageSize() utils.Size {
-	return utils.Size{W: f.pageWidth, H: f.pageHeight}
+	return utils.Size{f.pageWidth, f.pageHeight}
 }
 
 func (f *BitmapFont) Size() int {
@@ -168,7 +168,7 @@ func (f *BitmapFont) Size() int {
 }
 
 // TODO: this doesn't support multiline text
-func (f *BitmapFont) TextSize(size int, text string) (int, int) {
+func (f *BitmapFont) TextSize(size int, text string) utils.Size {
 	scale := float32(size) / float32(f.Size())
 	h := f.lineHeight
 	var previousGlyph int32
@@ -178,7 +178,7 @@ func (f *BitmapFont) TextSize(size int, text string) (int, int) {
 		w += bmc.AdvanceX + bmc.Kerning(previousGlyph)
 		previousGlyph = glyph
 	}
-	return int(float32(w) * scale), int(float32(h) * scale)
+	return utils.Size{int(float32(w) * scale), int(float32(h) * scale)}
 }
 
 func (f *BitmapFont) Glyph(index int32) BitmapGlyph {
