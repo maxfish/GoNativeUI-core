@@ -39,7 +39,6 @@ func (c *BoxContainer) Measure() {
 	var mainLength, oppositeLength int
 	mainIndex := c.orientation
 	oppositeIndex := 1 - c.orientation
-	c.spacing = 10
 	var totalFlex, totalFixed int
 	for _, child := range c.children {
 		if !child.Visible() {
