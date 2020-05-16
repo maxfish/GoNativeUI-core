@@ -7,7 +7,7 @@ import (
 )
 
 func TestBox(t *testing.T) {
-	g := InitTestGui(screenW, screenH, nil)
+	g := InitDummyGui(screenWidth, screenHeight, nil)
 	box := gui.NewBoxContainer(g.Theme(), gui.BoxHorizontalOrientation)
 	label := gui.NewLabel(textStrings[0])
 	box.AddChild(label)
@@ -27,8 +27,7 @@ func TestBox(t *testing.T) {
 }
 
 func TestBoxChildren(t *testing.T) {
-	theme := gui.NewDefaultTheme()
-	g := InitTestGui(screenW, screenH, theme)
+	g := InitDummyGui(screenWidth, screenHeight, nil)
 	box := gui.NewBoxContainer(g.Theme(), gui.BoxHorizontalOrientation)
 	label1 := gui.NewLabel(textStrings[0])
 	label1.SetId("label1")
@@ -51,13 +50,13 @@ func TestBoxChildren(t *testing.T) {
 	assertStructEqual(t, box.Children(), []gui.IWidget{label1, label2, button3, label4})
 
 	g.Screen().Layout()
-	c := box.FindChildAt(100, 10)
+	c := box.FindChildAt(180, 10)
 	assertStructEqual(t, c, button3)
 }
 
-func TestBoxInput(t *testing.T) {
-	theme := gui.NewDefaultTheme()
-	g := InitTestGui(screenW, screenH, theme)
+func TestBoxMouseInput(t *testing.T) {
+	theme := InitDummyTheme()
+	g := InitDummyGui(screenWidth, screenHeight, theme)
 	box := gui.NewBoxContainer(g.Theme(), gui.BoxHorizontalOrientation)
 	button := gui.NewButton(textStrings[0])
 	box.AddChildren(button)
@@ -73,8 +72,8 @@ func TestBoxInput(t *testing.T) {
 }
 
 func TestBoxBasics(t *testing.T) {
-	theme := gui.NewDefaultTheme()
-	g := InitTestGui(screenW, screenH, theme)
+	theme := InitDummyTheme()
+	g := InitDummyGui(screenWidth, screenHeight, theme)
 
 	l1 := gui.NewLabel(textStrings[2])
 	l1.SetId("label1")
@@ -86,17 +85,17 @@ func TestBoxBasics(t *testing.T) {
 	g.Screen().Layout()
 
 	// Assert content wrapping
-	assertStructEqual(t, c1.Bounds(), utils.Rect{X: 0, Y: 0, W: 207, H: 16})
+	assertStructEqual(t, c1.Bounds(), utils.Rect{X: 0, Y: 0, W: 380, H: 16})
 	// Assert children placement
-	assertStructEqual(t, l1.Bounds(), utils.Rect{X: 0, Y: 0, W: 99, H: 16})
-	assertStructEqual(t, l2.Bounds(), utils.Rect{X: 99, Y: 0, W: 108, H: 16})
+	assertStructEqual(t, l1.Bounds(), utils.Rect{X: 0, Y: 0, W: 180, H: 16})
+	assertStructEqual(t, l2.Bounds(), utils.Rect{X: 180, Y: 0, W: 200, H: 16})
 
 	// Spacing
 	c1.SetSpacing(10)
 	g.Screen().Layout()
-	assertStructEqual(t, c1.Bounds(), utils.Rect{X: 0, Y: 0, W: 217, H: 16})
-	assertStructEqual(t, l1.Bounds(), utils.Rect{X: 0, Y: 0, W: 99, H: 16})
-	assertStructEqual(t, l2.Bounds(), utils.Rect{X: 109, Y: 0, W: 108, H: 16})
+	assertStructEqual(t, c1.Bounds(), utils.Rect{X: 0, Y: 0, W: 390, H: 16})
+	assertStructEqual(t, l1.Bounds(), utils.Rect{X: 0, Y: 0, W: 180, H: 16})
+	assertStructEqual(t, l2.Bounds(), utils.Rect{X: 190, Y: 0, W: 200, H: 16})
 
 	// Removing children
 	c1.RemoveChildById("label1")
@@ -108,8 +107,8 @@ func TestBoxBasics(t *testing.T) {
 }
 
 func TestBoxComplexLayout(t *testing.T) {
-	theme := gui.NewDefaultTheme()
-	g := InitTestGui(screenW, screenH, theme)
+	theme := InitDummyTheme()
+	g := InitDummyGui(screenWidth, screenHeight, theme)
 
 	// Prepare the layout
 	spacer1 := gui.NewSpacer()
@@ -140,18 +139,18 @@ func TestBoxComplexLayout(t *testing.T) {
 
 	// Main layout
 	g.Screen().Layout()
-	assertStructEqual(t, c1.Bounds(), utils.Rect{X: 0, Y: 0, W: 230, H: 500})
-	assertStructEqual(t, c2.Bounds(), utils.Rect{X: 0, Y: 474, W: 230, H: 26})
-	assertStructEqual(t, l.Bounds(), utils.Rect{X: 460, Y: 0, W: 108, H: 16})
+	assertStructEqual(t, c1.Bounds(), utils.Rect{X: 0, Y: 0, W: 200, H: 500})
+	assertStructEqual(t, c2.Bounds(), utils.Rect{X: 0, Y: 474, W: 200, H: 26})
+	assertStructEqual(t, l.Bounds(), utils.Rect{X: 400, Y: 0, W: 200, H: 16})
 	assertStructEqual(t, spacer1.Bounds(), utils.Rect{X: 0, Y: 68, H: 406})
-	assertStructEqual(t, spacer2.Bounds(), utils.Rect{X: 230, Y: 0, W: 230, H: 0})
+	assertStructEqual(t, spacer2.Bounds(), utils.Rect{X: 200, Y: 0, W: 200, H: 0})
 
 	// Minimum dimensions constraints
 	g.Screen().SetDimension(256, 150)
 	g.Screen().Layout()
 	assertStructEqual(t, c1.Bounds(), utils.Rect{X: 0, Y: 0, W: 148, H: 150})
 	assertStructEqual(t, c2.Bounds(), utils.Rect{X: 0, Y: 168, W: 148, H: 26})
-	assertStructEqual(t, l.Bounds(), utils.Rect{X: 148, Y: 0, W: 108, H: 16})
+	assertStructEqual(t, l.Bounds(), utils.Rect{X: 148, Y: 0, W: 200, H: 16})
 	assertStructEqual(t, spacer1.Bounds(), utils.Rect{X: 0, Y: 68, W: 0, H: 100})
 	assertStructEqual(t, spacer2.Bounds(), utils.Rect{X: 148, Y: 0, W: 0, H: 0})
 }

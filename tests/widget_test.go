@@ -10,7 +10,7 @@ type WidgetTest struct {
 }
 
 func TestWidget(t *testing.T) {
-	g := InitTestGui(screenW, screenH, nil)
+	g := InitDummyGui(screenWidth, screenHeight, nil)
 	w := &WidgetTest{}
 	g.Screen().AddChild(w)
 

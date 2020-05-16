@@ -1,7 +1,6 @@
 package gui
 
 import (
-	"github.com/maxfish/GoNativeUI-Core/assets"
 	"github.com/maxfish/GoNativeUI-Core/utils"
 )
 
@@ -34,11 +33,11 @@ type Theme struct {
 	CheckboxAlignment utils.Alignment
 }
 
-func NewDefaultTheme() *Theme {
+func NewDefaultTheme(baseFont IFont) *Theme {
 	t := &Theme{}
 
 	t.ScreenBackgroundColor = utils.ColorGrayi(56, 255)
-	defaultFont := NewFontFromData(assets.FontRobotoRegularDefinition, []string{assets.FontRobotoRegularImage})
+	defaultFont := baseFont//NewFontFromData(assets.FontRobotoRegularDefinition, []string{assets.FontRobotoRegularImage})
 
 	t.LabelFont = defaultFont
 	t.LabelTextColor = utils.ColorGrayi(225, 255)

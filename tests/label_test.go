@@ -7,7 +7,7 @@ import (
 )
 
 func TestLabel(t *testing.T) {
-	g := InitTestGui(screenW, screenH, nil)
+	g := InitDummyGui(screenWidth, screenHeight, nil)
 	label := gui.NewLabel(textStrings[0])
 	g.Screen().AddChild(label)
 
