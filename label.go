@@ -51,10 +51,6 @@ func (l *Label) Measure() {
 	l.measuredFlex = l.flex
 }
 
-func (l *Label) Layout() {
-	// TODO: Layout content
-}
-
 func (l *Label) computeContentSize() {
 	textSize := l.theme.LabelFont.TextSize(l.fontSize, l.text)
 	l.contentWidth = textSize.W()
