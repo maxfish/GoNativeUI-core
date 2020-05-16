@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-func ColorToString(f utils.ColorF) string {
+func ColorToString(f utils.Color) string {
 	return fmt.Sprintf("{%.2f,%.2f,%.2f,%.2f}", f[0], f[1], f[2], f[3])
 }
 

@@ -1,15 +1,15 @@
 package utils
 
-type ColorF [4]float32
+type Color [4]float32
 
-// ColorRGBA creates a new color from float components (0->1)
-func ColorRGBA(r, g, b, a float32) ColorF {
-	return ColorF{r, g, b, a}
+// NewColor creates a new color from float components (0->1)
+func NewColor(r, g, b, a float32) Color {
+	return Color{r, g, b, a}
 }
 
-// ColorRGBAi creates a new color from 8bit components (0->255)
-func ColorRGBAi(r, g, b, a uint8) ColorF {
-	return ColorF{
+// NewColorInt creates a new color from 8bit components (0->255)
+func NewColorInt(r, g, b, a uint8) Color {
+	return Color{
 		float32(r) / 255.0,
 		float32(g) / 255.0,
 		float32(b) / 255.0,
@@ -17,9 +17,9 @@ func ColorRGBAi(r, g, b, a uint8) ColorF {
 	}
 }
 
-// ColorGrayi creates a gray shade from float components (0->1)
-func ColorGrayi(g, a uint8) ColorF {
-	return ColorF{
+// NewColorGrayInt creates a gray shade from float components (0->1)
+func NewColorGrayInt(g, a uint8) Color {
+	return Color{
 		float32(g) / 255.0,
 		float32(g) / 255.0,
 		float32(g) / 255.0,
@@ -27,13 +27,13 @@ func ColorGrayi(g, a uint8) ColorF {
 	}
 }
 
-// Transparent creates a new color with all components at 0, including the alpha
-func ColorTransparent() ColorF {
-	return ColorF{}
+// NewColorTransparent creates a new color with all components at 0, including the alpha
+func NewColorTransparent() Color {
+	return Color{}
 }
 
-func ColorScaled(c ColorF, scale float32) ColorF {
-	return ColorF{
+func (c Color)Scaled(scale float32) Color {
+	return Color{
 		c[0] * scale,
 		c[1] * scale,
 		c[2] * scale,

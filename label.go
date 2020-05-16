@@ -7,15 +7,15 @@ import (
 type LabelText struct {
 	font      IFont
 	fontSize  int
-	textColor utils.ColorF
+	textColor utils.Color
 	text      string
 }
 
 // Getters
 func (l *LabelText) Text() string            { return l.text }
 func (l *LabelText) Font() IFont             { return l.font }
-func (l *LabelText) FontSize() int           { return l.fontSize }
-func (l *LabelText) TextColor() utils.ColorF { return l.textColor }
+func (l *LabelText) FontSize() int          { return l.fontSize }
+func (l *LabelText) TextColor() utils.Color { return l.textColor }
 
 type Label struct {
 	Widget
