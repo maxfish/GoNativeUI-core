@@ -5,6 +5,7 @@ import "github.com/maxfish/GoNativeUI-Core/utils"
 type IFont interface {
 	FaceName() string
 	TextSize(fontSize int, text string) utils.Size
+	IndexFromCoords(fontSize int, text string, x int, y int) int
 }
 
 type IRenderer interface {
