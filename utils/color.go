@@ -17,6 +17,19 @@ func NewColorInt(r, g, b, a uint8) Color {
 	}
 }
 
+// NewColorHex creates a new color from an hex number
+func NewColorHex(hex uint32) Color {
+	c := Color{}
+	c[3] = float32(hex&0xFF) / 255
+	hex >>= 8
+	c[2] = float32(hex&0xFF) / 255
+	hex >>= 8
+	c[1] = float32(hex&0xFF) / 255
+	hex >>= 8
+	c[0] = float32(hex&0xFF) / 255
+	return c
+}
+
 // NewColorGrayInt creates a gray shade from float components (0->1)
 func NewColorGrayInt(g, a uint8) Color {
 	return Color{
@@ -32,7 +45,7 @@ func NewColorTransparent() Color {
 	return Color{}
 }
 
-func (c Color)Scaled(scale float32) Color {
+func (c Color) Scaled(scale float32) Color {
 	return Color{
 		c[0] * scale,
 		c[1] * scale,
