@@ -14,10 +14,25 @@ These are not goals of this project:
 * Provide an extensive set of Layouts or a complete widgets set similar to: QT, GTK, ...
 
 ## Core
-The core repository contains the logic code of the GUI and it does **not** contain rendering code. A backend for GLFW/OpenGL is WIP.
+The core repository contains the logic code of the GUI and it does **not** contain any rendering code.
 
-Right now, the only assumption made is that the default font (Roboto Regular) will be rendered using the embedded [Distance Field](https://github.com/libgdx/libgdx/wiki/Distance-field-fonts) PNG.
+The only assumption made is that the embedded font (Roboto Regular) will be rendered using the embedded [Distance Field](https://github.com/libgdx/libgdx/wiki/Distance-field-fonts) PNG. By implementing an interface is possible to replace the base font and to use different data and rendering techniques.
 
 ## Widgets currently available
 * Label
-* Button
+* Button, ToggleButton, Checkbox
+
+## Layout
+The _Box_ container allows to create complex layouts by applying very simple rules.
+
+The layout is inspired by the [The Box Model](https://developer.mozilla.org/en-US/docs/Archive/Mozilla/XUL/Tutorial/The_Box_Model) from the, now defunct, [Mozilla XUL](https://developer.mozilla.org/en-US/docs/Archive/Mozilla/XUL).
+
+
+## To do
+- [ ] Button action callbacks
+- [ ] Widget content alignment
+- [ ] Widget alignment within containers (only _stretch_ is supported right now)
+- [ ] Containers padding
+- [ ] Radio buttons
+- [ ] Input fields
+- [ ] Grid container / Property grid
