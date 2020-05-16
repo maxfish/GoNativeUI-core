@@ -59,8 +59,7 @@ type IWidget interface {
 	// Content
 	ContentWidth() int
 	ContentHeight() int
-	ContentAlignmentH() utils.AlignmentH
-	ContentAlignmentV() utils.AlignmentV
+	ContentAlignment() utils.Alignment
 }
 
 type Widget struct {
@@ -105,8 +104,7 @@ func (w *Widget) SetPadding(b utils.Insets)            { w.padding = b }
 func (w *Widget) InnerBounds() utils.Rect              { return w.bounds.ShrinkByInsets(w.padding) }
 func (w *Widget) ContentWidth() int                    { return w.contentWidth }
 func (w *Widget) ContentHeight() int                   { return w.contentHeight }
-func (w *Widget) ContentAlignmentH() utils.AlignmentH  { return w.contentAlignment.Horizontal }
-func (w *Widget) ContentAlignmentV() utils.AlignmentV  { return w.contentAlignment.Vertical }
+func (w *Widget) ContentAlignment() utils.Alignment    { return w.contentAlignment }
 func (w *Widget) Flex() int                            { return w.flex }
 func (w *Widget) SetFlex(flex int)                     { w.flex = flex }
 func (w *Widget) Stretch() int                         { return w.stretch }

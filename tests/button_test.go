@@ -43,7 +43,7 @@ func TestToggleButtonGrouped(t *testing.T) {
 	button2 := gui.NewToggleButton(textStrings[1])
 	g.Screen().AddChildren(button1, button2)
 
-	group := []*gui.Button{button1, button2}
+	group := []*gui.ToggleButton{button1, button2}
 	button1.SetButtonGroup(group)
 	button2.SetButtonGroup(group)
 

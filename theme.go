@@ -57,7 +57,7 @@ func NewDefaultTheme() *Theme {
 	t.CheckboxFillColor = utils.ColorTransparent()
 	t.CheckboxTextColor = utils.ColorGrayi(232, 255)
 	t.CheckboxFontSize = 15
-	t.CheckboxPadding = utils.Insets{Top: 2, Right: 2, Bottom: 2, Left: 2}
+	t.CheckboxPadding = utils.Insets{Top: 2, Right: 2, Bottom: 2, Left: 25}
 	t.CheckboxAlignment = utils.Alignment{Horizontal: utils.AlignmentHLeft, Vertical: utils.AlignmentVCenter}
 	return t
 }
