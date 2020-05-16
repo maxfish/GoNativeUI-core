@@ -4,13 +4,22 @@ import (
 	"github.com/maxfish/GoNativeUI-Core/utils"
 )
 
-type Label struct {
-	Widget
+type LabelText struct {
 	font      IFont
 	fontSize  int
 	textColor utils.ColorF
+	text      string
+}
 
-	text string
+// Getters
+func (l *LabelText) Text() string            { return l.text }
+func (l *LabelText) Font() IFont             { return l.font }
+func (l *LabelText) FontSize() int           { return l.fontSize }
+func (l *LabelText) TextColor() utils.ColorF { return l.textColor }
+
+type Label struct {
+	Widget
+	LabelText
 }
 
 func NewLabel(text string) *Label {
@@ -20,12 +29,6 @@ func NewLabel(text string) *Label {
 	l.fontSize = 25
 	return l
 }
-
-// Getters
-func (l *Label) Text() string            { return l.text }
-func (l *Label) Font() IFont             { return l.font }
-func (l *Label) FontSize() int           { return l.fontSize }
-func (l *Label) TextColor() utils.ColorF { return l.textColor }
 
 func (l *Label) SetTheme(theme *Theme) {
 	l.theme = theme
