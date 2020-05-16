@@ -66,6 +66,7 @@ func TestToggleButtonGrouped(t *testing.T) {
 	// Button2 pressed -> disabled Button1
 	button2.OnMouseButtonEvent(0, 0, 0, gui.EventActionPress, 0)
 	assertBoolEqual(t, button2.Pressed(), true)
+	assertBoolEqual(t, button1.Pressed(), false)
 	button2.OnMouseButtonEvent(0, 0, 0, gui.EventActionRelease, 0)
 	assertBoolEqual(t, button2.Pressed(), true)
 	assertBoolEqual(t, button1.Pressed(), false)
