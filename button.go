@@ -18,6 +18,7 @@ func (b *Button) SetTheme(theme *Theme) {
 	b.theme = theme
 	b.font = theme.ButtonFont
 	b.textColor = theme.ButtonTextColor
+	b.fillColor = theme.ButtonFillColor
 	b.fontSize = theme.ButtonFontSize
 	b.padding = theme.ButtonPadding
 	b.contentAlignment = theme.ButtonAlignment
