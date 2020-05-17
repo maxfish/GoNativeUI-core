@@ -170,3 +170,11 @@ func (c *Container) OnKeyEvent(key Key, action EventAction, modifierKey Modifier
 	}
 	return false
 }
+
+func (c *Container) OnCharEvent(char rune) bool {
+	// Sends the key events only to the focusedDescendant
+	if c.focusedDescendant != nil {
+		return c.focusedDescendant.OnCharEvent(char)
+	}
+	return false
+}

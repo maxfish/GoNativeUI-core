@@ -53,3 +53,7 @@ func (g *Gui) OnMouseScrolled(scrollX, scrollY float32) bool {
 func (g *Gui) OnKeyEvent(key Key, action EventAction, modifierKey ModifierKey) bool {
 	return g.screen.OnKeyEvent(key, action, modifierKey)
 }
+
+func (g *Gui) OnCharEvent(char rune) bool {
+	return g.screen.OnCharEvent(char)
+}
