@@ -8,14 +8,16 @@ type LabelText struct {
 	font      IFont
 	fontSize  int
 	textColor utils.Color
+	fillColor utils.Color
 	text      string
 }
 
 // Getters
-func (l *LabelText) Text() string            { return l.text }
-func (l *LabelText) Font() IFont             { return l.font }
+func (l *LabelText) Text() string           { return l.text }
+func (l *LabelText) Font() IFont            { return l.font }
 func (l *LabelText) FontSize() int          { return l.fontSize }
 func (l *LabelText) TextColor() utils.Color { return l.textColor }
+func (l *LabelText) FillColor() utils.Color { return l.fillColor }
 
 type Label struct {
 	Widget
@@ -34,8 +36,10 @@ func (l *Label) SetTheme(theme *Theme) {
 	l.theme = theme
 	l.font = theme.LabelFont
 	l.textColor = theme.LabelTextColor
+	l.fillColor = theme.LabelFillColor
 	l.fontSize = theme.LabelFontSize
 	l.padding = theme.LabelPadding
+	l.contentAlignment = theme.LabelAlignment
 	l.Measure()
 }
 
