@@ -50,7 +50,7 @@ func assertStructEqual(t *testing.T, actual interface{}, expected interface{}) {
 type DummyFont struct{}
 
 func (f *DummyFont) FaceName() string { return "Test font" }
-func (f *DummyFont) TextSize(size int, text string) utils.Size {
+func (f *DummyFont) TextSize(size int, text string, numGlyphs ...int) utils.Size {
 	return utils.Size{len(text) * fontCharWidth, fontCharHeight}
 }
 func (f *DummyFont) IndexFromCoords(fontSize int, text string, x int, y int) int {
