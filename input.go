@@ -175,5 +175,4 @@ type IFocusable interface {
 	FocusGained()
 	FocusLost()
 	Focused() bool
-	SetFocused()
 }
