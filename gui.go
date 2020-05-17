@@ -30,6 +30,7 @@ func (g *Gui) Theme() *Theme      { return g.screen.Theme() }
 
 // Mouse handling
 func (g *Gui) OnMouseCursorMoved(x, y float32) bool {
+	// TODO: Here the mouse pointer should change based on the component under it
 	//log.Printf("[Gui] Mouse moved %.2f,%.2f\n", x, y)
 	g.mouseData.previousPosX, g.mouseData.previousPosY = g.mouseData.currentPosX, g.mouseData.currentPosY
 	g.mouseData.currentPosX, g.mouseData.currentPosY = x, y
