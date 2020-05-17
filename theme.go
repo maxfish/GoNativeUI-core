@@ -15,6 +15,7 @@ type Theme struct {
 	LabelFont      IFont
 	LabelFontSize  int
 	LabelTextColor utils.Color
+	LabelFillColor utils.Color
 	LabelPadding   utils.Insets
 	LabelAlignment utils.Alignment
 
@@ -57,6 +58,7 @@ func NewDefaultTheme(baseFont IFont) *Theme {
 
 	// Label
 	t.LabelFont = t.BaseFont
+	t.LabelFillColor = utils.NewColorTransparent()
 	t.LabelTextColor = t.BaseTextColor
 	t.LabelFontSize = t.BaseFontSize
 	t.LabelPadding = utils.HomogeneousInsets(0)
@@ -83,7 +85,7 @@ func NewDefaultTheme(baseFont IFont) *Theme {
 	t.InputFieldFontSize = t.BaseFontSize
 	t.InputFieldTextColor = t.BaseTextColor
 	t.InputFieldFillColor = t.BaseFillColor
-	t.InputFieldPadding = utils.Insets{Top: 2, Right: 4, Bottom: 2, Left: 4}
+	t.InputFieldPadding = utils.Insets{Top: 4, Right: 5, Bottom: 4, Left: 5}
 	t.InputFieldAlignment = utils.Alignment{Horizontal: utils.AlignmentHLeft, Vertical: utils.AlignmentVCenter}
 	t.InputFieldSelectionColor = utils.NewColorHex(0x164288FF)
 	t.InputFieldCursorColor = utils.NewColorHex(0xBBBBBBFF)
