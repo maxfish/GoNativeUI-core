@@ -106,28 +106,24 @@ func (c *Container) OnMouseCursorMoved(x float32, y float32) bool {
 	return false
 }
 
-func (c *Container) OnMouseButtonEvent(x float32, y float32, button ButtonIndex, event EventAction, modifiers ModifierKey) bool {
-	var child IWidget = nil
+func (c *Container) OnMouseButtonEvent(x float32, y float32, button ButtonIndex, action EventAction, modifierKey ModifierKey) bool {
 	for _, oneChild := range c.children {
 		if !(oneChild.Visible() && oneChild.Enabled()) {
 			continue
 		}
 		if oneChild.Bounds().ContainsPoint(int(x), int(y)) {
-			child = oneChild
-			break
+			consumed := false
+			_, ok := oneChild.(IMouseListener)
+			if ok {
+				consumed = oneChild.OnMouseButtonEvent(x-float32(oneChild.Bounds().X), y-float32(oneChild.Bounds().Y), button, action, modifierKey)
+			} else {
+				consumed = oneChild.OnMouseButtonEvent(x, y, button, action, modifierKey)
+			}
+			return consumed
 		}
 	}
-	if child == nil {
-		return false
-	}
-	consumed := false
-	_, ok := child.(*Container)
-	if ok {
-		consumed = child.OnMouseButtonEvent(x-float32(child.Bounds().X), y-float32(child.Bounds().Y), button, event, modifiers)
-	} else {
-		consumed = child.OnMouseButtonEvent(x, y, button, event, modifiers)
-	}
-	return consumed
+
+	return false
 }
 
 func (c *Container) OnMouseScrolled(scrollX float32, scrollY float32) bool {
