@@ -35,7 +35,7 @@ type Theme struct {
 	CheckboxPadding   utils.Insets
 	CheckboxAlignment utils.Alignment
 
-	// InputField
+	// TextField
 	InputFieldFont           IFont
 	InputFieldFontSize       int
 	InputFieldTextColor      utils.Color
@@ -44,6 +44,7 @@ type Theme struct {
 	InputFieldAlignment      utils.Alignment
 	InputFieldSelectionColor utils.Color
 	InputFieldCursorColor    utils.Color
+	InputFieldNotValidColor  utils.Color
 }
 
 func NewDefaultTheme(baseFont IFont) *Theme {
@@ -80,15 +81,16 @@ func NewDefaultTheme(baseFont IFont) *Theme {
 	t.CheckboxPadding = utils.Insets{Top: 2, Right: 2, Bottom: 2, Left: 2}
 	t.CheckboxAlignment = utils.Alignment{Horizontal: utils.AlignmentHLeft, Vertical: utils.AlignmentVCenter}
 
-	// InputField
+	// TextField
 	t.InputFieldFont = t.BaseFont
 	t.InputFieldFontSize = t.BaseFontSize
 	t.InputFieldTextColor = t.BaseTextColor
-	t.InputFieldFillColor = t.BaseFillColor
+	t.InputFieldFillColor = utils.NewColorHex(0x45494AFF)
 	t.InputFieldPadding = utils.Insets{Top: 4, Right: 5, Bottom: 4, Left: 5}
 	t.InputFieldAlignment = utils.Alignment{Horizontal: utils.AlignmentHLeft, Vertical: utils.AlignmentVCenter}
 	t.InputFieldSelectionColor = utils.NewColorHex(0x164288FF)
 	t.InputFieldCursorColor = utils.NewColorHex(0xBBBBBBFF)
+	t.InputFieldNotValidColor = utils.NewColorHex(0x743A3AFF)
 
 	return t
 }
