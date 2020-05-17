@@ -168,6 +168,7 @@ const (
 
 type IKeyboardListener interface {
 	OnKeyEvent(key Key, action EventAction, modifierKey ModifierKey) bool
+	OnCharEvent(char rune) bool
 }
 
 type IFocusable interface {
