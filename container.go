@@ -2,6 +2,7 @@ package gui
 
 type IContainer interface {
 	IWidget
+	IKeyboardListener
 
 	Children() []IWidget
 	ChildrenCount() int
@@ -16,7 +17,8 @@ type IContainer interface {
 type Container struct {
 	Widget
 
-	children []IWidget
+	children     []IWidget
+	focusedChild IFocusable
 }
 
 func (c *Container) Init() {
@@ -127,5 +129,19 @@ func (c *Container) OnMouseButtonEvent(x float32, y float32, button ButtonIndex,
 }
 
 func (c *Container) OnMouseScrolled(scrollX float32, scrollY float32) bool {
+	return false
+}
+
+func (c *Container) OnKeyEvent(key Key, action EventAction, modifierKey ModifierKey) bool {
+	for _, oneChild := range c.children {
+		if !oneChild.Visible() || !oneChild.Enabled() {
+			continue
+		}
+		focusable, ok := oneChild.(IFocusable)
+		if ok && focusable.Focused() {
+			consumed := focusable.OnKeyEvent(key, action, modifierKey)
+			return consumed
+		}
+	}
 	return false
 }
