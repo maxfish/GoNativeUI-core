@@ -12,13 +12,16 @@ type IContainer interface {
 	FindChildAt(x int, y int) IWidget
 	RemoveChildById(id string)
 	RemoveChildAtIndex(index int)
+
+	RequestFocusFor(child IWidget)
+	setFocusedDescendant(child IWidget)
 }
 
 type Container struct {
 	Widget
 
-	children     []IWidget
-	focusedChild IFocusable
+	children          []IWidget
+	focusedDescendant IFocusable
 }
 
 func (c *Container) Init() {
@@ -74,6 +77,12 @@ func (c *Container) RemoveChildById(id string) {
 }
 
 func (c *Container) RemoveChildAtIndex(index int) {
+	focusable, ok := c.children[index].(IFocusable)
+	if ok {
+		if c.focusedDescendant == focusable {
+			c.setFocusedDescendant(nil)
+		}
+	}
 	ret := make([]IWidget, 0)
 	ret = append(ret, c.children[:index]...)
 	c.children = append(ret, c.children[index+1:]...)
@@ -86,6 +95,35 @@ func (c *Container) FindChildAt(x, y int) IWidget {
 		}
 	}
 	return nil
+}
+
+func (c *Container) setFocusedDescendant(child IWidget) {
+	focusable, ok := child.(IFocusable)
+	if ok {
+		if focusable == c.focusedDescendant {
+			return
+		}
+		if c.focusedDescendant != nil {
+			previousFocused, _ := c.focusedDescendant.(IFocusable)
+			previousFocused.FocusLost()
+		}
+		c.focusedDescendant = focusable
+		if child != nil {
+			focusable.FocusGained()
+		}
+	}
+}
+
+func (c *Container) RequestFocusFor(widget IWidget) {
+	// Note: the loop below stops at any container without a parent, assuming that's the root one.
+	parent := widget.Parent()
+	for parent != nil {
+		if parent.Parent() == nil {
+			parent.setFocusedDescendant(widget)
+			return
+		}
+		parent = parent.Parent()
+	}
 }
 
 func (c *Container) SetTheme(t *Theme) {
@@ -126,15 +164,9 @@ func (c *Container) OnMouseScrolled(scrollX float32, scrollY float32) bool {
 }
 
 func (c *Container) OnKeyEvent(key Key, action EventAction, modifierKey ModifierKey) bool {
-	for _, oneChild := range c.children {
-		if !oneChild.Visible() || !oneChild.Enabled() {
-			continue
-		}
-		focusable, ok := oneChild.(IFocusable)
-		if ok && focusable.Focused() {
-			consumed := focusable.OnKeyEvent(key, action, modifierKey)
-			return consumed
-		}
+	// Sends the key events only to the focusedDescendant
+	if c.focusedDescendant != nil {
+		return c.focusedDescendant.OnKeyEvent(key, action, modifierKey)
 	}
 	return false
 }
