@@ -47,3 +47,9 @@ func (g *Gui) OnMouseScrolled(scrollX, scrollY float32) bool {
 	//log.Printf("[Gui] Mouse wheel scrolled %.2f,%.2f\n", scrollX, scrollY)
 	return g.screen.OnMouseScrolled(scrollX, scrollY)
 }
+
+// Key events
+
+func (g *Gui) OnKeyEvent(key Key, action EventAction, modifierKey ModifierKey) bool {
+	return g.screen.OnKeyEvent(key, action, modifierKey)
+}
