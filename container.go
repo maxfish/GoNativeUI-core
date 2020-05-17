@@ -114,14 +114,7 @@ func (c *Container) OnMouseButtonEvent(x float32, y float32, button ButtonIndex,
 			continue
 		}
 		if oneChild.Bounds().ContainsPoint(int(x), int(y)) {
-			consumed := false
-			_, ok := oneChild.(IMouseListener)
-			if ok {
-				consumed = oneChild.OnMouseButtonEvent(x-float32(oneChild.Bounds().X), y-float32(oneChild.Bounds().Y), button, action, modifierKey)
-			} else {
-				consumed = oneChild.OnMouseButtonEvent(x, y, button, action, modifierKey)
-			}
-			return consumed
+			return oneChild.OnMouseButtonEvent(x-float32(oneChild.Bounds().X), y-float32(oneChild.Bounds().Y), button, action, modifierKey)
 		}
 	}
 
