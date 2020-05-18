@@ -52,7 +52,7 @@ func NewIntField(value int, signed bool) *TextField {
 }
 
 func NewFloatField(value float32) *TextField {
-	text := fmt.Sprintf("%f", value)
+	text := fmt.Sprintf("%.2f", value)
 	i := NewTextField(text)
 	i.SetValidationFormat(validatorFloat)
 	return i
