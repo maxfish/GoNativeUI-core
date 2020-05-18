@@ -60,6 +60,7 @@ type IWidget interface {
 	ContentWidth() int
 	ContentHeight() int
 	ContentAlignment() utils.Alignment
+	SetContentAlignment(alignment utils.Alignment)
 }
 
 type Widget struct {
@@ -149,6 +150,10 @@ func (w *Widget) SetHeight(height int) {
 func (w *Widget) SetDimension(width int, height int) {
 	w.SetWidth(width)
 	w.SetHeight(height)
+}
+
+func (w *Widget) SetContentAlignment(alignment utils.Alignment) {
+	w.contentAlignment = alignment
 }
 
 // Layout
