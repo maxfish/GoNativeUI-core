@@ -21,6 +21,8 @@ type IWidget interface {
 	// Theme
 	Theme() *Theme
 	SetTheme(t *Theme)
+	BackgroundColor() utils.Color
+	SetBackgroundColor(utils.Color)
 
 	// Dimensions
 	Bounds() utils.Rect
@@ -66,7 +68,9 @@ type IWidget interface {
 type Widget struct {
 	id     string
 	parent IContainer
-	theme  *Theme
+
+	theme           *Theme
+	backgroundColor utils.Color
 
 	enabled bool
 	visible bool
@@ -94,8 +98,6 @@ func (w *Widget) Id() string                           { return w.id }
 func (w *Widget) SetId(id string)                      { w.id = id }
 func (w *Widget) Parent() IContainer                   { return w.parent }
 func (w *Widget) SetParent(container IContainer)       { w.parent = container; w.theme = container.Theme() }
-func (w *Widget) Theme() *Theme                        { return w.theme }
-func (w *Widget) SetTheme(t *Theme)                    { w.theme = t }
 func (w *Widget) Enabled() bool                        { return w.enabled }
 func (w *Widget) SetEnabled(e bool)                    { w.enabled = e }
 func (w *Widget) Visible() bool                        { return w.visible }
@@ -127,6 +129,15 @@ func (w *Widget) MeasuredHeight() int                  { return w.measuredHeight
 func (w *Widget) SetMeasuredHeight(measuredHeight int) { w.measuredHeight = measuredHeight }
 func (w *Widget) MeasuredWidth() int                   { return w.measuredWidth }
 func (w *Widget) SetMeasuredWidth(measuredWidth int)   { w.measuredWidth = measuredWidth }
+
+func (w *Widget) Theme() *Theme     { return w.theme }
+func (w *Widget) SetTheme(t *Theme) { w.theme = t }
+
+func (w *Widget) BackgroundColor() utils.Color { return w.backgroundColor }
+
+func (w *Widget) SetBackgroundColor(color utils.Color) {
+	w.backgroundColor = color
+}
 
 func (w *Widget) SetWidth(width int) {
 	if width < w.minimumWidth {

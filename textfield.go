@@ -62,7 +62,7 @@ func (i *TextField) SetTheme(theme *Theme) {
 	i.theme = theme
 	i.font = theme.InputFieldFont
 	i.textColor = theme.InputFieldTextColor
-	i.fillColor = theme.InputFieldFillColor
+	i.backgroundColor = theme.InputFieldBackgroundColor
 	i.fontSize = theme.InputFieldFontSize
 	i.selectionColor = theme.InputFieldSelectionColor
 	i.cursorColor = theme.InputFieldCursorColor
