@@ -24,6 +24,7 @@ type Theme struct {
 	InputSelectionColor   utils.Color
 	InputNotValidColor    utils.Color
 	InputCursorColor      utils.Color
+	InputPadding          utils.Insets
 
 	CheckboxPadding   utils.Insets
 	CheckboxAlignment utils.Alignment
@@ -47,6 +48,7 @@ func NewDefaultTheme(baseFont IFont) *Theme {
 		InputSelectionColor:   utils.NewColorHex(0x164288FF),
 		InputCursorColor:      utils.NewColorHex(0xBBBBBBFF),
 		InputNotValidColor:    utils.NewColorHex(0x743A3AFF),
+		InputPadding:          utils.Insets{Top: 2, Right: 4, Bottom: 2, Left: 4},
 		CheckboxPadding:       utils.Insets{Top: 2, Right: 2, Bottom: 2, Left: 2},
 		CheckboxAlignment:     utils.Alignment{Horizontal: utils.AlignmentHLeft, Vertical: utils.AlignmentVCenter},
 	}

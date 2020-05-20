@@ -62,7 +62,7 @@ func (i *TextField) initStyle() {
 		FontSize:         t.TextFontSize,
 		TextColor:        t.TextColor,
 		BackgroundColor:  utils.TransparentColor,
-		Padding:          t.ButtonPadding,
+		Padding:          t.InputPadding,
 		ContentAlignment: utils.Alignment{Horizontal: utils.AlignmentHLeft, Vertical: utils.AlignmentVCenter},
 	}
 }
