@@ -2,6 +2,8 @@ package utils
 
 type Color [4]float32
 
+var TransparentColor = Color{0,0,0,0}
+
 // NewColor creates a new color from float components (0->1)
 func NewColor(r, g, b, a float32) Color {
 	return Color{r, g, b, a}
@@ -38,11 +40,6 @@ func NewColorGrayInt(g, a uint8) Color {
 		float32(g) / 255.0,
 		float32(a) / 255.0,
 	}
-}
-
-// NewColorTransparent creates a new color with all components at 0, including the alpha
-func NewColorTransparent() Color {
-	return Color{}
 }
 
 func (c Color) Scaled(scale float32) Color {

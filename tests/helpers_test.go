@@ -15,7 +15,7 @@ const (
 )
 
 var textStrings = [4]string{"Text 1", "Text 2 $$", "Longer test text 3", "Another text string!"}
-var textLengths = [4]utils.Size{
+var textSizes = [4]utils.Size{
 	{len(textStrings[0]) * fontCharWidth, fontCharHeight},
 	{len(textStrings[1]) * fontCharWidth, fontCharHeight},
 	{len(textStrings[2]) * fontCharWidth, fontCharHeight},
@@ -66,4 +66,8 @@ func InitDummyGui(width int, height int, theme *gui.Theme) *gui.Gui {
 		theme = InitDummyTheme()
 	}
 	return gui.NewGui(theme, width, height)
+}
+
+func FreeGui(g *gui.Gui) {
+	g.Free()
 }

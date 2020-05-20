@@ -2,6 +2,11 @@ package gui
 
 import "github.com/maxfish/GoNativeUI-Core/utils"
 
+var currentGui *Gui
+func CurrentGui() *Gui {
+	return currentGui
+}
+
 type IFont interface {
 	FaceName() string
 	TextSize(fontSize int, text string, numGlyphs ...int) utils.Size
@@ -15,18 +20,30 @@ type IRenderer interface {
 
 type Gui struct {
 	screen    IContainer
+	theme		*Theme
 	mouseData MouseData
 }
 
 func NewGui(theme *Theme, w int, h int) *Gui {
+	if currentGui != nil {
+		panic("There can be only one instance of the Gui")
+	}
 	g := &Gui{}
-	g.screen = NewBoxContainer(theme, BoxHorizontalOrientation)
+	g.theme = theme
+	g.screen = NewBoxContainer(BoxHorizontalOrientation)
 	g.screen.SetDimension(w, h)
+	currentGui = g
 	return g
 }
 
+func (g *Gui)Free() {
+	currentGui = nil
+	g.theme = nil
+	g.screen = nil
+}
+
 func (g *Gui) Screen() IContainer { return g.screen }
-func (g *Gui) Theme() *Theme      { return g.screen.Theme() }
+func (g *Gui) Theme() *Theme      { return g.theme }
 
 // Mouse handling
 func (g *Gui) OnMouseCursorMoved(x, y float32) bool {

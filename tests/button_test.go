@@ -7,6 +7,8 @@ import (
 
 func TestButton(t *testing.T) {
 	g := InitDummyGui(screenWidth, screenHeight, nil)
+	defer FreeGui(g)
+
 	button := gui.NewButton(textStrings[0])
 	g.Screen().AddChild(button)
 
@@ -20,6 +22,8 @@ func TestButton(t *testing.T) {
 
 func TestToggleButton(t *testing.T) {
 	g := InitDummyGui(screenWidth, screenHeight, nil)
+	defer FreeGui(g)
+
 	button := gui.NewToggleButton(textStrings[0])
 	g.Screen().AddChild(button)
 
@@ -39,6 +43,8 @@ func TestToggleButton(t *testing.T) {
 
 func TestToggleButtonGrouped(t *testing.T) {
 	g := InitDummyGui(screenWidth, screenHeight, nil)
+	defer FreeGui(g)
+
 	button1 := gui.NewToggleButton(textStrings[0])
 	button2 := gui.NewToggleButton(textStrings[1])
 	g.Screen().AddChildren(button1, button2)

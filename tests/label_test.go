@@ -8,6 +8,7 @@ import (
 
 func TestLabel(t *testing.T) {
 	g := InitDummyGui(screenWidth, screenHeight, nil)
+	defer FreeGui(g)
 	label := gui.NewLabel(textStrings[0])
 	g.Screen().AddChild(label)
 
@@ -16,12 +17,12 @@ func TestLabel(t *testing.T) {
 	assertBoolEqual(t, label.Enabled(), true)
 
 	// Measured size == Text size + Padding
-	assertIntEqual(t, label.MeasuredWidth(), textLengths[0].W()+label.Padding().Left+label.Padding().Right)
-	assertIntEqual(t, label.MeasuredHeight(), textLengths[0].H()+label.Padding().Top+label.Padding().Bottom)
+	assertIntEqual(t, label.MeasuredWidth(), textSizes[0].W()+label.Style().Padding.Left+label.Style().Padding.Right)
+	assertIntEqual(t, label.MeasuredHeight(), textSizes[0].H()+label.Style().Padding.Top+label.Style().Padding.Bottom)
 
-	assertStructEqual(t, label.TextColor(), g.Theme().LabelTextColor)
-	assertStructEqual(t, label.Font(), g.Theme().LabelFont)
-	assertStructEqual(t, label.FontSize(), g.Theme().LabelFontSize)
+	assertStructEqual(t, label.Style().TextColor, g.Theme().TextColor)
+	assertStructEqual(t, label.Style().Font, g.Theme().TextFont)
+	assertStructEqual(t, label.Style().FontSize, g.Theme().TextFontSize)
 
 	assertStringEqual(t, label.Text(), textStrings[0])
 
@@ -30,6 +31,6 @@ func TestLabel(t *testing.T) {
 
 	for i := 0; i < len(textStrings); i++ {
 		label.SetText(textStrings[i])
-		assertStructEqual(t, utils.Size{label.ContentWidth(), label.ContentHeight()}, textLengths[i])
+		assertStructEqual(t, utils.Size{label.ContentWidth(), label.ContentHeight()}, textSizes[i])
 	}
 }

@@ -24,9 +24,8 @@ type Container struct {
 	focusedDescendant IFocusable
 }
 
-func (c *Container) Init() {
-	widgetInit(c)
-	c.children = make([]IWidget, 0, 16)
+func (c *Container) initStyle() {
+	c.style = &WidgetStyle{}
 }
 
 // Children
@@ -35,8 +34,8 @@ func (c *Container) ChildrenCount() int  { return len(c.children) }
 
 func (c *Container) AddChild(child IWidget) {
 	c.children = append(c.children, child)
-	child.SetParent(c)
-	child.SetTheme(c.theme)
+	child.setParent(c)
+	//child.SetTheme(c.theme)
 }
 
 func (c *Container) AddChildren(children ...IWidget) {
@@ -46,8 +45,8 @@ func (c *Container) AddChildren(children ...IWidget) {
 }
 
 func (c *Container) AddChildAtIndex(child IWidget, i int32) {
-	child.SetParent(c)
-	child.SetTheme(c.theme)
+	child.setParent(c)
+	//child.SetTheme(c.theme)
 
 	s := append(c.children, nil)
 	copy(s[i+1:], s[i:])
@@ -126,11 +125,10 @@ func (c *Container) RequestFocusFor(widget IWidget) {
 	}
 }
 
-func (c *Container) SetTheme(t *Theme) {
-	for _, child := range c.children {
-		child.SetTheme(t)
-	}
-}
+//func (c *Container) SetTheme(t *Theme) {
+//	c.theme = t
+//	c.backgroundColor = c.theme.ContainerBackgroundColor
+//}
 
 // Layout
 func (c *Container) Layout() {
@@ -177,4 +175,10 @@ func (c *Container) OnCharEvent(char rune) bool {
 		return c.focusedDescendant.OnCharEvent(char)
 	}
 	return false
+}
+
+func containerInit(c IContainer) {
+	c.SetEnabled(true)
+	c.SetVisible(true)
+	c.initStyle()
 }

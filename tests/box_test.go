@@ -8,7 +8,8 @@ import (
 
 func TestBox(t *testing.T) {
 	g := InitDummyGui(screenWidth, screenHeight, nil)
-	box := gui.NewBoxContainer(g.Theme(), gui.BoxHorizontalOrientation)
+	defer FreeGui(g)
+	box := gui.NewBoxContainer(gui.BoxHorizontalOrientation)
 	label := gui.NewLabel(textStrings[0])
 	box.AddChild(label)
 	g.Screen().AddChild(box)
@@ -28,7 +29,8 @@ func TestBox(t *testing.T) {
 
 func TestBoxChildren(t *testing.T) {
 	g := InitDummyGui(screenWidth, screenHeight, nil)
-	box := gui.NewBoxContainer(g.Theme(), gui.BoxHorizontalOrientation)
+	defer FreeGui(g)
+	box := gui.NewBoxContainer(gui.BoxHorizontalOrientation)
 	label1 := gui.NewLabel(textStrings[0])
 	label1.SetId("label1")
 	label2 := gui.NewLabel(textStrings[0])
@@ -57,7 +59,8 @@ func TestBoxChildren(t *testing.T) {
 func TestBoxMouseInput(t *testing.T) {
 	theme := InitDummyTheme()
 	g := InitDummyGui(screenWidth, screenHeight, theme)
-	box := gui.NewBoxContainer(g.Theme(), gui.BoxHorizontalOrientation)
+	defer FreeGui(g)
+	box := gui.NewBoxContainer(gui.BoxHorizontalOrientation)
 	button := gui.NewButton(textStrings[0])
 	box.AddChildren(button)
 	g.Screen().AddChild(box)
@@ -74,12 +77,13 @@ func TestBoxMouseInput(t *testing.T) {
 func TestBoxBasics(t *testing.T) {
 	theme := InitDummyTheme()
 	g := InitDummyGui(screenWidth, screenHeight, theme)
+	defer FreeGui(g)
 
 	l1 := gui.NewLabel(textStrings[2])
 	l1.SetId("label1")
 	l2 := gui.NewLabel(textStrings[3])
 	l2.SetId("label2")
-	c1 := gui.NewBoxContainer(theme, gui.BoxHorizontalOrientation, l1)
+	c1 := gui.NewBoxContainer(gui.BoxHorizontalOrientation, l1)
 	c1.AddChild(l2)
 	g.Screen().AddChild(c1)
 	g.Screen().Layout()
@@ -109,6 +113,7 @@ func TestBoxBasics(t *testing.T) {
 func TestBoxComplexLayout(t *testing.T) {
 	theme := InitDummyTheme()
 	g := InitDummyGui(screenWidth, screenHeight, theme)
+	defer FreeGui(g)
 
 	// Prepare the layout
 	spacer1 := gui.NewSpacer()
@@ -117,13 +122,13 @@ func TestBoxComplexLayout(t *testing.T) {
 	invisibleLabel := gui.NewLabel(textStrings[1])
 	invisibleLabel.SetVisible(false)
 
-	c2 := gui.NewBoxContainer(theme, gui.BoxHorizontalOrientation,
+	c2 := gui.NewBoxContainer(gui.BoxHorizontalOrientation,
 		gui.NewButton(textStrings[1]),
 		gui.NewSpacer(),
 		gui.NewButton(textStrings[2]),
 	)
 	c2.SetStretch(1)
-	c1 := gui.NewBoxContainer(theme, gui.BoxVerticalOrientation,
+	c1 := gui.NewBoxContainer(gui.BoxVerticalOrientation,
 		gui.NewLabel(textStrings[1]),
 		gui.NewButton(textStrings[2]),
 		invisibleLabel,

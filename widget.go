@@ -10,7 +10,10 @@ type IWidget interface {
 	Id() string
 	SetId(id string)
 	Parent() IContainer
-	SetParent(container IContainer)
+
+	setParent(container IContainer)
+	initStyle()
+	Style() *WidgetStyle
 
 	// Status
 	Visible() bool
@@ -18,22 +21,14 @@ type IWidget interface {
 	Enabled() bool
 	SetEnabled(e bool)
 
-	// Theme
-	Theme() *Theme
-	SetTheme(t *Theme)
-	BackgroundColor() utils.Color
-	SetBackgroundColor(utils.Color)
-
 	// Dimensions
 	Bounds() utils.Rect
 	InnerBounds() utils.Rect
-	Padding() utils.Insets
 	SetLeft(left int)
 	SetTop(top int)
 	SetDimension(width int, height int)
 	SetWidth(width int)
 	SetHeight(height int)
-	SetPadding(b utils.Insets)
 
 	// Layout
 	Flex() int
@@ -61,21 +56,17 @@ type IWidget interface {
 	// Content
 	ContentWidth() int
 	ContentHeight() int
-	ContentAlignment() utils.Alignment
-	SetContentAlignment(alignment utils.Alignment)
 }
 
 type Widget struct {
 	id     string
 	parent IContainer
 
-	theme           *Theme
-	backgroundColor utils.Color
-
 	enabled bool
 	visible bool
 	bounds  utils.Rect
-	padding utils.Insets
+
+	style *WidgetStyle
 
 	minimumWidth  int
 	maximumWidth  int
@@ -88,26 +79,24 @@ type Widget struct {
 	measuredHeight int
 	measuredFlex   int
 
-	contentAlignment utils.Alignment
 	contentWidth     int
 	contentHeight    int
 }
 
 // Getters / Setters
-func (w *Widget) Id() string                           { return w.id }
-func (w *Widget) SetId(id string)                      { w.id = id }
-func (w *Widget) Parent() IContainer                   { return w.parent }
-func (w *Widget) SetParent(container IContainer)       { w.parent = container; w.theme = container.Theme() }
+func (w *Widget) Id() string         { return w.id }
+func (w *Widget) SetId(id string)    { w.id = id }
+func (w *Widget) Parent() IContainer { return w.parent }
+func (w *Widget) Style() *WidgetStyle { return w.style }
+
+func (w *Widget) setParent(container IContainer)       { w.parent = container }
 func (w *Widget) Enabled() bool                        { return w.enabled }
 func (w *Widget) SetEnabled(e bool)                    { w.enabled = e }
 func (w *Widget) Visible() bool                        { return w.visible }
 func (w *Widget) SetVisible(v bool)                    { w.visible = v }
-func (w *Widget) Padding() utils.Insets                { return w.padding }
-func (w *Widget) SetPadding(b utils.Insets)            { w.padding = b }
-func (w *Widget) InnerBounds() utils.Rect              { return w.bounds.ShrinkByInsets(w.padding) }
+func (w *Widget) InnerBounds() utils.Rect              { return w.bounds.ShrinkByInsets(w.style.Padding) }
 func (w *Widget) ContentWidth() int                    { return w.contentWidth }
 func (w *Widget) ContentHeight() int                   { return w.contentHeight }
-func (w *Widget) ContentAlignment() utils.Alignment    { return w.contentAlignment }
 func (w *Widget) Flex() int                            { return w.flex }
 func (w *Widget) SetFlex(flex int)                     { w.flex = flex }
 func (w *Widget) Stretch() int                         { return w.stretch }
@@ -130,15 +119,6 @@ func (w *Widget) SetMeasuredHeight(measuredHeight int) { w.measuredHeight = meas
 func (w *Widget) MeasuredWidth() int                   { return w.measuredWidth }
 func (w *Widget) SetMeasuredWidth(measuredWidth int)   { w.measuredWidth = measuredWidth }
 
-func (w *Widget) Theme() *Theme     { return w.theme }
-func (w *Widget) SetTheme(t *Theme) { w.theme = t }
-
-func (w *Widget) BackgroundColor() utils.Color { return w.backgroundColor }
-
-func (w *Widget) SetBackgroundColor(color utils.Color) {
-	w.backgroundColor = color
-}
-
 func (w *Widget) SetWidth(width int) {
 	if width < w.minimumWidth {
 		w.bounds.W = w.minimumWidth
@@ -148,6 +128,7 @@ func (w *Widget) SetWidth(width int) {
 		w.bounds.W = width
 	}
 }
+
 func (w *Widget) SetHeight(height int) {
 	if height < w.minimumHeight {
 		w.bounds.H = w.minimumHeight
@@ -163,18 +144,11 @@ func (w *Widget) SetDimension(width int, height int) {
 	w.SetHeight(height)
 }
 
-func (w *Widget) SetContentAlignment(alignment utils.Alignment) {
-	w.contentAlignment = alignment
-}
+// Methods which need to be implemented by the widgets
 
-// Layout
-func (w *Widget) Measure() {
-	panic("Cannot be called on Widget")
-}
-
-func (w *Widget) Layout() {
-	// NOP
-}
+func (w *Widget) initStyle() { /* NOP */ }
+func (w *Widget) Measure()   { /* NOP */ }
+func (w *Widget) Layout()    { /* NOP */ }
 
 // Mouse handling
 func (w *Widget) OnMouseCursorMoved(x, y float32) bool {
@@ -190,4 +164,6 @@ func (w *Widget) OnMouseScrolled(scrollX, scrollY float32) bool {
 func widgetInit(w IWidget) {
 	w.SetEnabled(true)
 	w.SetVisible(true)
+	w.initStyle()
+	w.Measure()
 }

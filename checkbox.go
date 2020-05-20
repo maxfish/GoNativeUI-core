@@ -1,5 +1,7 @@
 package gui
 
+import "github.com/maxfish/GoNativeUI-Core/utils"
+
 type Checkbox struct {
 	Button
 }
@@ -8,6 +10,7 @@ func NewCheckbox(text string) *Checkbox {
 	b := &Checkbox{}
 	widgetInit(b)
 	b.text = text
+	b.Measure()
 	return b
 }
 
@@ -15,14 +18,16 @@ func (b *Checkbox) Checked() bool { return b.pressed }
 
 func (b *Checkbox) SetChecked(checked bool) { b.pressed = checked }
 
-func (b *Checkbox) SetTheme(theme *Theme) {
-	b.theme = theme
-	b.font = theme.CheckboxFont
-	b.textColor = theme.CheckboxTextColor
-	b.fontSize = theme.CheckboxFontSize
-	b.padding = theme.CheckboxPadding
-	b.contentAlignment = theme.CheckboxAlignment
-	b.Measure()
+func (b *Checkbox) initStyle() {
+	t := CurrentGui().Theme()
+	b.style = &WidgetStyle{
+		Font:             t.TextFont,
+		FontSize:         t.TextFontSize,
+		TextColor:        t.TextColor,
+		BackgroundColor:  utils.TransparentColor,
+		Padding:          t.CheckboxPadding,
+		ContentAlignment: utils.Alignment{Horizontal: utils.AlignmentHLeft, Vertical: utils.AlignmentVCenter},
+	}
 }
 
 func (b *Checkbox) OnMouseButtonEvent(x float32, y float32, button ButtonIndex, event EventAction, modifiers ModifierKey) bool {

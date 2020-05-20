@@ -11,6 +11,7 @@ type WidgetTest struct {
 
 func TestWidget(t *testing.T) {
 	g := InitDummyGui(screenWidth, screenHeight, nil)
+	defer FreeGui(g)
 	w := &WidgetTest{}
 	g.Screen().AddChild(w)
 

@@ -1,5 +1,7 @@
 package gui
 
+import "github.com/maxfish/GoNativeUI-Core/utils"
+
 type Button struct {
 	Label
 	pressed bool
@@ -9,20 +11,22 @@ func NewButton(text string) *Button {
 	b := &Button{}
 	widgetInit(b)
 	b.text = text
+	b.Measure()
 	return b
 }
 
 func (b *Button) Pressed() bool { return b.pressed }
 
-func (b *Button) SetTheme(theme *Theme) {
-	b.theme = theme
-	b.font = theme.ButtonFont
-	b.textColor = theme.ButtonTextColor
-	b.backgroundColor = theme.ButtonBackgroundColor
-	b.fontSize = theme.ButtonFontSize
-	b.padding = theme.ButtonPadding
-	b.contentAlignment = theme.ButtonAlignment
-	b.Measure()
+func (b *Button) initStyle() {
+	t := CurrentGui().Theme()
+	b.style = &WidgetStyle{
+		Font:             t.TextFont,
+		FontSize:         t.TextFontSize,
+		TextColor:        t.TextColor,
+		BackgroundColor:  t.ButtonColor,
+		Padding:          t.ButtonPadding,
+		ContentAlignment: utils.Alignment{Horizontal: utils.AlignmentHCenter, Vertical: utils.AlignmentVCenter},
+	}
 }
 
 func (b *Button) OnMouseButtonEvent(x float32, y float32, button ButtonIndex, event EventAction, modifiers ModifierKey) bool {

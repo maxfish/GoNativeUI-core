@@ -18,10 +18,10 @@ type BoxContainer struct {
 	childrenTotalFixedLength int
 }
 
-func NewBoxContainer(theme *Theme, orientation BoxOrientation, children ...IWidget) *BoxContainer {
+func NewBoxContainer(orientation BoxOrientation, children ...IWidget) *BoxContainer {
 	b := &BoxContainer{}
-	b.Container.Init()
-	b.theme = theme
+	containerInit(b)
+	b.children = make([]IWidget, 0, 16)
 	b.orientation = orientation
 
 	if children != nil {
@@ -32,7 +32,7 @@ func NewBoxContainer(theme *Theme, orientation BoxOrientation, children ...IWidg
 	return b
 }
 
-func (c *BoxContainer) Spacing() int        { return c.spacing }
+func (c *BoxContainer) Spacing() int           { return c.spacing }
 func (c *BoxContainer) SetSpacing(spacing int) { c.spacing = spacing }
 
 func (c *BoxContainer) Measure() {
@@ -67,8 +67,8 @@ func (c *BoxContainer) Measure() {
 	c.childrenTotalFlexAmount = totalFlex
 
 	lengths := []int{mainLength, oppositeLength}
-	c.measuredWidth = lengths[c.orientation] + c.padding.Left + c.padding.Right
-	c.measuredHeight = lengths[1-c.orientation] + c.padding.Top + c.padding.Bottom
+	c.measuredWidth = lengths[c.orientation] + c.style.Padding.Left + c.style.Padding.Right
+	c.measuredHeight = lengths[1-c.orientation] + c.style.Padding.Top + c.style.Padding.Bottom
 }
 
 func (c *BoxContainer) Layout() {
@@ -89,7 +89,7 @@ func (c *BoxContainer) layoutChildren() {
 		hasToRestart := true
 		for hasToRestart {
 			hasToRestart = false
-			offset := c.padding.Left
+			offset := c.style.Padding.Left
 			spaceFree := utils.MaxI(totalSpace-fixedSpace, 0)
 			maxHeight := 0
 			for _, child := range c.children {
@@ -129,7 +129,7 @@ func (c *BoxContainer) layoutChildren() {
 		hasToRestart := true
 		for hasToRestart {
 			hasToRestart = false
-			offset := c.padding.Top
+			offset := c.style.Padding.Top
 			spaceFree := utils.MaxI(totalSpace-fixedSpace, 0)
 			for _, child := range c.children {
 				if !child.Visible() {

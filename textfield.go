@@ -16,19 +16,16 @@ type TextField struct {
 	IFocusable
 	focused bool
 
-	selectionColor utils.Color
-	cursorColor    utils.Color
-
 	formatValidator *regexp.Regexp
 	inputIsValid    bool
 	//unit            string
 	//defaultText     string
 
 	// Editing
-	committed      bool
-	editingText    string
-	editingRunes   []rune
-	cursorPos      int
+	committed    bool
+	editingText  string
+	editingRunes []rune
+	cursorPos    int
 	//selectionStart int
 	//selectionEnd   int
 }
@@ -37,6 +34,7 @@ func NewTextField(text string) *TextField {
 	i := &TextField{}
 	widgetInit(i)
 	i.text = text
+	i.Measure()
 	return i
 }
 
@@ -58,28 +56,27 @@ func NewFloatField(value float32) *TextField {
 	return i
 }
 
-func (i *TextField) SetTheme(theme *Theme) {
-	i.theme = theme
-	i.font = theme.InputFieldFont
-	i.textColor = theme.InputFieldTextColor
-	i.backgroundColor = theme.InputFieldBackgroundColor
-	i.fontSize = theme.InputFieldFontSize
-	i.selectionColor = theme.InputFieldSelectionColor
-	i.cursorColor = theme.InputFieldCursorColor
-	i.padding = theme.InputFieldPadding
-	i.contentAlignment = theme.InputFieldAlignment
-	i.Measure()
+func (i *TextField) initStyle() {
+	t := CurrentGui().Theme()
+	i.style = &WidgetStyle{
+		Font:             t.TextFont,
+		FontSize:         t.TextFontSize,
+		TextColor:        t.TextColor,
+		BackgroundColor:  utils.TransparentColor,
+		Padding:          t.ButtonPadding,
+		ContentAlignment: utils.Alignment{Horizontal: utils.AlignmentHLeft, Vertical: utils.AlignmentVCenter},
+	}
 }
 
 func (i *TextField) Measure() {
 	i.computeContentSize()
-	i.measuredWidth = i.contentWidth + i.padding.Left + i.padding.Right
-	i.measuredHeight = i.contentHeight + i.padding.Top + i.padding.Bottom
+	i.measuredWidth = i.contentWidth + i.style.Padding.Left + i.style.Padding.Right
+	i.measuredHeight = i.contentHeight + i.style.Padding.Top + i.style.Padding.Bottom
 	i.measuredFlex = i.flex
 }
 
 func (i *TextField) computeContentSize() {
-	textSize := i.theme.LabelFont.TextSize(i.fontSize, i.text)
+	textSize := i.style.Font.TextSize(i.style.FontSize, i.text)
 	i.contentWidth = textSize.W()
 	i.contentHeight = textSize.H()
 }
@@ -92,7 +89,6 @@ func (i *TextField) Text() string {
 	}
 }
 
-func (i *TextField) CursorColor() utils.Color { return i.cursorColor }
 func (i *TextField) CursorPos() int           { return i.cursorPos }
 func (i *TextField) Valid() bool              { return i.inputIsValid }
 
@@ -111,8 +107,8 @@ func (i *TextField) OnMouseButtonEvent(x float32, y float32, button ButtonIndex,
 			return true
 		}
 
-		relativeX := int(x - float32(i.bounds.X+i.padding.Left))
-		index := i.font.IndexFromCoords(i.fontSize, i.text, relativeX, 0)
+		relativeX := int(x - float32(i.bounds.X+i.style.Padding.Left))
+		index := i.style.Font.IndexFromCoords(i.style.FontSize, i.text, relativeX, 0)
 		i.cursorPos = index
 		return true
 	}
