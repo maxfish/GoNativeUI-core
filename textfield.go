@@ -34,7 +34,6 @@ func NewTextField(text string) *TextField {
 	i := &TextField{}
 	widgetInit(i)
 	i.text = text
-	i.Measure()
 	return i
 }
 

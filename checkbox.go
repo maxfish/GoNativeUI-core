@@ -10,7 +10,6 @@ func NewCheckbox(text string) *Checkbox {
 	b := &Checkbox{}
 	widgetInit(b)
 	b.text = text
-	b.Measure()
 	return b
 }
 

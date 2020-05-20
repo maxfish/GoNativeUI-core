@@ -11,7 +11,6 @@ func NewButton(text string) *Button {
 	b := &Button{}
 	widgetInit(b)
 	b.text = text
-	b.Measure()
 	return b
 }
 

@@ -18,7 +18,6 @@ func NewLabel(text string) *Label {
 	l := &Label{}
 	widgetInit(l)
 	l.text = text
-	l.Measure()
 	return l
 }
 
