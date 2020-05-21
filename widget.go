@@ -147,8 +147,10 @@ func (w *Widget) SetDimension(width int, height int) {
 // Methods which need to be implemented by the widgets
 
 func (w *Widget) initStyle() { /* NOP */ }
-func (w *Widget) Measure()   { /* NOP */ }
 func (w *Widget) Layout()    { /* NOP */ }
+func (w *Widget) Measure()   {
+	w.measuredFlex = w.flex
+}
 
 // Mouse handling
 func (w *Widget) OnMouseCursorMoved(x, y float32) bool {

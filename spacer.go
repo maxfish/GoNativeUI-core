@@ -10,7 +10,3 @@ func NewSpacer() *Spacer {
 	s.flex = 1
 	return s
 }
-
-func (s *Spacer) Measure() {
-	s.measuredFlex = s.flex
-}
