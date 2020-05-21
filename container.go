@@ -35,7 +35,6 @@ func (c *Container) ChildrenCount() int  { return len(c.children) }
 func (c *Container) AddChild(child IWidget) {
 	c.children = append(c.children, child)
 	child.setParent(c)
-	//child.SetTheme(c.theme)
 }
 
 func (c *Container) AddChildren(children ...IWidget) {
@@ -46,7 +45,6 @@ func (c *Container) AddChildren(children ...IWidget) {
 
 func (c *Container) AddChildAtIndex(child IWidget, i int32) {
 	child.setParent(c)
-	//child.SetTheme(c.theme)
 
 	s := append(c.children, nil)
 	copy(s[i+1:], s[i:])
@@ -124,11 +122,6 @@ func (c *Container) RequestFocusFor(widget IWidget) {
 		parent = parent.Parent()
 	}
 }
-
-//func (c *Container) SetTheme(t *Theme) {
-//	c.theme = t
-//	c.backgroundColor = c.theme.ContainerBackgroundColor
-//}
 
 // Layout
 func (c *Container) Layout() {
