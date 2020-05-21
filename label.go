@@ -2,16 +2,9 @@ package gui
 
 import "github.com/maxfish/GoNativeUI-Core/utils"
 
-type LabelText struct {
-	text string
-}
-
-// Getters
-func (l *LabelText) Text() string { return l.text }
-
 type Label struct {
 	Widget
-	LabelText
+	text string
 }
 
 func NewLabel(text string) *Label {
@@ -32,6 +25,7 @@ func (l *Label) initStyle() {
 	}
 }
 
+func (l *Label) Text() string { return l.text }
 func (l *Label) SetText(text string) {
 	l.text = text
 	l.Measure()

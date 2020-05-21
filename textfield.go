@@ -12,9 +12,9 @@ const validatorFloat = "^[-]?[0-9]*[.]?[0-9]+$"
 
 type TextField struct {
 	Widget
-	LabelText
 	IFocusable
 	focused bool
+	text    string
 
 	formatValidator *regexp.Regexp
 	inputIsValid    bool
@@ -88,8 +88,8 @@ func (i *TextField) Text() string {
 	}
 }
 
-func (i *TextField) CursorPos() int           { return i.cursorPos }
-func (i *TextField) Valid() bool              { return i.inputIsValid }
+func (i *TextField) CursorPos() int { return i.cursorPos }
+func (i *TextField) Valid() bool    { return i.inputIsValid }
 
 func (i *TextField) SetValidationFormat(format string) {
 	i.formatValidator, _ = regexp.Compile(format)
