@@ -22,6 +22,12 @@ func (r Rect) MoveTo(x, y int) Rect {
 	return r
 }
 
+func (r Rect) Translate(x, y int) Rect {
+	r.X += x
+	r.Y += y
+	return r
+}
+
 func (r Rect) ResizeTo(w, h int) Rect {
 	r.W = w
 	r.H = h
