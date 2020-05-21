@@ -97,6 +97,7 @@ func (c *BoxContainer) layoutChildren() {
 					continue
 				}
 				child.SetLeft(offset)
+				child.SetTop(c.style.Padding.Top)
 				if child.MeasuredFlex() > 0 {
 					width := (child.MeasuredFlex() * spaceFree) / flexSpace
 					child.SetWidth(width)
@@ -114,7 +115,7 @@ func (c *BoxContainer) layoutChildren() {
 				}
 
 				if child.Stretch() > 0 {
-					child.SetHeight(c.Bounds().H)
+					child.SetHeight(c.InnerBounds().H)
 				} else {
 					child.SetHeight(child.MeasuredHeight())
 				}
@@ -136,6 +137,7 @@ func (c *BoxContainer) layoutChildren() {
 					continue
 				}
 				child.SetTop(offset)
+				child.SetLeft(c.style.Padding.Left)
 				if child.MeasuredFlex() > 0 {
 					height := (child.MeasuredFlex() * spaceFree) / flexSpace
 					child.SetHeight(height)
@@ -153,7 +155,7 @@ func (c *BoxContainer) layoutChildren() {
 				}
 
 				if child.Stretch() > 0 {
-					child.SetWidth(c.Bounds().W)
+					child.SetWidth(c.InnerBounds().W)
 				} else {
 					child.SetWidth(child.MeasuredWidth())
 				}
