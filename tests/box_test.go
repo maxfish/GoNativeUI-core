@@ -1,14 +1,23 @@
 package tests
 
 import (
+	"fmt"
 	gui "github.com/maxfish/GoNativeUI-Core"
 	"github.com/maxfish/GoNativeUI-Core/utils"
 	"testing"
 )
 
-func TestBox(t *testing.T) {
+func setUpGui() *gui.Gui {
 	g := InitDummyGui(screenWidth, screenHeight, nil)
-	defer FreeGui(g)
+	return g
+}
+
+func tearDown(g *gui.Gui) {
+	FreeGui(g)
+}
+
+func TestBox(t *testing.T) {
+	g := setUpGui()
 	box := gui.NewBoxContainer(gui.BoxHorizontalOrientation)
 	label := gui.NewLabel(textStrings[0])
 	box.AddChild(label)
@@ -25,6 +34,8 @@ func TestBox(t *testing.T) {
 	//dimensions = utils.Size{W: box.Bounds().W, H: box.Bounds().H}
 	//expected := utils.Size{W: 100, H: box.Bounds().H}
 	//assertStructEqual(t, dimensions, expected)
+
+	tearDown(g)
 }
 
 func TestBoxChildren(t *testing.T) {
@@ -54,12 +65,25 @@ func TestBoxChildren(t *testing.T) {
 	g.Screen().Layout()
 	c := box.FindChildAt(180, 10)
 	assertStructEqual(t, c, button3)
+
+	t.Run("Removing children", func(t *testing.T) {
+		box.RemoveChildById("label1")
+		box.RemoveChildById("label3")
+		box.RemoveChildAtIndex(1)
+
+		// Only one child left, and it's label2
+		assertIntEqual(t, box.ChildrenCount(), 1)
+		c1 := box.Children()[0]
+		assertStringEqual(t, c1.Id(), "label2")
+
+		// No children
+		box.RemoveChildAtIndex(0)
+		assertStructEqual(t, box.Children(), []gui.IWidget{})
+	})
 }
 
 func TestBoxMouseInput(t *testing.T) {
-	theme := InitDummyTheme()
-	g := InitDummyGui(screenWidth, screenHeight, theme)
-	defer FreeGui(g)
+	g := setUpGui()
 	box := gui.NewBoxContainer(gui.BoxHorizontalOrientation)
 	button := gui.NewButton(textStrings[0])
 	box.AddChildren(button)
@@ -72,12 +96,12 @@ func TestBoxMouseInput(t *testing.T) {
 	assertBoolEqual(t, button.Pressed(), true)
 	button.OnMouseButtonEvent(10, 10, 0, gui.EventActionRelease, 0)
 	assertBoolEqual(t, button.Pressed(), false)
+
+	tearDown(g)
 }
 
-func TestBoxBasics(t *testing.T) {
-	theme := InitDummyTheme()
-	g := InitDummyGui(screenWidth, screenHeight, theme)
-	defer FreeGui(g)
+func TestHBoxLayout(t *testing.T) {
+	g := setUpGui()
 
 	l1 := gui.NewLabel(textStrings[2])
 	l1.SetId("label1")
@@ -85,35 +109,53 @@ func TestBoxBasics(t *testing.T) {
 	l2.SetId("label2")
 	c1 := gui.NewBoxContainer(gui.BoxHorizontalOrientation, l1)
 	c1.AddChild(l2)
+	c1.Style().Padding = utils.Insets{Top: 2, Right: 3, Bottom: 4, Left: 5}
 	g.Screen().AddChild(c1)
 	g.Screen().Layout()
 
-	// Assert content wrapping
-	assertStructEqual(t, c1.Bounds(), utils.Rect{X: 0, Y: 0, W: 380, H: 16})
-	// Assert children placement
-	assertStructEqual(t, l1.Bounds(), utils.Rect{X: 0, Y: 0, W: 180, H: 16})
-	assertStructEqual(t, l2.Bounds(), utils.Rect{X: 180, Y: 0, W: 200, H: 16})
+	t.Run("Content wrapping", func(t *testing.T) {
+		assertStructEqual(t, c1.Bounds(), utils.Rect{X: 0, Y: 0, W: 388, H: 22})
+	})
 
-	// Spacing
-	c1.SetSpacing(10)
-	g.Screen().Layout()
-	assertStructEqual(t, c1.Bounds(), utils.Rect{X: 0, Y: 0, W: 390, H: 16})
-	assertStructEqual(t, l1.Bounds(), utils.Rect{X: 0, Y: 0, W: 180, H: 16})
-	assertStructEqual(t, l2.Bounds(), utils.Rect{X: 190, Y: 0, W: 200, H: 16})
+	testCases := []struct {
+		spacing int
+		padding utils.Insets
+	}{
+		{spacing: 21},
+		{padding: utils.Insets{Top: 1, Right: 2, Bottom: 3, Left: 4}},
+		{spacing: 13, padding: utils.Insets{Top: 3, Right: 4, Bottom: 5, Left: 6}},
+	}
+	for _, tc := range testCases {
+		t.Run(
+			fmt.Sprintf("Children placement: spacing=%d, padding=%s", tc.spacing, gui.InsetsToString(tc.padding)),
+			func(t *testing.T) {
+				c1.SetSpacing(tc.spacing)
+				c1.Style().Padding = tc.padding
+				c1.Layout()
+				assertStructEqual(t, l1.Bounds(), utils.Rect{
+					X: c1.Style().Padding.Left, Y: c1.Style().Padding.Top, W: 180, H: 16,
+				})
+				assertStructEqual(t, l2.Bounds(), utils.Rect{
+					X: l1.Bounds().W + c1.Style().Padding.Left + c1.Spacing(),
+					Y: c1.Style().Padding.Top, W: 200, H: 16,
+				})
+			},
+		)
+	}
 
-	// Removing children
-	c1.RemoveChildById("label1")
-	c1.RemoveChildById("label2")
-	g.Screen().Layout()
-	assertStructEqual(t, c1.Children(), []gui.IWidget{})
-	// Content wrapping without children
-	assertStructEqual(t, c1.Bounds(), utils.Rect{})
+	t.Run("Content wrapping with no children", func(t *testing.T) {
+		c1.Style().Padding = utils.Insets{Top: 3, Right: 4, Bottom: 5, Left: 6}
+		c1.RemoveChildAtIndex(0)
+		c1.RemoveChildAtIndex(0)
+		g.Screen().Layout()
+		assertStructEqual(t, c1.Bounds(), utils.Rect{W: 10, H: 8})
+	})
+
+	tearDown(g)
 }
 
 func TestBoxComplexLayout(t *testing.T) {
-	theme := InitDummyTheme()
-	g := InitDummyGui(screenWidth, screenHeight, theme)
-	defer FreeGui(g)
+	g := setUpGui()
 
 	// Prepare the layout
 	spacer1 := gui.NewSpacer()
@@ -158,4 +200,6 @@ func TestBoxComplexLayout(t *testing.T) {
 	assertStructEqual(t, l.Bounds(), utils.Rect{X: 148, Y: 0, W: 200, H: 16})
 	assertStructEqual(t, spacer1.Bounds(), utils.Rect{X: 0, Y: 68, W: 0, H: 100})
 	assertStructEqual(t, spacer2.Bounds(), utils.Rect{X: 148, Y: 0, W: 0, H: 0})
+
+	tearDown(g)
 }
