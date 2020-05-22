@@ -43,7 +43,7 @@ func NewDefaultTheme(baseFont IFont) *Theme {
 		IconColor:             utils.NewColorHex(0xAFB1B3FF),
 		IconDisabledColor:     utils.TransparentColor,
 		InputPlaceholderColor: utils.TransparentColor,
-		InputBackgroundColor:  utils.NewColorHex(0x45494AFF),
+		InputBackgroundColor:  utils.NewColorHex(0x3C3C3CFF),
 		InputTextColor:        utils.TransparentColor,
 		InputSelectionColor:   utils.NewColorHex(0x164288FF),
 		InputCursorColor:      utils.NewColorHex(0xBBBBBBFF),
