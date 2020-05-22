@@ -117,7 +117,7 @@ func (c *BoxContainer) layoutChildren() {
 				if child.Stretch() > 0 {
 					child.SetHeight(c.InnerBounds().H)
 				} else {
-					child.SetHeight(child.MeasuredHeight())
+					child.SetHeight(utils.MinI(child.MeasuredHeight(), c.InnerBounds().H))
 				}
 
 				maxHeight = utils.MaxI(maxHeight, child.Bounds().H)
@@ -157,7 +157,7 @@ func (c *BoxContainer) layoutChildren() {
 				if child.Stretch() > 0 {
 					child.SetWidth(c.InnerBounds().W)
 				} else {
-					child.SetWidth(child.MeasuredWidth())
+					child.SetWidth(utils.MinI(child.MeasuredWidth(), c.InnerBounds().W))
 				}
 
 				offset += child.Bounds().H + c.spacing

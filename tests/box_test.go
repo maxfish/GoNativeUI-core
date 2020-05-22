@@ -131,7 +131,7 @@ func TestHBoxLayout(t *testing.T) {
 			func(t *testing.T) {
 				c1.SetSpacing(tc.spacing)
 				c1.Style().Padding = tc.padding
-				c1.Layout()
+				g.Screen().Layout()
 				assertStructEqual(t, l1.Bounds(), utils.Rect{
 					X: c1.Style().Padding.Left, Y: c1.Style().Padding.Top, W: 180, H: 16,
 				})
