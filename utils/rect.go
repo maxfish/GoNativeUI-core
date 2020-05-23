@@ -82,6 +82,36 @@ func (r Rect) AlignIn(b Rect, alignment Alignment) Rect {
 	return r
 }
 
+func (r Rect) FitIn(b Rect, mode FitMode, alignment Alignment) Rect {
+	switch mode {
+	case FitModeFill:
+		return b
+	//case FitModeAlign:
+	//	return r.AlignIn(b, alignment)
+	case FitModeAspectFit:
+		if r.W > r.H {
+			f := float32(b.W) / float32(r.W)
+			r.W = int(f * float32(r.W))
+			r.H = int(f * float32(r.H))
+		} else {
+			f := float32(b.H) / float32(r.H)
+			r.W = int(f * float32(r.W))
+			r.H = int(f * float32(r.H))
+		}
+	case FitModeAspectFill:
+		if r.W > r.H {
+			f := float32(b.H) / float32(r.H)
+			r.W = int(f * float32(r.W))
+			r.H = int(f * float32(r.H))
+		} else {
+			f := float32(b.W) / float32(r.W)
+			r.W = int(f * float32(r.W))
+			r.H = int(f * float32(r.H))
+		}
+	}
+	return r.AlignIn(b, alignment)
+}
+
 func (r Rect) UnionWith(other Rect) Rect {
 	x1 := MinI(r.X, other.X)
 	y1 := MinI(r.Y, other.Y)
