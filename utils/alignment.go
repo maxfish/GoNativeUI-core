@@ -22,3 +22,12 @@ type Alignment struct {
 	Horizontal AlignmentH
 	Vertical   AlignmentV
 }
+
+type FitMode int
+
+const (
+	FitModeAlign FitMode = iota
+	FitModeFill
+	FitModeAspectFit
+	FitModeAspectFill
+)
