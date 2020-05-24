@@ -5,28 +5,39 @@ type ToggleButton struct {
 	buttonGroup []*ToggleButton
 }
 
-func NewToggleButton(text string) *ToggleButton {
+func NewToggleButton(text string, changeCallback ...ButtonChangeCallback) *ToggleButton {
 	b := &ToggleButton{}
 	widgetInit(b)
 	b.text = text
+	if len(changeCallback) == 1 {
+		b.onChangeCallback = changeCallback[0]
+	}
 	return b
 }
 
 func (b *ToggleButton) SetButtonGroup(buttonGroup []*ToggleButton) {
 	b.buttonGroup = buttonGroup
 }
+
 func (b *ToggleButton) SetPressed(pressed bool) {
 	if b.buttonGroup == nil {
 		b.pressed = pressed
+		b.fireChangeEvent(pressed)
 		return
 	}
 
 	if pressed && !b.pressed {
 		for _, btn := range b.buttonGroup {
 			if btn == b {
-				b.pressed = true
+				if b.pressed != true {
+					b.pressed = true
+					b.fireChangeEvent(true)
+				}
 			} else {
-				btn.pressed = false
+				if btn.pressed != false {
+					btn.pressed = false
+					btn.fireChangeEvent(false)
+				}
 			}
 		}
 	}

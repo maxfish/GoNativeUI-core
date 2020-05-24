@@ -1,18 +1,22 @@
 package gui
 
+type ButtonChangeCallback func(state bool)
+
 type Button struct {
 	Label
-	pressed bool
+	pressed          bool
+	onChangeCallback ButtonChangeCallback
 }
 
-func NewButton(text string) *Button {
+func NewButton(text string, changeCallback ...ButtonChangeCallback) *Button {
 	b := &Button{}
 	widgetInit(b)
 	b.text = text
+	if len(changeCallback) == 1 {
+		b.onChangeCallback = changeCallback[0]
+	}
 	return b
 }
-
-func (b *Button) Pressed() bool { return b.pressed }
 
 func (b *Button) initStyle() {
 	b.Label.initStyle()
@@ -21,12 +25,31 @@ func (b *Button) initStyle() {
 	b.style.Padding = t.ButtonPadding
 }
 
+func (b *Button) Pressed() bool { return b.pressed }
+
+func (b *Button) SetOnChangeCallback(f ButtonChangeCallback) {
+	b.onChangeCallback = f
+}
+
+func (b *Button) setPressed(pressed bool) {
+	b.pressed = pressed
+	if pressed {
+		b.fireChangeEvent(true)
+	}
+}
+
+func (b *Button) fireChangeEvent(state bool) {
+	if b.onChangeCallback != nil {
+		b.onChangeCallback(state)
+	}
+}
+
 func (b *Button) OnMouseButtonEvent(x float32, y float32, button ButtonIndex, event EventAction, modifiers ModifierKey) bool {
 	if event == EventActionPress {
-		b.pressed = true
+		b.setPressed(true)
 		return true
 	} else if event == EventActionRelease {
-		b.pressed = false
+		b.setPressed(false)
 		return true
 	}
 	return false
