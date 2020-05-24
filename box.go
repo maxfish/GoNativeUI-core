@@ -47,6 +47,7 @@ func (c *BoxContainer) Measure() {
 		child.Measure()
 		measuredLength := []int{child.MeasuredWidth(), child.MeasuredHeight()}
 		minimumLength := []int{child.MinimumWidth(), child.MinimumHeight()}
+		maximumLength := []int{child.MaximumWidth(), child.MaximumHeight()}
 
 		// From the second widget adds the container spacing
 		if mainLength > 0 {
@@ -54,7 +55,11 @@ func (c *BoxContainer) Measure() {
 			totalFixed += c.spacing
 		}
 
-		mainLength += utils.MaxI(measuredLength[mainIndex], minimumLength[mainIndex])
+		length := utils.MaxI(measuredLength[mainIndex], minimumLength[mainIndex])
+		if maximumLength[mainIndex] >0 {
+			length = utils.MinI(length, maximumLength[mainIndex])
+		}
+		mainLength += length
 		oppositeLength = utils.MaxI(oppositeLength, utils.MaxI(measuredLength[oppositeIndex], minimumLength[oppositeIndex]))
 		if child.MeasuredFlex() == 0 {
 			totalFixed += measuredLength[mainIndex]
