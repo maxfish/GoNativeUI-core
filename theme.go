@@ -46,7 +46,7 @@ func NewDefaultTheme(baseFont IFont) *Theme {
 		InputBackgroundColor:  utils.NewColorHex(0x3C3C3CFF),
 		InputTextColor:        utils.TransparentColor,
 		InputSelectionColor:   utils.NewColorHex(0x164288FF),
-		InputCursorColor:      utils.NewColorHex(0xBBBBBBFF),
+		InputCursorColor:      utils.NewColorHex(0xDDDDDDFF),
 		InputNotValidColor:    utils.NewColorHex(0x743A3AFF),
 		InputPadding:          utils.Insets{Top: 2, Right: 4, Bottom: 2, Left: 4},
 		CheckboxPadding:       utils.Insets{Top: 2, Right: 2, Bottom: 2, Left: 2},
