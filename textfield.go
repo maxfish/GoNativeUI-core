@@ -123,9 +123,9 @@ func (i *TextField) OnKeyEvent(key Key, action EventAction, modifierKey Modifier
 	if action == EventActionPress {
 		switch key {
 		case KeyUp:
-			i.cursorPos = 0
+			i.setCursorPos(0)
 		case KeyDown:
-			i.cursorPos = len(i.editingRunes)
+			i.setCursorPos(len(i.editingRunes))
 		case KeyLeft:
 			if i.cursorPos > 0 {
 				i.setCursorPos(i.cursorPos - 1)
