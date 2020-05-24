@@ -104,7 +104,11 @@ func (i *TextField) OnMouseCursorMoved(x float32, y float32) bool {
 func (i *TextField) OnMouseButtonEvent(x float32, y float32, button ButtonIndex, event EventAction, modifiers ModifierKey) bool {
 	if button == 0 && event == EventActionPress {
 		relativeX := int(x - float32(i.style.Padding.Left-i.offset))
-		index := i.style.Font.IndexFromCoords(i.style.FontSize, i.text, relativeX, 0)
+		text := i.text
+		if i.focused {
+			text = i.editingText
+		}
+		index := i.style.Font.IndexFromCoords(i.style.FontSize, text, relativeX, 0)
 		i.setCursorPos(index)
 
 		if !i.focused {
