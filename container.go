@@ -9,9 +9,12 @@ type IContainer interface {
 	AddChild(c IWidget)
 	AddChildren(children ...IWidget)
 	AddChildAtIndex(c IWidget, i int32)
-	FindChildAt(x int, y int) IWidget
 	RemoveChildById(id string)
 	RemoveChildAtIndex(index int)
+	ChildById(id string) IWidget
+	IndexOfChild(aChild IWidget) int
+	ChildAtIndex(index int) IWidget
+	FindChildAt(x int, y int) IWidget
 
 	RequestFocusFor(child IWidget)
 	setFocusedDescendant(child IWidget)
@@ -52,6 +55,13 @@ func (c *Container) AddChildAtIndex(child IWidget, i int32) {
 	c.children = s
 }
 
+func (c *Container) ChildAtIndex(index int) IWidget {
+	if index < 0 || index >= len(c.children) {
+		return nil
+	}
+	return c.children[index]
+}
+
 func (c *Container) ChildById(id string) IWidget {
 	for _, child := range c.children {
 		if child.Id() == id {
@@ -59,6 +69,15 @@ func (c *Container) ChildById(id string) IWidget {
 		}
 	}
 	return nil
+}
+
+func (c *Container) IndexOfChild(aChild IWidget) int {
+	for index, child := range c.children {
+		if child == aChild {
+			return index
+		}
+	}
+	return -1
 }
 
 func (c *Container) RemoveChildById(id string) {
@@ -121,15 +140,6 @@ func (c *Container) RequestFocusFor(widget IWidget) {
 		}
 		parent = parent.Parent()
 	}
-}
-
-// Layout
-func (c *Container) Layout() {
-	panic("Layout() shouldn't be called on the base Controller")
-}
-
-func (c *Container) layoutChildren() {
-	panic("layoutChildren() shouldn't be called on the base Controller")
 }
 
 // Mouse handling
