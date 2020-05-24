@@ -53,8 +53,6 @@ func NewDefaultTheme(baseFont IFont) *Theme {
 		CheckboxAlignment:     utils.Alignment{Horizontal: utils.AlignmentHLeft, Vertical: utils.AlignmentVCenter},
 	}
 	//t.ButtonAlignment = utils.Alignment{Horizontal: utils.AlignmentHCenter, Vertical: utils.AlignmentVCenter}
-	//t.CheckboxAlignment = utils.Alignment{Horizontal: utils.AlignmentHLeft, Vertical: utils.AlignmentVCenter}
-	//t.InputFieldPadding = utils.Insets{Top: 4, Right: 5, Bottom: 4, Left: 5}
 	//t.InputFieldAlignment = utils.Alignment{Horizontal: utils.AlignmentHLeft, Vertical: utils.AlignmentVCenter}
 
 	return t
