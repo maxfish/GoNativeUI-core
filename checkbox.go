@@ -19,14 +19,9 @@ func (b *Checkbox) SetChecked(checked bool) { b.pressed = checked }
 
 func (b *Checkbox) initStyle() {
 	t := CurrentGui().Theme()
-	b.style = &WidgetStyle{
-		Font:             t.TextFont,
-		FontSize:         t.TextFontSize,
-		TextColor:        t.TextColor,
-		BackgroundColor:  utils.TransparentColor,
-		Padding:          t.CheckboxPadding,
-		ContentAlignment: utils.Alignment{Horizontal: utils.AlignmentHLeft, Vertical: utils.AlignmentVCenter},
-	}
+	b.Label.initStyle()
+	b.style.Padding = t.CheckboxPadding
+	b.style.ContentAlignment = utils.Alignment{Horizontal: utils.AlignmentHLeft, Vertical: utils.AlignmentVCenter}
 }
 
 func (b *Checkbox) OnMouseButtonEvent(x float32, y float32, button ButtonIndex, event EventAction, modifiers ModifierKey) bool {
