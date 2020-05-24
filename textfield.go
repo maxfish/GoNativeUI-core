@@ -16,16 +16,17 @@ type TextField struct {
 	focused bool
 	text    string
 
-	formatValidator *regexp.Regexp
-	inputIsValid    bool
+	offset int
 	//unit            string
 	//defaultText     string
 
 	// Editing
-	committed    bool
-	editingText  string
-	editingRunes []rune
-	cursorPos    int
+	formatValidator *regexp.Regexp
+	inputIsValid    bool
+	committed       bool
+	editingText     string
+	editingRunes    []rune
+	cursorPos       int
 	//selectionStart int
 	//selectionEnd   int
 }
@@ -88,8 +89,9 @@ func (i *TextField) Text() string {
 	}
 }
 
-func (i *TextField) CursorPos() int { return i.cursorPos }
-func (i *TextField) Valid() bool    { return i.inputIsValid }
+func (i *TextField) TextOffset() int { return i.offset }
+func (i *TextField) CursorPos() int  { return i.cursorPos }
+func (i *TextField) Valid() bool     { return i.inputIsValid }
 
 func (i *TextField) SetValidationFormat(format string) {
 	i.formatValidator, _ = regexp.Compile(format)
@@ -101,14 +103,13 @@ func (i *TextField) OnMouseCursorMoved(x float32, y float32) bool {
 
 func (i *TextField) OnMouseButtonEvent(x float32, y float32, button ButtonIndex, event EventAction, modifiers ModifierKey) bool {
 	if button == 0 && event == EventActionPress {
-		if !i.focused {
-			i.Parent().RequestFocusFor(i)
-			return true
-		}
-
-		relativeX := int(x - float32(i.bounds.X+i.style.Padding.Left))
+		relativeX := int(x - float32(i.style.Padding.Left-i.offset))
 		index := i.style.Font.IndexFromCoords(i.style.FontSize, i.text, relativeX, 0)
-		i.cursorPos = index
+		i.setCursorPos(index)
+
+		if !i.focused {
+			i.parent.RequestFocusFor(i)
+		}
 		return true
 	}
 	return false
@@ -123,11 +124,11 @@ func (i *TextField) OnKeyEvent(key Key, action EventAction, modifierKey Modifier
 			i.cursorPos = len(i.editingRunes)
 		case KeyLeft:
 			if i.cursorPos > 0 {
-				i.cursorPos--
+				i.setCursorPos(i.cursorPos - 1)
 			}
 		case KeyRight:
 			if i.cursorPos < len(i.editingRunes) {
-				i.cursorPos++
+				i.setCursorPos(i.cursorPos + 1)
 			}
 		case KeyDelete:
 			if i.cursorPos < len(i.editingRunes) {
@@ -138,10 +139,12 @@ func (i *TextField) OnKeyEvent(key Key, action EventAction, modifierKey Modifier
 		case KeyBackspace:
 			if i.cursorPos > 0 {
 				i.editingRunes = append(i.editingRunes[:i.cursorPos-1], i.editingRunes[i.cursorPos:]...)
-				i.cursorPos--
 				i.editingText = string(i.editingRunes)
+				i.setCursorPos(i.cursorPos - 1)
 				i.validateInput()
 			}
+		case KeyEnter:
+			i.commitChanges()
 		default:
 			return false
 		}
@@ -151,8 +154,8 @@ func (i *TextField) OnKeyEvent(key Key, action EventAction, modifierKey Modifier
 
 func (i *TextField) OnCharEvent(char rune) bool {
 	i.editingRunes = append(i.editingRunes[:i.cursorPos], append([]rune{rune(char)}, i.editingRunes[i.cursorPos:]...)...)
-	i.cursorPos++
 	i.editingText = string(i.editingRunes)
+	i.setCursorPos(i.cursorPos + 1)
 	i.validateInput()
 	return true
 }
@@ -161,16 +164,28 @@ func (i *TextField) FocusGained() {
 	i.focused = true
 	i.editingRunes = []rune(i.text)
 	i.editingText = i.text
+
 	i.validateInput()
 }
 
 func (i *TextField) FocusLost() {
 	i.commitChanges()
+	i.setCursorPos(0)
 	i.focused = false
 }
 
 func (i *TextField) Focused() bool {
 	return i.focused
+}
+
+func (i *TextField) setCursorPos(pos int) {
+	i.cursorPos = pos
+	textSizeAtCursor := i.style.Font.TextSize(i.style.FontSize, i.editingText, i.cursorPos)
+	if textSizeAtCursor.W() > i.offset+i.InnerBounds().W {
+		i.offset = textSizeAtCursor.W() - i.InnerBounds().W + 4
+	} else if textSizeAtCursor.W() < i.offset {
+		i.offset = utils.MaxI(textSizeAtCursor.W()-i.InnerBounds().W/2, 0)
+	}
 }
 
 func (i *TextField) validateInput() {
