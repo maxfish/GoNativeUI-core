@@ -24,7 +24,7 @@ The core repository contains the logic code of the GUI and it does not
 - [x] Toggle button
 - [x] Checkbox
 - [ ] Radio button
-- [ ] Input fields
+- [X] Input fields
 
 ## Layout
 The only container available is _Box_. It allows creating complex layouts by applying
@@ -34,8 +34,8 @@ The layout is inspired by the [The Box Model](https://developer.mozilla.org/en-U
  from [Mozilla XUL](https://developer.mozilla.org/en-US/docs/Archive/Mozilla/XUL) (now defunct).
 
 ## Other ToDo
-- [ ] Button action callbacks
-- [ ] Widget content alignment
+- [X] Button action callbacks
+- [X] Widget content alignment
 - [ ] Widget alignment within containers (only _stretch_ is supported right now)
 - [x] Containers padding
 - [ ] Grid container / Property grid
