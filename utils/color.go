@@ -50,3 +50,8 @@ func (c Color) Scaled(scale float32) Color {
 		c[3] * scale,
 	}
 }
+
+func (c Color) WithAlpha(alpha float32) Color {
+	c[3] = alpha
+	return c
+}
