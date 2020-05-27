@@ -15,6 +15,10 @@ func (r Rect) Bottom() int  { return r.Y + r.H }
 func (r Rect) CenterX() int { return r.X + r.W/2 }
 func (r Rect) CenterY() int { return r.Y + r.H/2 }
 
+func (r Rect) Empty() bool {
+	return r.X == 0 && r.Y == 0 && r.W == 0 && r.H == 0
+}
+
 func (r Rect) MoveTo(x, y int) Rect {
 	r.X = x
 	r.Y = y
