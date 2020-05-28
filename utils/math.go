@@ -15,3 +15,13 @@ func MinI(a, b int) int {
 		return b
 	}
 }
+
+func ClampI(value, a, b int) int {
+	if value < a {
+		return a
+	} else if value > b {
+		return b
+	}
+
+	return value
+}
