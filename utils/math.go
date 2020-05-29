@@ -25,3 +25,14 @@ func ClampI(value, a, b int) int {
 
 	return value
 }
+
+func Clamp(value, a, b float32) float32 {
+	if value < a {
+		return a
+	} else if value > b {
+		return b
+	}
+
+	return value
+}
+
