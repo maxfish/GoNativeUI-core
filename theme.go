@@ -6,6 +6,7 @@ import (
 
 type Theme struct {
 	BackgroundColor   utils.Color
+	SelectionColor    utils.Color
 	TextColor         utils.Color
 	TextDisabledColor utils.Color
 	TextFont          IFont
@@ -33,6 +34,7 @@ type Theme struct {
 func NewDefaultTheme(baseFont IFont) *Theme {
 	t := &Theme{
 		BackgroundColor:       utils.NewColorHex(0x3C3F41FF),
+		SelectionColor:        utils.NewColorHex(0x1A65D1FF),
 		TextColor:             utils.NewColorHex(0xAFB1B3FF),
 		TextDisabledColor:     utils.TransparentColor,
 		TextFont:              baseFont,
@@ -45,7 +47,6 @@ func NewDefaultTheme(baseFont IFont) *Theme {
 		InputPlaceholderColor: utils.TransparentColor,
 		InputBackgroundColor:  utils.NewColorHex(0x3C3C3CFF),
 		InputTextColor:        utils.TransparentColor,
-		InputSelectionColor:   utils.NewColorHex(0x164288FF),
 		InputCursorColor:      utils.NewColorHex(0xDDDDDDFF),
 		InputNotValidColor:    utils.NewColorHex(0x743A3AFF),
 		InputPadding:          utils.Insets{Top: 2, Right: 4, Bottom: 2, Left: 4},
