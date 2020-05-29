@@ -10,6 +10,7 @@ func CurrentGui() *Gui {
 type IFont interface {
 	FaceName() string
 	TextSize(fontSize int, text string, numGlyphs ...int) utils.Size
+	LineHeight(fontSize int) int
 	IndexFromCoords(fontSize int, text string, x int, y int) int
 }
 
