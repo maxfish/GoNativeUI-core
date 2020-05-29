@@ -160,7 +160,15 @@ func (c *Container) OnMouseButtonEvent(x float32, y float32, button ButtonIndex,
 	return false
 }
 
-func (c *Container) OnMouseScrolled(scrollX float32, scrollY float32) bool {
+func (c *Container) OnMouseScrolled(x float32, y float32, scrollX float32, scrollY float32) bool {
+	for _, oneChild := range c.children {
+		if !(oneChild.Visible() && oneChild.Enabled()) {
+			continue
+		}
+		if oneChild.Bounds().ContainsPoint(int(x), int(y)) {
+			return oneChild.OnMouseScrolled(x-float32(oneChild.Bounds().X), y-float32(oneChild.Bounds().Y), scrollX, scrollY)
+		}
+	}
 	return false
 }
 

@@ -60,9 +60,9 @@ func (g *Gui) OnMouseButtonEvent(x float32, y float32, buttonIndex ButtonIndex, 
 	return g.screen.OnMouseButtonEvent(g.mouseData.currentPosX, g.mouseData.currentPosY, buttonIndex, event, modifiers)
 }
 
-func (g *Gui) OnMouseScrolled(scrollX, scrollY float32) bool {
+func (g *Gui) OnMouseScrolled(x float32, y float32, scrollX, scrollY float32) bool {
 	//log.Printf("[Gui] Mouse wheel scrolled %.2f,%.2f\n", scrollX, scrollY)
-	return g.screen.OnMouseScrolled(scrollX, scrollY)
+	return g.screen.OnMouseScrolled(g.mouseData.currentPosX, g.mouseData.currentPosY,  scrollX, scrollY)
 }
 
 // Key events
