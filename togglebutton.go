@@ -8,6 +8,7 @@ type ToggleButton struct {
 func NewToggleButton(text string, changeCallback ...ButtonChangeCallback) *ToggleButton {
 	b := &ToggleButton{}
 	widgetInit(b)
+	b.style = CurrentGui().Theme().Button
 	b.text = text
 	if len(changeCallback) == 1 {
 		b.onChangeCallback = changeCallback[0]

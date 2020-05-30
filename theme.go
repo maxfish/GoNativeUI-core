@@ -5,73 +5,57 @@ import (
 )
 
 type Theme struct {
-	// Common
-	BackgroundColor   utils.Color
-	SelectionColor    utils.Color
-	TextColor         utils.Color
-	TextDisabledColor utils.Color
-	TextFont          IFont
-	TextFontSize      int
-	// Icons
-	IconColor         utils.Color
-	IconDisabledColor utils.Color
-	// Button
-	ButtonColor         utils.Color
-	ButtonDisabledColor utils.Color
-	ButtonPadding       utils.Insets
-	// Checkbox
-	CheckboxPadding   utils.Insets
-	CheckboxAlignment utils.Alignment
-	// TextField
-	TextFieldPlaceholderColor utils.Color
-	TextFieldBackgroundColor  utils.Color
-	TextFieldTextColor        utils.Color
-	TextFieldSelectionColor   utils.Color
-	TextFieldNotValidColor    utils.Color
-	TextFieldCursorColor      utils.Color
-	TextFieldPadding          utils.Insets
-	// ListView
-	ListViewTextColor       utils.Color
-	ListViewSelectionColor  utils.Color
-	ListViewBackgroundColor utils.Color
-	ListViewPadding         utils.Insets
-	ListViewAlignment       utils.Alignment
+	BaseStyle WidgetStyle
+	Label     WidgetStyle
+	Button    WidgetStyle
+	Checkbox  WidgetStyle
+	TextField WidgetStyle
+	ImageView WidgetStyle
+	ListView  WidgetStyle
 }
 
 func NewDefaultTheme(baseFont IFont) *Theme {
 	t := &Theme{}
+	t.BaseStyle = WidgetStyle{
+		Font:              baseFont,
+		FontSize:          15,
+		BackgroundColor:   utils.NewColorHex(0x3C3F41FF),
+		BorderColor:       utils.NewColorHex(0x59595AFF),
+		Padding:           utils.Insets{},
+		ContentAlignment:  utils.Alignment{},
+		TextColor:         utils.NewColorHex(0xAFB1B3FF),
+		CursorColor:       utils.NewColorHex(0xDDDDDDFF),
+		TextDisabledColor: utils.NewColorHex(0xAFB1B3FF).Scaled(0.6),
+		IconColor:         utils.NewColorHex(0xAFB1B3FF),
+		IconDisabledColor: utils.NewColorHex(0xAFB1B3FF).Scaled(0.6),
+		SelectionColor:    utils.NewColorHex(0x1A65D1FF),
+		ErrorColor:        utils.NewColorHex(0x743A3AFF),
+	}
 
-	// Common
-	t.BackgroundColor = utils.NewColorHex(0x3C3F41FF)
-	t.SelectionColor = utils.NewColorHex(0x1A65D1FF)
-	t.TextColor = utils.NewColorHex(0xAFB1B3FF)
-	t.TextDisabledColor = t.TextColor.Scaled(0.6)
-	t.TextFont = baseFont
-	t.TextFontSize = 15
-	// Icons
-	t.IconColor = utils.NewColorHex(0xAFB1B3FF)
-	t.IconDisabledColor = t.IconColor.Scaled(0.6)
+	// Label
+	t.Label = t.BaseStyle
+	t.Label.BackgroundColor = utils.TransparentColor
 	// Button
-	t.ButtonColor = utils.NewColorHex(0x4B5052FF)
-	t.ButtonDisabledColor = t.TextDisabledColor
-	t.ButtonPadding = utils.Insets{Top: 5, Right: 10, Bottom: 5, Left: 10}
+	t.Button = t.BaseStyle
+	t.Button.BackgroundColor = utils.NewColorHex(0x4B5052FF)
+	t.Button.Padding = utils.Insets{Top: 5, Right: 10, Bottom: 5, Left: 10}
 	// Checkbox
-	t.CheckboxPadding = utils.Insets{Top: 2, Right: 2, Bottom: 2, Left: 2}
-	t.CheckboxAlignment = utils.Alignment{Horizontal: utils.AlignmentHLeft, Vertical: utils.AlignmentVCenter}
+	t.Checkbox = t.BaseStyle
+	t.Checkbox.Padding = utils.Insets{Top: 2, Right: 2, Bottom: 2, Left: 2}
+	t.Checkbox.ContentAlignment = utils.Alignment{Horizontal: utils.AlignmentHLeft, Vertical: utils.AlignmentVCenter}
 	// TextField
-	t.TextFieldPlaceholderColor = utils.TransparentColor
-	t.TextFieldBackgroundColor = utils.NewColorHex(0x3C3C3CFF)
-	t.TextFieldTextColor = t.TextColor
-	t.TextFieldSelectionColor = t.SelectionColor
-	t.TextFieldCursorColor = utils.NewColorHex(0xDDDDDDFF)
-	t.TextFieldNotValidColor = utils.NewColorHex(0x743A3AFF)
-	t.TextFieldPadding = utils.Insets{Top: 2, Right: 4, Bottom: 2, Left: 4}
+	t.TextField = t.BaseStyle
+	t.TextField.Padding = utils.Insets{Top: 2, Right: 4, Bottom: 2, Left: 4}
+	t.TextField.ContentAlignment = utils.Alignment{Horizontal: utils.AlignmentHLeft, Vertical: utils.AlignmentVCenter}
+	t.TextField.BackgroundColor = utils.NewColorHex(0x44494AFF)
+	t.TextField.BorderColor = utils.NewColorHex(0x646464FF)
+	// ImageView
+	t.ImageView = t.BaseStyle
+	t.ImageView.BackgroundColor = utils.TransparentColor
 	// ListView
-	t.ListViewTextColor = t.TextColor
-	t.ListViewSelectionColor = t.SelectionColor
-	t.ListViewBackgroundColor = utils.NewColorHex(0x4B5052FF)
-	t.ListViewPadding = utils.HomogeneousInsets(4)
-	t.ListViewAlignment = utils.Alignment{Horizontal: utils.AlignmentHLeft, Vertical: utils.AlignmentVCenter}
-
+	t.ListView = t.BaseStyle
+	t.ListView.BackgroundColor = utils.NewColorHex(0x4B5052FF)
+	t.ListView.Padding = utils.HomogeneousInsets(4)
+	t.ListView.ContentAlignment = utils.Alignment{Horizontal: utils.AlignmentHLeft, Vertical: utils.AlignmentVCenter}
 	return t
 }

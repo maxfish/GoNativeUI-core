@@ -14,9 +14,9 @@ func TestLabel(t *testing.T) {
 	// Check initial state
 	assertBoolEqual(t, label.Visible(), true)
 	assertBoolEqual(t, label.Enabled(), true)
-	assertStructEqual(t, label.Style().TextColor, g.Theme().TextColor)
-	assertStructEqual(t, label.Style().Font, g.Theme().TextFont)
-	assertStructEqual(t, label.Style().FontSize, g.Theme().TextFontSize)
+	assertStructEqual(t, label.Style().TextColor, g.Theme().BaseStyle.TextColor)
+	assertStructEqual(t, label.Style().Font, g.Theme().BaseStyle.Font)
+	assertStructEqual(t, label.Style().FontSize, g.Theme().BaseStyle.FontSize)
 	assertStringEqual(t, label.Text(), textStrings[0])
 
 	// Change the text

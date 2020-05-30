@@ -34,6 +34,7 @@ type TextField struct {
 func NewTextField(text string) *TextField {
 	i := &TextField{}
 	widgetInit(i)
+	i.style = CurrentGui().Theme().TextField
 	i.text = text
 	return i
 }
@@ -58,14 +59,7 @@ func NewFloatField(value float32) *TextField {
 
 func (i *TextField) initStyle() {
 	t := CurrentGui().Theme()
-	i.style = &WidgetStyle{
-		Font:             t.TextFont,
-		FontSize:         t.TextFontSize,
-		TextColor:        t.TextColor,
-		BackgroundColor:  t.TextFieldBackgroundColor,
-		Padding:          t.TextFieldPadding,
-		ContentAlignment: utils.Alignment{Horizontal: utils.AlignmentHLeft, Vertical: utils.AlignmentVCenter},
-	}
+	i.style = t.TextField
 }
 
 func (i *TextField) Measure() {

@@ -12,7 +12,6 @@ type IWidget interface {
 	Parent() IContainer
 
 	setParent(container IContainer)
-	initStyle()
 	Style() *WidgetStyle
 
 	// Status
@@ -66,7 +65,7 @@ type Widget struct {
 	visible bool
 	bounds  utils.Rect
 
-	style *WidgetStyle
+	style WidgetStyle
 
 	minimumWidth  int
 	maximumWidth  int
@@ -79,15 +78,15 @@ type Widget struct {
 	measuredHeight int
 	measuredFlex   int
 
-	contentWidth     int
-	contentHeight    int
+	contentWidth  int
+	contentHeight int
 }
 
 // Getters / Setters
-func (w *Widget) Id() string         { return w.id }
-func (w *Widget) SetId(id string)    { w.id = id }
-func (w *Widget) Parent() IContainer { return w.parent }
-func (w *Widget) Style() *WidgetStyle { return w.style }
+func (w *Widget) Id() string          { return w.id }
+func (w *Widget) SetId(id string)     { w.id = id }
+func (w *Widget) Parent() IContainer  { return w.parent }
+func (w *Widget) Style() *WidgetStyle { return &w.style }
 
 func (w *Widget) setParent(container IContainer)       { w.parent = container }
 func (w *Widget) Enabled() bool                        { return w.enabled }
@@ -146,9 +145,9 @@ func (w *Widget) SetDimension(width int, height int) {
 
 // Methods which need to be implemented by the widgets
 
-func (w *Widget) initStyle() { /* NOP */ }
-func (w *Widget) Layout()    { /* NOP */ }
-func (w *Widget) Measure()   {
+func (w *Widget) Layout() { /* NOP */ }
+
+func (w *Widget) Measure() {
 	w.measuredFlex = w.flex
 }
 
@@ -166,6 +165,4 @@ func (w *Widget) OnMouseScrolled(x float32, y float32, scrollX, scrollY float32)
 func widgetInit(w IWidget) {
 	w.SetEnabled(true)
 	w.SetVisible(true)
-	w.initStyle()
-	w.Measure()
 }

@@ -11,18 +11,12 @@ type Button struct {
 func NewButton(text string, changeCallback ...ButtonChangeCallback) *Button {
 	b := &Button{}
 	widgetInit(b)
+	b.style = CurrentGui().Theme().Button
 	b.text = text
 	if len(changeCallback) == 1 {
 		b.onChangeCallback = changeCallback[0]
 	}
 	return b
-}
-
-func (b *Button) initStyle() {
-	b.Label.initStyle()
-	t := CurrentGui().Theme()
-	b.style.BackgroundColor = t.ButtonColor
-	b.style.Padding = t.ButtonPadding
 }
 
 func (b *Button) Pressed() bool { return b.pressed }

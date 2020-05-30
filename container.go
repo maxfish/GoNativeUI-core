@@ -28,7 +28,7 @@ type Container struct {
 }
 
 func (c *Container) initStyle() {
-	c.style = &WidgetStyle{}
+	c.style = WidgetStyle{}
 }
 
 // Children
@@ -191,5 +191,4 @@ func (c *Container) OnCharEvent(char rune) bool {
 func containerInit(c IContainer) {
 	c.SetEnabled(true)
 	c.SetVisible(true)
-	c.initStyle()
 }

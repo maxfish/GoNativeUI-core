@@ -22,11 +22,7 @@ func NewImageView(image image.Image) *ImageView {
 }
 
 func (i *ImageView) initStyle() {
-	//t := CurrentGui().Theme()
-	i.style = &WidgetStyle{
-		BackgroundColor:  utils.TransparentColor,
-		ContentAlignment: utils.Alignment{Horizontal: utils.AlignmentHCenter, Vertical: utils.AlignmentVCenter},
-	}
+	i.style = CurrentGui().Theme().ImageView
 }
 
 func (i *ImageView) Measure() {

@@ -1,7 +1,5 @@
 package gui
 
-import "github.com/maxfish/GoNativeUI-Core/utils"
-
 type Checkbox struct {
 	Button
 }
@@ -9,6 +7,7 @@ type Checkbox struct {
 func NewCheckbox(text string, changeCallback ...ButtonChangeCallback) *Checkbox {
 	b := &Checkbox{}
 	widgetInit(b)
+	b.style = CurrentGui().Theme().Checkbox
 	b.text = text
 	if len(changeCallback) == 1 {
 		b.onChangeCallback = changeCallback[0]
@@ -21,13 +20,6 @@ func (b *Checkbox) Checked() bool { return b.pressed }
 func (b *Checkbox) SetChecked(checked bool) {
 	b.pressed = checked
 	b.fireChangeEvent(checked)
-}
-
-func (b *Checkbox) initStyle() {
-	t := CurrentGui().Theme()
-	b.Label.initStyle()
-	b.style.Padding = t.CheckboxPadding
-	b.style.ContentAlignment = utils.Alignment{Horizontal: utils.AlignmentHLeft, Vertical: utils.AlignmentVCenter}
 }
 
 func (b *Checkbox) OnMouseButtonEvent(x float32, y float32, button ButtonIndex, event EventAction, modifiers ModifierKey) bool {

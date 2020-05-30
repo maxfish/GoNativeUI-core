@@ -21,21 +21,10 @@ type ListView struct {
 func NewListView() *ListView {
 	l := &ListView{}
 	widgetInit(l)
+	l.style = CurrentGui().Theme().ListView
 	l.visibleRows = DefaultVisibleRows
 	l.selectedIndex = -1
 	return l
-}
-
-func (l *ListView) initStyle() {
-	t := CurrentGui().Theme()
-	l.style = &WidgetStyle{
-		Font:             t.TextFont,
-		FontSize:         t.TextFontSize,
-		TextColor:        t.ListViewTextColor,
-		BackgroundColor:  t.ListViewBackgroundColor,
-		Padding:          t.ListViewPadding,
-		ContentAlignment: t.ListViewAlignment,
-	}
 }
 
 func (l *ListView) Measure() {

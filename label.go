@@ -1,7 +1,5 @@
 package gui
 
-import "github.com/maxfish/GoNativeUI-Core/utils"
-
 type Label struct {
 	Widget
 	text string
@@ -10,19 +8,9 @@ type Label struct {
 func NewLabel(text string) *Label {
 	l := &Label{}
 	widgetInit(l)
+	l.style = CurrentGui().Theme().Label
 	l.text = text
 	return l
-}
-
-func (l *Label) initStyle() {
-	t := CurrentGui().Theme()
-	l.style = &WidgetStyle{
-		Font:             t.TextFont,
-		FontSize:         t.TextFontSize,
-		TextColor:        t.TextColor,
-		BackgroundColor:  utils.TransparentColor,
-		ContentAlignment: utils.Alignment{Horizontal: utils.AlignmentHCenter, Vertical: utils.AlignmentVCenter},
-	}
 }
 
 func (l *Label) Text() string { return l.text }
