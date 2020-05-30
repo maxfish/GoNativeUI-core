@@ -3,18 +3,16 @@ package utils
 type AlignmentH uint32
 
 const (
-	AlignmentHNone AlignmentH = iota
+	AlignmentHCenter AlignmentH = iota
 	AlignmentHLeft
-	AlignmentHCenter
 	AlignmentHRight
 )
 
 type AlignmentV uint32
 
 const (
-	AlignmentVNone AlignmentV = iota
+	AlignmentVCenter AlignmentV = iota
 	AlignmentVTop
-	AlignmentVCenter
 	AlignmentVBottom
 )
 
