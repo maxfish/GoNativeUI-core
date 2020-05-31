@@ -3,6 +3,7 @@ package gui
 import "github.com/maxfish/GoNativeUI-Core/utils"
 
 var currentGui *Gui
+
 func CurrentGui() *Gui {
 	return currentGui
 }
@@ -20,8 +21,8 @@ type IRenderer interface {
 }
 
 type Gui struct {
-	screen    IContainer
-	theme		*Theme
+	screen    *Screen
+	theme     *Theme
 	mouseData MouseData
 }
 
@@ -31,20 +32,19 @@ func NewGui(theme *Theme, w int, h int) *Gui {
 	}
 	g := &Gui{}
 	g.theme = theme
-	g.screen = NewBoxContainer(BoxHorizontalOrientation)
-	g.screen.SetDimension(w, h)
+	g.screen = NewScreen(BoxHorizontalOrientation, w, h)
 	currentGui = g
 	return g
 }
 
-func (g *Gui)Free() {
+func (g *Gui) Free() {
 	currentGui = nil
 	g.theme = nil
 	g.screen = nil
 }
 
-func (g *Gui) Screen() IContainer { return g.screen }
-func (g *Gui) Theme() *Theme      { return g.theme }
+func (g *Gui) Screen() *Screen { return g.screen }
+func (g *Gui) Theme() *Theme   { return g.theme }
 
 // Mouse handling
 func (g *Gui) OnMouseCursorMoved(x, y float32) bool {
@@ -63,7 +63,7 @@ func (g *Gui) OnMouseButtonEvent(x float32, y float32, buttonIndex ButtonIndex, 
 
 func (g *Gui) OnMouseScrolled(x float32, y float32, scrollX, scrollY float32) bool {
 	//log.Printf("[Gui] Mouse wheel scrolled %.2f,%.2f\n", scrollX, scrollY)
-	return g.screen.OnMouseScrolled(g.mouseData.currentPosX, g.mouseData.currentPosY,  scrollX, scrollY)
+	return g.screen.OnMouseScrolled(g.mouseData.currentPosX, g.mouseData.currentPosY, scrollX, scrollY)
 }
 
 // Key events

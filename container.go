@@ -2,7 +2,6 @@ package gui
 
 type IContainer interface {
 	IWidget
-	IKeyboardListener
 
 	Children() []IWidget
 	ChildrenCount() int
@@ -15,16 +14,12 @@ type IContainer interface {
 	IndexOfChild(aChild IWidget) int
 	ChildAtIndex(index int) IWidget
 	FindChildAt(x int, y int) IWidget
-
-	RequestFocusFor(child IWidget)
-	setFocusedDescendant(child IWidget)
 }
 
 type Container struct {
 	Widget
 
-	children          []IWidget
-	focusedDescendant IFocusable
+	children []IWidget
 }
 
 func (c *Container) initStyle() {
@@ -93,12 +88,7 @@ func (c *Container) RemoveChildById(id string) {
 }
 
 func (c *Container) RemoveChildAtIndex(index int) {
-	focusable, ok := c.children[index].(IFocusable)
-	if ok {
-		if c.focusedDescendant == focusable {
-			c.setFocusedDescendant(nil)
-		}
-	}
+	CurrentGui().Screen().RemoveFocusFrom(c.children[index])
 	ret := make([]IWidget, 0)
 	ret = append(ret, c.children[:index]...)
 	c.children = append(ret, c.children[index+1:]...)
@@ -111,35 +101,6 @@ func (c *Container) FindChildAt(x, y int) IWidget {
 		}
 	}
 	return nil
-}
-
-func (c *Container) setFocusedDescendant(child IWidget) {
-	focusable, ok := child.(IFocusable)
-	if ok {
-		if focusable == c.focusedDescendant {
-			return
-		}
-		if c.focusedDescendant != nil {
-			previousFocused, _ := c.focusedDescendant.(IFocusable)
-			previousFocused.FocusLost()
-		}
-		c.focusedDescendant = focusable
-		if child != nil {
-			focusable.FocusGained()
-		}
-	}
-}
-
-func (c *Container) RequestFocusFor(widget IWidget) {
-	// Note: the loop below stops at any container without a parent, assuming that's the root one.
-	parent := widget.Parent()
-	for parent != nil {
-		if parent.Parent() == nil {
-			parent.setFocusedDescendant(widget)
-			return
-		}
-		parent = parent.Parent()
-	}
 }
 
 // Mouse handling
@@ -157,6 +118,7 @@ func (c *Container) OnMouseButtonEvent(x float32, y float32, button ButtonIndex,
 		}
 	}
 
+	CurrentGui().Screen().RemoveFocus()
 	return false
 }
 
@@ -168,22 +130,6 @@ func (c *Container) OnMouseScrolled(x float32, y float32, scrollX float32, scrol
 		if oneChild.Bounds().ContainsPoint(int(x), int(y)) {
 			return oneChild.OnMouseScrolled(x-float32(oneChild.Bounds().X), y-float32(oneChild.Bounds().Y), scrollX, scrollY)
 		}
-	}
-	return false
-}
-
-func (c *Container) OnKeyEvent(key Key, action EventAction, modifierKey ModifierKey) bool {
-	// Sends the key events only to the focusedDescendant
-	if c.focusedDescendant != nil {
-		return c.focusedDescendant.OnKeyEvent(key, action, modifierKey)
-	}
-	return false
-}
-
-func (c *Container) OnCharEvent(char rune) bool {
-	// Sends the key events only to the focusedDescendant
-	if c.focusedDescendant != nil {
-		return c.focusedDescendant.OnCharEvent(char)
 	}
 	return false
 }
