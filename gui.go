@@ -23,7 +23,6 @@ type IRenderer interface {
 type Gui struct {
 	screen    *Screen
 	theme     *Theme
-	mouseData MouseData
 }
 
 func NewGui(theme *Theme, w int, h int) *Gui {
@@ -50,20 +49,17 @@ func (g *Gui) Theme() *Theme   { return g.theme }
 func (g *Gui) OnMouseCursorMoved(x, y float32) bool {
 	// TODO: Here the mouse pointer should change based on the component under it
 	//log.Printf("[Gui] Mouse moved %.2f,%.2f\n", x, y)
-	g.mouseData.previousPosX, g.mouseData.previousPosY = g.mouseData.currentPosX, g.mouseData.currentPosY
-	g.mouseData.currentPosX, g.mouseData.currentPosY = x, y
 	return g.screen.OnMouseCursorMoved(x, y)
 }
 
-// NOTE: We don't expect to receive the cursor coordinates here, that's why they are stored when the cursor moves
 func (g *Gui) OnMouseButtonEvent(x float32, y float32, buttonIndex ButtonIndex, event EventAction, modifiers ModifierKey) bool {
 	//log.Printf("[Gui] Mouse button #%d <%d> modifiers:%d\n", buttonIndex, event, modifiers)
-	return g.screen.OnMouseButtonEvent(g.mouseData.currentPosX, g.mouseData.currentPosY, buttonIndex, event, modifiers)
+	return g.screen.OnMouseButtonEvent(x, y, buttonIndex, event, modifiers)
 }
 
 func (g *Gui) OnMouseScrolled(x float32, y float32, scrollX, scrollY float32) bool {
 	//log.Printf("[Gui] Mouse wheel scrolled %.2f,%.2f\n", scrollX, scrollY)
-	return g.screen.OnMouseScrolled(g.mouseData.currentPosX, g.mouseData.currentPosY, scrollX, scrollY)
+	return g.screen.OnMouseScrolled(x, y, scrollX, scrollY)
 }
 
 // Key events
