@@ -20,6 +20,12 @@ const (
 
 type ButtonIndex int
 
+const (
+	MouseButtonLeft ButtonIndex = 0
+	MouseButtonMiddle
+	MouseButtonRight
+)
+
 // Mouse
 
 type IMouseListener interface {

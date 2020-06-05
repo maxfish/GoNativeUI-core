@@ -39,6 +39,10 @@ func (b *Button) fireChangeEvent(state bool) {
 }
 
 func (b *Button) OnMouseButtonEvent(x float32, y float32, button ButtonIndex, event EventAction, modifiers ModifierKey) bool {
+	if button != MouseButtonLeft {
+		return false
+	}
+
 	if event == EventActionPress {
 		b.setPressed(true)
 		return true

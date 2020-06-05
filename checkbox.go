@@ -23,6 +23,9 @@ func (b *Checkbox) SetChecked(checked bool) {
 }
 
 func (b *Checkbox) OnMouseButtonEvent(x float32, y float32, button ButtonIndex, event EventAction, modifiers ModifierKey) bool {
+	if button != MouseButtonLeft {
+		return false
+	}
 	if event == EventActionPress {
 		b.pressed = !b.pressed
 		b.fireChangeEvent(b.pressed)

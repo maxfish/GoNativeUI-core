@@ -45,6 +45,9 @@ func (b *ToggleButton) SetPressed(pressed bool) {
 }
 
 func (b *ToggleButton) OnMouseButtonEvent(x float32, y float32, button ButtonIndex, event EventAction, modifiers ModifierKey) bool {
+	if button != MouseButtonLeft {
+		return false
+	}
 	if event == EventActionPress {
 		b.SetPressed(!b.pressed)
 		return true
