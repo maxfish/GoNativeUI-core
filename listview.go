@@ -18,12 +18,15 @@ type ListView struct {
 	selectedIndex int
 }
 
-func NewListView() *ListView {
+func NewListView(dataModel ...ListModel) *ListView {
 	l := &ListView{}
 	widgetInit(l)
 	l.style = CurrentGui().Theme().ListView
 	l.visibleRows = DefaultVisibleRows
 	l.selectedIndex = -1
+	if len(dataModel) == 1 {
+		l.SetDataModel(dataModel[0])
+	}
 	return l
 }
 
