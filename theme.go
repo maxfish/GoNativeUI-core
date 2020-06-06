@@ -12,6 +12,7 @@ type Theme struct {
 	TextField WidgetStyle
 	ImageView WidgetStyle
 	ListView  WidgetStyle
+	ComboBox  WidgetStyle
 }
 
 func NewDefaultTheme(baseFont IFont) *Theme {
@@ -57,5 +58,11 @@ func NewDefaultTheme(baseFont IFont) *Theme {
 	t.ListView.BackgroundColor = utils.NewColorHex(0x4B5052FF)
 	t.ListView.Padding = utils.HomogeneousInsets(4)
 	t.ListView.ContentAlignment = utils.Alignment{Horizontal: utils.AlignmentHLeft, Vertical: utils.AlignmentVCenter}
+	// ComboBox
+	t.ComboBox = t.BaseStyle
+	t.ComboBox.BackgroundColor = utils.NewColorHex(0x4B5052FF)
+	t.ComboBox.Padding = utils.Insets{Top: 5, Right: 3, Bottom: 5, Left: 3}
+	t.ComboBox.ContentAlignment = utils.Alignment{Horizontal: utils.AlignmentHLeft, Vertical: utils.AlignmentVCenter}
+
 	return t
 }
