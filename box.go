@@ -78,6 +78,10 @@ func (c *BoxContainer) Measure() {
 
 func (c *BoxContainer) Layout() {
 	c.Measure()
+	// If this container doesn't have a set dimension then make it wrap its content
+	if c.parent == nil && c.bounds.W == 0 && c.bounds.H == 0 {
+		c.SetDimension(c.measuredWidth, c.measuredHeight)
+	}
 	c.layoutChildren()
 }
 
