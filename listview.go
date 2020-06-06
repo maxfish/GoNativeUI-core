@@ -38,17 +38,11 @@ func (l *ListView) Measure() {
 	}
 }
 
-func (l *ListView) Offset() int          { return int(l.offset) }
-func (l *ListView) SelectedIndex() int   { return l.selectedIndex }
-func (l *ListView) DataModel() ListModel { return l.dataModel }
-
-func (l *ListView) SetDataModel(dataModel ListModel) {
-	l.dataModel = dataModel
-}
-
-func (l *ListView) SetSelectedIndex(index int) {
-	l.selectedIndex = index
-}
+func (l *ListView) Offset() int                      { return int(l.offset) }
+func (l *ListView) DataModel() ListModel             { return l.dataModel }
+func (l *ListView) SetDataModel(dataModel ListModel) { l.dataModel = dataModel }
+func (l *ListView) SelectedIndex() int               { return l.selectedIndex }
+func (l *ListView) SetSelectedIndex(index int)       { l.selectedIndex = index }
 
 func (l *ListView) totalHeight() int {
 	if l.dataModel == nil {
