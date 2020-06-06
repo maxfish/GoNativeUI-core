@@ -62,6 +62,9 @@ func (l *ListView) OnMouseCursorMoved(x, y float32) bool {
 }
 
 func (l *ListView) OnMouseButtonEvent(x float32, y float32, button ButtonIndex, event EventAction, modifiers ModifierKey) bool {
+	if button != MouseButtonLeft {
+		return false
+	}
 	if event == EventActionPress {
 		if l.dataModel != nil {
 			l.selectedIndex = utils.ClampI((int(y+l.offset))/l.dataModel.ItemHeight(l), 0, l.dataModel.NumItems(l)-1)
