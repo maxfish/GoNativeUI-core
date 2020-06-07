@@ -1,10 +1,10 @@
 package gui
 
 type ListModel interface {
-	ItemAt(view *ListView, row int) string
-	ItemsMaxWidth(view *ListView) int
-	ItemHeight(view *ListView) int
-	NumItems(view *ListView) int
+	ItemAt(widget IWidget, row int) string
+	ItemsMaxWidth(widget IWidget) int
+	ItemHeight(widget IWidget) int
+	NumItems(widget IWidget) int
 }
 
 type StringListModel struct {
@@ -15,15 +15,15 @@ func NewStringListModel(items []string) *StringListModel {
 	return &StringListModel{items: items}
 }
 
-func (d *StringListModel) ItemAt(view *ListView, row int) string {
+func (d *StringListModel) ItemAt(widget IWidget, row int) string {
 	return d.items[row]
 }
 
-func (d *StringListModel) ItemsMaxWidth(view *ListView) int {
+func (d *StringListModel) ItemsMaxWidth(widget IWidget) int {
 	// This is slow but accurate
 	maxWidth := 0
 	for _, s := range d.items {
-		size := view.style.Font.TextSize(view.style.FontSize, s)
+		size := widget.Style().Font.TextSize(widget.Style().FontSize, s)
 		if size.W() > maxWidth {
 			maxWidth = size.W()
 		}
@@ -31,10 +31,10 @@ func (d *StringListModel) ItemsMaxWidth(view *ListView) int {
 	return maxWidth
 }
 
-func (d *StringListModel) ItemHeight(view *ListView) int {
-	return view.style.Font.LineHeight(view.style.FontSize)
+func (d *StringListModel) ItemHeight(widget IWidget) int {
+	return widget.Style().Font.LineHeight(widget.Style().FontSize)
 }
 
-func (d *StringListModel) NumItems(view *ListView) int {
+func (d *StringListModel) NumItems(widget IWidget) int {
 	return len(d.items)
 }
