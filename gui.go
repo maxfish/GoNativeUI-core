@@ -25,6 +25,7 @@ type Gui struct {
 	theme *Theme
 
 	focusedDescendant IFocusable
+	popupStack        []IPopup
 }
 
 func NewGui(theme *Theme, w int, h int) *Gui {
@@ -34,6 +35,7 @@ func NewGui(theme *Theme, w int, h int) *Gui {
 	g := &Gui{
 		theme:      theme,
 		root:       NewBoxContainer(BoxHorizontalOrientation),
+		popupStack: make([]IPopup, 0, 16),
 	}
 	g.root.SetDimension(w, h)
 	currentGui = g
@@ -48,9 +50,17 @@ func (g *Gui) Free() {
 
 func (g *Gui) Screen() *BoxContainer { return g.root }
 func (g *Gui) Theme() *Theme         { return g.theme }
+func (g *Gui) Popups() []IPopup      { return g.popupStack }
 
+func (g *Gui) ShowPopup(popup IPopup) {
+	popup.SetVisible(true)
+	g.popupStack = append(g.popupStack, popup)
 }
 
+func (g *Gui) DismissPopup() {
+	g.popupStack[len(g.popupStack)-1].SetVisible(false)
+	g.popupStack = g.popupStack[:len(g.popupStack)-1]
+}
 
 func (g *Gui) RemoveFocusFrom(child IWidget) {
 	focusable, ok := child.(IFocusable)
