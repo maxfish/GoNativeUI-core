@@ -106,7 +106,7 @@ func (i *TextField) OnMouseButtonEvent(x float32, y float32, button ButtonIndex,
 		i.setCursorPos(index)
 
 		if !i.focused {
-			CurrentGui().Screen().RequestFocusFor(i)
+			CurrentGui().RequestFocusFor(i)
 		}
 		return true
 	}

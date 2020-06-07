@@ -21,17 +21,21 @@ type IRenderer interface {
 }
 
 type Gui struct {
-	screen    *Screen
-	theme     *Theme
+	root  *BoxContainer
+	theme *Theme
+
+	focusedDescendant IFocusable
 }
 
 func NewGui(theme *Theme, w int, h int) *Gui {
 	if currentGui != nil {
 		panic("There can be only one instance of the Gui")
 	}
-	g := &Gui{}
-	g.theme = theme
-	g.screen = NewScreen(BoxHorizontalOrientation, w, h)
+	g := &Gui{
+		theme:      theme,
+		root:       NewBoxContainer(BoxHorizontalOrientation),
+	}
+	g.root.SetDimension(w, h)
 	currentGui = g
 	return g
 }
@@ -39,35 +43,76 @@ func NewGui(theme *Theme, w int, h int) *Gui {
 func (g *Gui) Free() {
 	currentGui = nil
 	g.theme = nil
-	g.screen = nil
+	g.root = nil
 }
 
-func (g *Gui) Screen() *Screen { return g.screen }
-func (g *Gui) Theme() *Theme   { return g.theme }
+func (g *Gui) Screen() *BoxContainer { return g.root }
+func (g *Gui) Theme() *Theme         { return g.theme }
+
+}
+
+
+func (g *Gui) RemoveFocusFrom(child IWidget) {
+	focusable, ok := child.(IFocusable)
+	if ok && focusable == g.focusedDescendant {
+		g.focusedDescendant.FocusLost()
+		g.focusedDescendant = nil
+	}
+}
+
+func (g *Gui) RemoveFocus() {
+	if g.focusedDescendant != nil {
+		g.focusedDescendant.FocusLost()
+		g.focusedDescendant = nil
+	}
+}
+
+func (g *Gui) RequestFocusFor(child IWidget) {
+	focusable, ok := child.(IFocusable)
+	if ok {
+		if focusable == g.focusedDescendant {
+			return
+		}
+		if g.focusedDescendant != nil {
+			previousFocused, _ := g.focusedDescendant.(IFocusable)
+			previousFocused.FocusLost()
+		}
+		g.focusedDescendant = focusable
+		focusable.FocusGained()
+	}
+}
 
 // Mouse handling
 func (g *Gui) OnMouseCursorMoved(x, y float32) bool {
 	// TODO: Here the mouse pointer should change based on the component under it
 	//log.Printf("[Gui] Mouse moved %.2f,%.2f\n", x, y)
-	return g.screen.OnMouseCursorMoved(x, y)
+	return g.root.OnMouseCursorMoved(x, y)
 }
 
 func (g *Gui) OnMouseButtonEvent(x float32, y float32, buttonIndex ButtonIndex, event EventAction, modifiers ModifierKey) bool {
 	//log.Printf("[Gui] Mouse button #%d <%d> modifiers:%d\n", buttonIndex, event, modifiers)
-	return g.screen.OnMouseButtonEvent(x, y, buttonIndex, event, modifiers)
+	return g.root.OnMouseButtonEvent(x, y, buttonIndex, event, modifiers)
 }
 
 func (g *Gui) OnMouseScrolled(x float32, y float32, scrollX, scrollY float32) bool {
 	//log.Printf("[Gui] Mouse wheel scrolled %.2f,%.2f\n", scrollX, scrollY)
-	return g.screen.OnMouseScrolled(x, y, scrollX, scrollY)
+	return g.root.OnMouseScrolled(x, y, scrollX, scrollY)
 }
 
 // Key events
 
 func (g *Gui) OnKeyEvent(key Key, action EventAction, modifierKey ModifierKey) bool {
-	return g.screen.OnKeyEvent(key, action, modifierKey)
+	// Sends the key events only to the focusedDescendant
+	if g.focusedDescendant == nil {
+		return false
+	}
+	return g.focusedDescendant.OnKeyEvent(key, action, modifierKey)
 }
 
 func (g *Gui) OnCharEvent(char rune) bool {
-	return g.screen.OnCharEvent(char)
+	// Sends the key events only to the focusedDescendant
+	if g.focusedDescendant != nil {
+		return g.focusedDescendant.OnCharEvent(char)
+	}
+	return false
 }

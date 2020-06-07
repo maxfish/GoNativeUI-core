@@ -88,7 +88,7 @@ func (c *Container) RemoveChildById(id string) {
 }
 
 func (c *Container) RemoveChildAtIndex(index int) {
-	CurrentGui().Screen().RemoveFocusFrom(c.children[index])
+	CurrentGui().RemoveFocusFrom(c.children[index])
 	ret := make([]IWidget, 0)
 	ret = append(ret, c.children[:index]...)
 	c.children = append(ret, c.children[index+1:]...)
@@ -118,7 +118,7 @@ func (c *Container) OnMouseButtonEvent(x float32, y float32, button ButtonIndex,
 		}
 	}
 
-	CurrentGui().Screen().RemoveFocus()
+	CurrentGui().RemoveFocus()
 	return false
 }
 

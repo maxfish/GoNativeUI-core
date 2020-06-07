@@ -25,8 +25,6 @@ func WidgetToDebugString(str interface{}) string {
 	// Struct type
 	wType := ""
 	switch str.(type) {
-	case *Screen:
-		wType = "S"
 	case *Container:
 		wType = "C"
 	case *BoxContainer:
