@@ -10,22 +10,26 @@ const (
 	DefaultVisibleRows = 10
 )
 
+type ItemSelectedCallback func(source IWidget, index int)
+
 type ListView struct {
 	Widget
-	dataModel     ListModel
-	offset        float32
-	visibleRows   int
-	selectedIndex int
+	dataModel            ListModel
+	offset               float32
+	visibleRows          int
+	selectedIndex        int
+	itemSelectedCallback ItemSelectedCallback
 }
 
-func NewListView(dataModel ...ListModel) *ListView {
+func NewListView(dataModel ListModel, itemSelectedCallback ...ItemSelectedCallback) *ListView {
 	l := &ListView{}
 	widgetInit(l)
 	l.style = CurrentGui().Theme().ListView
 	l.visibleRows = DefaultVisibleRows
 	l.selectedIndex = -1
-	if len(dataModel) == 1 {
-		l.SetDataModel(dataModel[0])
+	l.dataModel = dataModel
+	if len(itemSelectedCallback) == 1 {
+		l.itemSelectedCallback = itemSelectedCallback[0]
 	}
 	return l
 }
@@ -36,10 +40,20 @@ func (l *ListView) SetDataModel(dataModel ListModel) { l.dataModel = dataModel }
 func (l *ListView) SelectedIndex() int               { return l.selectedIndex }
 func (l *ListView) SetSelectedIndex(index int)       { l.selectedIndex = index }
 
+func (l *ListView) SetOnItemSelectedCallback(f ItemSelectedCallback) {
+	l.itemSelectedCallback = f
+}
+
+func (l *ListView) fireSelectionChangedEvent(index int) {
+	if l.itemSelectedCallback != nil {
+		l.itemSelectedCallback(l, index)
+	}
+}
+
 func (l *ListView) Measure() {
 	l.computeContentSize()
 	l.measuredWidth = l.contentWidth + l.style.Padding.Left + l.style.Padding.Right
-	l.measuredHeight = utils.MinI(l.visibleRows * l.dataModel.ItemHeight(l), l.contentHeight) + l.style.Padding.Top + l.style.Padding.Bottom
+	l.measuredHeight = utils.MinI(l.visibleRows*l.dataModel.ItemHeight(l), l.contentHeight) + l.style.Padding.Top + l.style.Padding.Bottom
 	l.measuredFlex = l.flex
 }
 
@@ -63,7 +77,11 @@ func (l *ListView) OnMouseButtonEvent(x float32, y float32, button ButtonIndex, 
 	}
 	if event == EventActionPress {
 		if l.dataModel != nil {
-			l.selectedIndex = utils.ClampI((int(y+l.offset))/l.dataModel.ItemHeight(l), 0, l.dataModel.NumItems(l)-1)
+			newIndex := utils.ClampI((int(y+l.offset))/l.dataModel.ItemHeight(l), 0, l.dataModel.NumItems(l)-1)
+			if newIndex != l.selectedIndex {
+				l.selectedIndex = newIndex
+				l.fireSelectionChangedEvent(newIndex)
+			}
 		}
 		return true
 	} else if event == EventActionRelease {
