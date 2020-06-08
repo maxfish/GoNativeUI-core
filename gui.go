@@ -96,16 +96,42 @@ func (g *Gui) RequestFocusFor(child IWidget) {
 func (g *Gui) OnMouseCursorMoved(x, y float32) bool {
 	// TODO: Here the mouse pointer should change based on the component under it
 	//log.Printf("[Gui] Mouse moved %.2f,%.2f\n", x, y)
+	if len(g.popupStack) > 0 {
+		topItem := g.popupStack[len(g.popupStack)-1]
+		widget := topItem.Widget()
+		if widget.Bounds().ContainsPoint(int(x), int(y)) {
+			return widget.OnMouseCursorMoved(x-float32(widget.Bounds().X), y-float32(widget.Bounds().Y))
+		}
+	}
 	return g.root.OnMouseCursorMoved(x, y)
 }
 
 func (g *Gui) OnMouseButtonEvent(x float32, y float32, buttonIndex ButtonIndex, event EventAction, modifiers ModifierKey) bool {
 	//log.Printf("[Gui] Mouse button #%d <%d> modifiers:%d\n", buttonIndex, event, modifiers)
+	if len(g.popupStack) > 0 {
+		topItem := g.popupStack[len(g.popupStack)-1]
+		widget := topItem.Widget()
+		if widget.Bounds().ContainsPoint(int(x), int(y)) {
+			return widget.OnMouseButtonEvent(x-float32(widget.Bounds().X), y-float32(widget.Bounds().Y), buttonIndex, event, modifiers)
+		} else {
+			if buttonIndex == MouseButtonLeft && event == EventActionPress {
+				g.DismissPopup()
+				return true
+			}
+		}
+	}
 	return g.root.OnMouseButtonEvent(x, y, buttonIndex, event, modifiers)
 }
 
 func (g *Gui) OnMouseScrolled(x float32, y float32, scrollX, scrollY float32) bool {
 	//log.Printf("[Gui] Mouse wheel scrolled %.2f,%.2f\n", scrollX, scrollY)
+	if len(g.popupStack) > 0 {
+		topItem := g.popupStack[len(g.popupStack)-1]
+		widget := topItem.Widget()
+		if widget.Bounds().ContainsPoint(int(x), int(y)) {
+			return widget.OnMouseScrolled(x-float32(widget.Bounds().X), y-float32(widget.Bounds().Y), scrollX, scrollY)
+		}
+	}
 	return g.root.OnMouseScrolled(x, y, scrollX, scrollY)
 }
 

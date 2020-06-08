@@ -105,6 +105,15 @@ func (c *Container) FindChildAt(x, y int) IWidget {
 
 // Mouse handling
 func (c *Container) OnMouseCursorMoved(x float32, y float32) bool {
+	for _, oneChild := range c.children {
+		if !(oneChild.Visible() && oneChild.Enabled()) {
+			continue
+		}
+		if oneChild.Bounds().ContainsPoint(int(x), int(y)) {
+			return oneChild.OnMouseCursorMoved(x-float32(oneChild.Bounds().X), y-float32(oneChild.Bounds().Y))
+		}
+	}
+
 	return false
 }
 
