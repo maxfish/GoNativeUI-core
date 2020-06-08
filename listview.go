@@ -17,6 +17,7 @@ type ListView struct {
 	dataModel            ListModel
 	offset               float32
 	visibleRows          int
+	hoveredIndex         int
 	selectedIndex        int
 	itemSelectedCallback ItemSelectedCallback
 }
@@ -26,6 +27,7 @@ func NewListView(dataModel ListModel, itemSelectedCallback ...ItemSelectedCallba
 	widgetInit(l)
 	l.style = CurrentGui().Theme().ListView
 	l.visibleRows = DefaultVisibleRows
+	l.hoveredIndex = -1
 	l.selectedIndex = -1
 	l.dataModel = dataModel
 	if len(itemSelectedCallback) == 1 {
@@ -38,6 +40,7 @@ func (l *ListView) Offset() int                      { return int(l.offset) }
 func (l *ListView) DataModel() ListModel             { return l.dataModel }
 func (l *ListView) SetDataModel(dataModel ListModel) { l.dataModel = dataModel }
 func (l *ListView) SelectedIndex() int               { return l.selectedIndex }
+func (l *ListView) HoveredIndex() int                { return l.hoveredIndex }
 func (l *ListView) SetSelectedIndex(index int)       { l.selectedIndex = index }
 
 func (l *ListView) SetOnItemSelectedCallback(f ItemSelectedCallback) {
@@ -67,8 +70,13 @@ func (l *ListView) computeContentSize() {
 	}
 }
 
+func (l *ListView) hoveredIndexFromCoords(x, y float32) {
+	l.hoveredIndex = utils.ClampI((int(y+l.offset))/l.dataModel.ItemHeight(l), 0, l.dataModel.NumItems(l)-1)
+}
+
 func (l *ListView) OnMouseCursorMoved(x, y float32) bool {
-	return false
+	l.hoveredIndexFromCoords(x, y)
+	return true
 }
 
 func (l *ListView) OnMouseButtonEvent(x float32, y float32, button ButtonIndex, event EventAction, modifiers ModifierKey) bool {
@@ -77,10 +85,10 @@ func (l *ListView) OnMouseButtonEvent(x float32, y float32, button ButtonIndex, 
 	}
 	if event == EventActionPress {
 		if l.dataModel != nil {
-			newIndex := utils.ClampI((int(y+l.offset))/l.dataModel.ItemHeight(l), 0, l.dataModel.NumItems(l)-1)
+			newIndex := l.hoveredIndex
 			if newIndex != l.selectedIndex {
 				l.selectedIndex = newIndex
-				l.fireSelectionChangedEvent(newIndex)
+				l.fireSelectionChangedEvent(l.selectedIndex)
 			}
 		}
 		return true
@@ -92,5 +100,6 @@ func (l *ListView) OnMouseButtonEvent(x float32, y float32, button ButtonIndex, 
 
 func (l *ListView) OnMouseScrolled(x float32, y float32, scrollX, scrollY float32) bool {
 	l.offset = utils.Clamp(l.offset-scrollY, 0, float32(l.contentHeight-l.InnerBounds().H))
+	l.hoveredIndexFromCoords(x, y)
 	return true
 }
