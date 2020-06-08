@@ -10,7 +10,7 @@ const (
 	DefaultVisibleRows = 10
 )
 
-type ItemSelectedCallback func(source IWidget, index int)
+type ItemSelectedCallback func(source interface{}, index int)
 
 type ListView struct {
 	Widget
