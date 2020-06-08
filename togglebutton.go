@@ -44,13 +44,16 @@ func (b *ToggleButton) SetPressed(pressed bool) {
 	}
 }
 
-func (b *ToggleButton) OnMouseButtonEvent(x float32, y float32, button ButtonIndex, event EventAction, modifiers ModifierKey) bool {
-	if button != MouseButtonLeft {
-		return false
+func (b *ToggleButton) OnMouseEvent(event MouseEvent) IWidget {
+	if event.Type == MouseEventButton {
+		if event.Button != MouseButtonLeft {
+			return nil
+		}
+		if event.Action == EventActionPress {
+			b.SetPressed(!b.pressed)
+			return b
+		}
 	}
-	if event == EventActionPress {
-		b.SetPressed(!b.pressed)
-		return true
-	}
-	return false
+
+	return nil
 }

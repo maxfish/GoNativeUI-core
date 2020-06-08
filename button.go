@@ -38,17 +38,19 @@ func (b *Button) fireChangeEvent(state bool) {
 	}
 }
 
-func (b *Button) OnMouseButtonEvent(x float32, y float32, button ButtonIndex, event EventAction, modifiers ModifierKey) bool {
-	if button != MouseButtonLeft {
-		return false
+func (b *Button) OnMouseEvent(event MouseEvent) IWidget {
+	if event.Type == MouseEventButton {
+		if event.Button != MouseButtonLeft {
+			return nil
+		}
+		if event.Action == EventActionPress {
+			b.setPressed(true)
+			return b
+		} else if event.Action == EventActionRelease {
+			b.setPressed(false)
+			return b
+		}
 	}
 
-	if event == EventActionPress {
-		b.setPressed(true)
-		return true
-	} else if event == EventActionRelease {
-		b.setPressed(false)
-		return true
-	}
-	return false
+	return nil
 }

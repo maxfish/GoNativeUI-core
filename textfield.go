@@ -91,26 +91,28 @@ func (i *TextField) SetValidationFormat(format string) {
 	i.formatValidator, _ = regexp.Compile(format)
 }
 
-func (i *TextField) OnMouseCursorMoved(x float32, y float32) bool {
-	return false
-}
-
-func (i *TextField) OnMouseButtonEvent(x float32, y float32, button ButtonIndex, event EventAction, modifiers ModifierKey) bool {
-	if button == 0 && event == EventActionPress {
-		relativeX := int(x - float32(i.style.Padding.Left-i.offset))
-		text := i.text
-		if i.focused {
-			text = i.editingText
+func (i *TextField) OnMouseEvent(event MouseEvent) IWidget {
+	if event.Type == MouseEventButton {
+		if event.Button != MouseButtonLeft {
+			return nil
 		}
-		index := i.style.Font.IndexFromCoords(i.style.FontSize, text, relativeX, 0)
-		i.setCursorPos(index)
+		if event.Action == EventActionPress {
+			relativeX := int(event.X - float32(i.style.Padding.Left-i.offset))
+			text := i.text
+			if i.focused {
+				text = i.editingText
+			}
+			index := i.style.Font.IndexFromCoords(i.style.FontSize, text, relativeX, 0)
+			i.setCursorPos(index)
 
-		if !i.focused {
-			CurrentGui().RequestFocusFor(i)
+			if !i.focused {
+				CurrentGui().RequestFocusFor(i)
+			}
+			return i
 		}
-		return true
 	}
-	return false
+
+	return nil
 }
 
 func (i *TextField) OnKeyEvent(key Key, action EventAction, modifierKey ModifierKey) bool {

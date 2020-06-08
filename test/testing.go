@@ -1,4 +1,4 @@
-package tests
+package test
 
 import (
 	gui "github.com/maxfish/GoNativeUI-Core"
@@ -21,6 +21,46 @@ var textSizes = [4]utils.Size{
 	{len(textStrings[2]) * fontCharWidth, fontCharHeight},
 	{len(textStrings[3]) * fontCharWidth, fontCharHeight},
 }
+
+type DummyFont struct{}
+
+func (f *DummyFont) FaceName() string        { return "Test font" }
+func (f *DummyFont) LineHeight(size int) int { return fontCharHeight }
+func (f *DummyFont) TextSize(size int, text string, numGlyphs ...int) utils.Size {
+	return utils.Size{len(text) * fontCharWidth, fontCharHeight}
+}
+func (f *DummyFont) IndexFromCoords(fontSize int, text string, x int, y int) int {
+	return fontSize / fontCharWidth
+}
+
+func InitDummyTheme() *gui.Theme {
+	return gui.NewDefaultTheme(&DummyFont{})
+}
+
+func InitDummyGui(width int, height int, theme *gui.Theme) *gui.Gui {
+	if theme == nil {
+		theme = InitDummyTheme()
+	}
+	return gui.NewGui(theme, width, height)
+}
+
+func FreeGui(g *gui.Gui) {
+	g.Free()
+}
+
+// Events
+
+func MouseButtonTestEvent(action gui.EventAction, button gui.ButtonIndex, x, y float32) gui.MouseEvent {
+	return gui.MouseEvent{
+		Type: gui.MouseEventButton,
+		Action: action,
+		Button: button,
+		X: x,
+		Y: y,
+	}
+}
+
+// Assert utils
 
 func assertIntEqual(t *testing.T, actual int, expected int) {
 	if actual != expected {
@@ -45,30 +85,4 @@ func assertStructEqual(t *testing.T, actual interface{}, expected interface{}) {
 	if !reflect.DeepEqual(actual, expected) {
 		t.Errorf("expected: %s\nreceived: %s", expected, actual)
 	}
-}
-
-type DummyFont struct{}
-
-func (f *DummyFont) FaceName() string { return "Test font" }
-func (f *DummyFont) LineHeight(size int) int {	return fontCharHeight}
-func (f *DummyFont) TextSize(size int, text string, numGlyphs ...int) utils.Size {
-	return utils.Size{len(text) * fontCharWidth, fontCharHeight}
-}
-func (f *DummyFont) IndexFromCoords(fontSize int, text string, x int, y int) int {
-	return fontSize / fontCharWidth
-}
-
-func InitDummyTheme() *gui.Theme {
-	return gui.NewDefaultTheme(&DummyFont{})
-}
-
-func InitDummyGui(width int, height int, theme *gui.Theme) *gui.Gui {
-	if theme == nil {
-		theme = InitDummyTheme()
-	}
-	return gui.NewGui(theme, width, height)
-}
-
-func FreeGui(g *gui.Gui) {
-	g.Free()
 }

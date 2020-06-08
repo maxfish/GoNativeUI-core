@@ -1,4 +1,4 @@
-package tests
+package test
 
 import (
 	"fmt"
@@ -92,9 +92,11 @@ func TestBoxMouseInput(t *testing.T) {
 
 	// Button pressed
 	assertBoolEqual(t, button.Pressed(), false)
-	box.OnMouseButtonEvent(10, 10, 0, gui.EventActionPress, 0)
+	mouseEvent := MouseButtonTestEvent(gui.EventActionPress, gui.MouseButtonLeft, 10, 10)
+	box.OnMouseEvent(mouseEvent)
 	assertBoolEqual(t, button.Pressed(), true)
-	button.OnMouseButtonEvent(10, 10, 0, gui.EventActionRelease, 0)
+	mouseEvent.Action = gui.EventActionRelease
+	button.OnMouseEvent(mouseEvent)
 	assertBoolEqual(t, button.Pressed(), false)
 
 	tearDown(g)

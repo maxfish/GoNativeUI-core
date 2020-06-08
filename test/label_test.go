@@ -1,4 +1,4 @@
-package tests
+package test
 
 import (
 	gui "github.com/maxfish/GoNativeUI-Core"

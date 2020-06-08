@@ -1,4 +1,4 @@
-package tests
+package test
 
 import (
 	gui "github.com/maxfish/GoNativeUI-Core"
@@ -14,9 +14,9 @@ func TestButton(t *testing.T) {
 
 	// Button pressed
 	assertBoolEqual(t, button.Pressed(), false)
-	button.OnMouseButtonEvent(0, 0, 0, gui.EventActionPress, 0)
+	button.OnMouseEvent(MouseButtonTestEvent(gui.EventActionPress, gui.MouseButtonLeft, 0, 0))
 	assertBoolEqual(t, button.Pressed(), true)
-	button.OnMouseButtonEvent(0, 0, 0, gui.EventActionRelease, 0)
+	button.OnMouseEvent(MouseButtonTestEvent(gui.EventActionRelease, gui.MouseButtonLeft, 0, 0))
 	assertBoolEqual(t, button.Pressed(), false)
 }
 
@@ -29,15 +29,15 @@ func TestToggleButton(t *testing.T) {
 
 	// Button pressed
 	assertBoolEqual(t, button.Pressed(), false)
-	button.OnMouseButtonEvent(0, 0, 0, gui.EventActionPress, 0)
+	button.OnMouseEvent(MouseButtonTestEvent(gui.EventActionPress, gui.MouseButtonLeft, 0, 0))
 	assertBoolEqual(t, button.Pressed(), true)
-	button.OnMouseButtonEvent(0, 0, 0, gui.EventActionRelease, 0)
+	button.OnMouseEvent(MouseButtonTestEvent(gui.EventActionRelease, gui.MouseButtonLeft, 0, 0))
 	assertBoolEqual(t, button.Pressed(), true)
 
 	// Button released
-	button.OnMouseButtonEvent(0, 0, 0, gui.EventActionPress, 0)
+	button.OnMouseEvent(MouseButtonTestEvent(gui.EventActionPress, gui.MouseButtonLeft, 0, 0))
 	assertBoolEqual(t, button.Pressed(), false)
-	button.OnMouseButtonEvent(0, 0, 0, gui.EventActionRelease, 0)
+	button.OnMouseEvent(MouseButtonTestEvent(gui.EventActionRelease, gui.MouseButtonLeft, 0, 0))
 	assertBoolEqual(t, button.Pressed(), false)
 }
 
@@ -58,22 +58,22 @@ func TestToggleButtonGrouped(t *testing.T) {
 	assertBoolEqual(t, button2.Pressed(), false)
 
 	// Button1 pressed
-	button1.OnMouseButtonEvent(0, 0, 0, gui.EventActionPress, 0)
+	button1.OnMouseEvent(MouseButtonTestEvent(gui.EventActionPress, gui.MouseButtonLeft, 0, 0))
 	assertBoolEqual(t, button1.Pressed(), true)
-	button1.OnMouseButtonEvent(0, 0, 0, gui.EventActionRelease, 0)
+	button1.OnMouseEvent(MouseButtonTestEvent(gui.EventActionRelease, gui.MouseButtonLeft, 0, 0))
 	assertBoolEqual(t, button1.Pressed(), true)
 
 	// Another click doesn't change the button status
-	button1.OnMouseButtonEvent(0, 0, 0, gui.EventActionPress, 0)
+	button1.OnMouseEvent(MouseButtonTestEvent(gui.EventActionPress, gui.MouseButtonLeft, 0, 0))
 	assertBoolEqual(t, button1.Pressed(), true)
-	button1.OnMouseButtonEvent(0, 0, 0, gui.EventActionRelease, 0)
+	button1.OnMouseEvent(MouseButtonTestEvent(gui.EventActionRelease, gui.MouseButtonLeft, 0, 0))
 	assertBoolEqual(t, button1.Pressed(), true)
 
 	// Button2 pressed -> disabled Button1
-	button2.OnMouseButtonEvent(0, 0, 0, gui.EventActionPress, 0)
+	button2.OnMouseEvent(MouseButtonTestEvent(gui.EventActionPress, gui.MouseButtonLeft, 0, 0))
 	assertBoolEqual(t, button2.Pressed(), true)
 	assertBoolEqual(t, button1.Pressed(), false)
-	button2.OnMouseButtonEvent(0, 0, 0, gui.EventActionRelease, 0)
+	button2.OnMouseEvent(MouseButtonTestEvent(gui.EventActionRelease, gui.MouseButtonLeft, 0, 0))
 	assertBoolEqual(t, button2.Pressed(), true)
 	assertBoolEqual(t, button1.Pressed(), false)
 }

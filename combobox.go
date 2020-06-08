@@ -64,20 +64,23 @@ func (c *ComboBox) fireChangeEvent(selectedIndex int) {
 	}
 }
 
-func (c *ComboBox) OnMouseButtonEvent(x float32, y float32, button ButtonIndex, event EventAction, modifiers ModifierKey) bool {
-	if button != MouseButtonLeft {
-		return false
-	}
-	if event == EventActionPress {
-		if c.popup.Visible() {
-			CurrentGui().DismissPopup()
-		} else {
-			absPosition := c.AbsolutePosition()
-			c.popup.Widget().SetLeft(absPosition.X())
-			c.popup.Widget().SetTop(absPosition.Y())
-			CurrentGui().ShowPopup(c.popup)
+func (c *ComboBox) OnMouseEvent(event MouseEvent) IWidget {
+	if event.Type == MouseEventButton {
+		if event.Button != MouseButtonLeft {
+			return nil
 		}
-		return true
+		if event.Action == EventActionPress {
+			if c.popup.Visible() {
+				CurrentGui().DismissPopup()
+			} else {
+				absPosition := c.AbsolutePosition()
+				c.popup.Widget().SetLeft(absPosition.X())
+				c.popup.Widget().SetTop(absPosition.Y())
+				CurrentGui().ShowPopup(c.popup)
+			}
+			return c
+		}
 	}
-	return false
+
+	return nil
 }

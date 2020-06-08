@@ -103,44 +103,22 @@ func (c *Container) FindChildAt(x, y int) IWidget {
 	return nil
 }
 
-// Mouse handling
-func (c *Container) OnMouseCursorMoved(x float32, y float32) bool {
+func (c *Container) OnMouseEvent(event MouseEvent) IWidget {
 	for _, oneChild := range c.children {
 		if !(oneChild.Visible() && oneChild.Enabled()) {
 			continue
 		}
-		if oneChild.Bounds().ContainsPoint(int(x), int(y)) {
-			return oneChild.OnMouseCursorMoved(x-float32(oneChild.Bounds().X), y-float32(oneChild.Bounds().Y))
+		if oneChild.Bounds().ContainsPoint(int(event.X), int(event.Y)) {
+			listener, ok := oneChild.(IMouseListener)
+			if ok {
+				e := event
+				e.X -= float32(oneChild.Bounds().X)
+				e.Y -= float32(oneChild.Bounds().Y)
+				return listener.OnMouseEvent(e)
+			}
 		}
 	}
-
-	return false
-}
-
-func (c *Container) OnMouseButtonEvent(x float32, y float32, button ButtonIndex, action EventAction, modifierKey ModifierKey) bool {
-	for _, oneChild := range c.children {
-		if !(oneChild.Visible() && oneChild.Enabled()) {
-			continue
-		}
-		if oneChild.Bounds().ContainsPoint(int(x), int(y)) {
-			return oneChild.OnMouseButtonEvent(x-float32(oneChild.Bounds().X), y-float32(oneChild.Bounds().Y), button, action, modifierKey)
-		}
-	}
-
-	CurrentGui().RemoveFocus()
-	return false
-}
-
-func (c *Container) OnMouseScrolled(x float32, y float32, scrollX float32, scrollY float32) bool {
-	for _, oneChild := range c.children {
-		if !(oneChild.Visible() && oneChild.Enabled()) {
-			continue
-		}
-		if oneChild.Bounds().ContainsPoint(int(x), int(y)) {
-			return oneChild.OnMouseScrolled(x-float32(oneChild.Bounds().X), y-float32(oneChild.Bounds().Y), scrollX, scrollY)
-		}
-	}
-	return false
+	return nil
 }
 
 func containerInit(c IContainer) {

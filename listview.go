@@ -74,32 +74,34 @@ func (l *ListView) hoveredIndexFromCoords(x, y float32) {
 	l.hoveredIndex = utils.ClampI((int(y+l.offset))/l.dataModel.ItemHeight(l), 0, l.dataModel.NumItems(l)-1)
 }
 
-func (l *ListView) OnMouseCursorMoved(x, y float32) bool {
-	l.hoveredIndexFromCoords(x, y)
-	return true
-}
-
-func (l *ListView) OnMouseButtonEvent(x float32, y float32, button ButtonIndex, event EventAction, modifiers ModifierKey) bool {
-	if button != MouseButtonLeft {
-		return false
+func (l *ListView) OnMouseEvent(event MouseEvent) IWidget {
+	if event.Type == MouseEventPosition {
+		// Updates the hovered item index
+		l.hoveredIndexFromCoords(event.X, event.Y)
+		return l
 	}
-	if event == EventActionPress {
-		if l.dataModel != nil {
-			newIndex := l.hoveredIndex
-			if newIndex != l.selectedIndex {
-				l.selectedIndex = newIndex
-				l.fireSelectionChangedEvent(l.selectedIndex)
-			}
+	if event.Type == MouseEventWheel {
+		l.offset = utils.Clamp(l.offset-event.ScrollY, 0, float32(l.contentHeight-l.InnerBounds().H))
+		l.hoveredIndexFromCoords(event.X, event.Y)
+		return l
+	}
+	if event.Type == MouseEventButton {
+		if event.Button != MouseButtonLeft {
+			return nil
 		}
-		return true
-	} else if event == EventActionRelease {
-		return true
+		if event.Action == EventActionPress {
+			if l.dataModel != nil {
+				newIndex := l.hoveredIndex
+				if newIndex != l.selectedIndex {
+					l.selectedIndex = newIndex
+					l.fireSelectionChangedEvent(l.selectedIndex)
+				}
+			}
+			return l
+		} else if event.Action == EventActionRelease {
+			return l
+		}
 	}
-	return false
-}
 
-func (l *ListView) OnMouseScrolled(x float32, y float32, scrollX, scrollY float32) bool {
-	l.offset = utils.Clamp(l.offset-scrollY, 0, float32(l.contentHeight-l.InnerBounds().H))
-	l.hoveredIndexFromCoords(x, y)
-	return true
+	return nil
 }

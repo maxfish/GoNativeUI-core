@@ -22,14 +22,17 @@ func (b *Checkbox) SetChecked(checked bool) {
 	b.fireChangeEvent(checked)
 }
 
-func (b *Checkbox) OnMouseButtonEvent(x float32, y float32, button ButtonIndex, event EventAction, modifiers ModifierKey) bool {
-	if button != MouseButtonLeft {
-		return false
+func (b *Checkbox) OnMouseEvent(event MouseEvent) IWidget {
+	if event.Type == MouseEventButton {
+		if event.Button != MouseButtonLeft {
+			return nil
+		}
+		if event.Action == EventActionPress {
+			b.pressed = !b.pressed
+			b.fireChangeEvent(b.pressed)
+			return b
+		}
 	}
-	if event == EventActionPress {
-		b.pressed = !b.pressed
-		b.fireChangeEvent(b.pressed)
-		return true
-	}
-	return false
+
+	return nil
 }

@@ -13,7 +13,8 @@ const (
 type EventAction int
 
 const (
-	EventActionPress EventAction = iota
+	EventActionNone EventAction = iota
+	EventActionPress
 	EventActionRelease
 	EventActionRepeat
 )
@@ -21,17 +22,32 @@ const (
 type ButtonIndex int
 
 const (
-	MouseButtonLeft ButtonIndex = 0
+	MouseButtonNone ButtonIndex = iota
+	MouseButtonLeft
 	MouseButtonMiddle
 	MouseButtonRight
 )
 
 // Mouse
+type MouseEventType int
+
+const (
+	MouseEventPosition MouseEventType = iota
+	MouseEventButton
+	MouseEventWheel
+)
+
+type MouseEvent struct {
+	Type             MouseEventType
+	Action           EventAction
+	X, Y             float32
+	ScrollX, ScrollY float32
+	Button           ButtonIndex
+	Modifiers        ModifierKey
+}
 
 type IMouseListener interface {
-	OnMouseCursorMoved(x float32, y float32) bool
-	OnMouseButtonEvent(x float32, y float32, button ButtonIndex, event EventAction, modifiers ModifierKey) bool
-	OnMouseScrolled(x float32, y float32, scrollX float32, scrollY float32) bool
+	OnMouseEvent(event MouseEvent) IWidget
 }
 
 // Keyboard

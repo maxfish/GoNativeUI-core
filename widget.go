@@ -5,8 +5,6 @@ import (
 )
 
 type IWidget interface {
-	IMouseListener
-
 	Id() string
 	SetId(id string)
 	Parent() IContainer
@@ -160,17 +158,6 @@ func (w *Widget) Layout() { /* NOP */ }
 
 func (w *Widget) Measure() {
 	w.measuredFlex = w.flex
-}
-
-// Mouse handling
-func (w *Widget) OnMouseCursorMoved(x, y float32) bool {
-	return false
-}
-func (w *Widget) OnMouseButtonEvent(x float32, y float32, button ButtonIndex, event EventAction, modifiers ModifierKey) bool {
-	return false
-}
-func (w *Widget) OnMouseScrolled(x float32, y float32, scrollX, scrollY float32) bool {
-	return false
 }
 
 func widgetInit(w IWidget) {
