@@ -16,6 +16,10 @@ func (p Point) Y() int {
 	return p[1]
 }
 
+func (p Point) Add(other Point) Point {
+	return Point{p[0] + other[0], p[1] + other[1]}
+}
+
 func (p Point) EqualsTo(other Point) bool {
 	return p[0] == other[0] && p[1] == other[1]
 }
