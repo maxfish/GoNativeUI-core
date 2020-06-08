@@ -13,6 +13,7 @@ type IWidget interface {
 
 	setParent(container IContainer)
 	Style() *WidgetStyle
+	SetStyle(style WidgetStyle)
 
 	// Status
 	Visible() bool
@@ -87,6 +88,7 @@ func (w *Widget) Id() string          { return w.id }
 func (w *Widget) SetId(id string)     { w.id = id }
 func (w *Widget) Parent() IContainer  { return w.parent }
 func (w *Widget) Style() *WidgetStyle { return &w.style }
+func (w *Widget) SetStyle(style WidgetStyle) { w.style = style }
 
 func (w *Widget) setParent(container IContainer)       { w.parent = container }
 func (w *Widget) Enabled() bool                        { return w.enabled }
