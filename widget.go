@@ -29,6 +29,7 @@ type IWidget interface {
 	SetDimension(width int, height int)
 	SetWidth(width int)
 	SetHeight(height int)
+	AbsolutePosition() utils.Point
 
 	// Layout
 	Flex() int
@@ -119,6 +120,14 @@ func (w *Widget) MeasuredHeight() int                  { return w.measuredHeight
 func (w *Widget) SetMeasuredHeight(measuredHeight int) { w.measuredHeight = measuredHeight }
 func (w *Widget) MeasuredWidth() int                   { return w.measuredWidth }
 func (w *Widget) SetMeasuredWidth(measuredWidth int)   { w.measuredWidth = measuredWidth }
+
+func (w *Widget) AbsolutePosition() utils.Point {
+	p := utils.Point{w.bounds.X, w.bounds.Y}
+	if w.parent != nil {
+		p = p.Add(w.parent.AbsolutePosition())
+	}
+	return p
+}
 
 func (w *Widget) SetWidth(width int) {
 	if width < w.minimumWidth {
