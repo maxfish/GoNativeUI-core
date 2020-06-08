@@ -6,6 +6,7 @@ type IPopup interface {
 	Visible() bool
 	SetVisible(value bool)
 }
+
 type Popup struct {
 	widget  IWidget
 	modal   bool
